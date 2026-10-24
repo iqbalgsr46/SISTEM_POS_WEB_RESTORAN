@@ -1,32 +1,45 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 
 export function SmoothScrollProvider({ children }) {
   const lenisRef = useRef(null);
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Inisialisasi Lenis dengan inertia & momentum gliding persis seperti di smartphone
+    // Inisialisasi Lenis Smooth Scroll untuk seluruh halaman agar meluncur halus
     const lenis = new Lenis({
-      duration: 1.25, // Durasi glide / gliding momentum
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing eksponensial khas inersia smartphone (smooth decay)
+      duration: 0.9,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.05, // Responsif saat di-scroll dengan wheel/trackpad
-      touchMultiplier: 1.6, // Sensitivitas gliding saat touch
-      syncTouch: true, // Momentum gliding untuk touch device
-      syncTouchLerp: 0.08,
-      touchInertiaExponent: 1.7,
-      autoRaf: true, // Loop otomatis requestAnimationFrame
-      anchors: true, // Navigasi klik tautan menu (#highlight, dll.) meluncur dengan halus
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.0,
+      syncTouch: false,
+      autoRaf: true,
+      anchors: true,
+      allowNestedScroll: true,
+      prevent: (node) => {
+        if (!node) return false;
+        // Izinkan container internal (seperti drawer kustomisasi modal, dialog, popup, atau panel pos/kitchen)
+        // melakukan scroll mandiri tanpa terganggu oleh Lenis scroll window utama
+        const scrollable = node.closest?.(
+          "[data-lenis-prevent], [role='dialog'], .pos-scrollbar, .overflow-y-auto, .overflow-y-scroll"
+        );
+        return Boolean(
+          scrollable &&
+          scrollable !== document.documentElement &&
+          scrollable !== document.body
+        );
+      },
     });
 
     lenisRef.current = lenis;
 
-    // Pasang instance di window agar bisa diakses global jika diperlukan
     if (typeof window !== "undefined") {
       window.__lenis = lenis;
     }
@@ -38,7 +51,7 @@ export function SmoothScrollProvider({ children }) {
         delete window.__lenis;
       }
     };
-  }, []);
+  }, [pathname]);
 
   return <>{children}</>;
 }

@@ -10,7 +10,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
       id="highlight"
       className="relative w-full pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 md:pb-10 overflow-visible"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8">
         {/* Header Statement Besar Sesuai Referensi CRISPR (media_1790311555742.png & media_1790479134334.png) */}
         <div className="relative text-center max-w-4xl mx-auto mb-6 sm:mb-8 md:mb-10 flex flex-col items-center">
           
@@ -34,10 +34,10 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
             {/* JUDUL UTAMA 3 BARIS: FONT FREDOKA BOLD, TEKS HITAM SOLID & MIRING PERSIS REFERENSI (media_1790312504163.png) */}
             <h2
               style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-              className="font-bold text-[30px] min-[360px]:text-[34px] min-[400px]:text-[38px] sm:text-[52px] md:text-[64px] lg:text-[76px] uppercase text-black leading-[0.88] tracking-tight select-none relative z-10 transform -rotate-[4.2deg] sm:-rotate-[4.8deg]"
+              className="font-bold text-[26px] min-[360px]:text-[29px] min-[380px]:text-[31px] min-[410px]:text-[33.5px] sm:text-[52px] md:text-[64px] lg:text-[76px] uppercase text-black leading-[0.88] tracking-tight select-none relative z-10 transform -rotate-[3.5deg] sm:-rotate-[4.5deg] max-w-full"
             >
               <span className="block whitespace-nowrap">SIZZLING PEDAS TO</span>
-              <span className="block whitespace-nowrap">MIE GACOAN CIKARANG</span>
+              <span className="block whitespace-nowrap">MIE ELON MUSK CIKARANG</span>
               <span className="block whitespace-nowrap">BRINGS ART</span>
             </h2>
           </div>

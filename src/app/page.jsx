@@ -23,7 +23,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-gacoan-yellow relative overflow-x-clip">
+    <main className="min-h-screen flex flex-col bg-gacoan-yellow relative overflow-x-clip scrollbar-yellow">
       {/* 1. Header / Navbar Sticky Sesuai Referensi CRISPR */}
       <SiteHeader />
 
@@ -86,7 +86,7 @@ export default function HomePage() {
 
       {/* 4. Sub-footer Copyright Sesuai Referensi CRISPR */}
       <div className="relative z-10 w-[340px] sm:w-[540px] md:w-[720px] lg:w-[860px] mx-auto py-4 px-3 text-xs font-bold text-black flex items-center justify-start select-none">
-        <p>© 2026 PT Pesta Pora Abadi (Mie Gacoan Cikarang). All rights reserved.</p>
+        <p>© 2026 PT Pesta Pora Abadi (Mie Elon Musk Cikarang). All rights reserved.</p>
       </div>
 
       {/* Modal Dialog Pemesanan Online */}

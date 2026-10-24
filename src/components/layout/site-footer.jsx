@@ -23,7 +23,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-3 gap-3 sm:gap-8 md:gap-12 w-full lg:w-auto">
           {/* Kolom 1: Menu Mie Gacoan */}
           <div className="flex flex-col space-y-2 text-xs sm:text-sm font-bold text-black">
-            <a href="#highlight" className="hover:opacity-70 transition-opacity">Mie Gacoan</a>
+            <a href="#highlight" className="hover:opacity-70 transition-opacity">Mie Elon Musk</a>
             <a href="#highlight" className="hover:opacity-70 transition-opacity">Mie Hompimpa</a>
             <a href="#highlight" className="hover:opacity-70 transition-opacity">Udang Keju</a>
             <a href="#highlight" className="hover:opacity-70 transition-opacity">Pangsit Goreng</a>
@@ -35,7 +35,6 @@ export function SiteFooter() {
             <a href="#stories" className="hover:opacity-70 transition-opacity">Tentang Kami</a>
             <a href="#hero" className="hover:opacity-70 transition-opacity">Outlet Cikarang</a>
             <a href="#hero" className="hover:opacity-70 transition-opacity">100% Halal MUI</a>
-            <a href="#hero" className="hover:opacity-70 transition-opacity">Syarat &amp; Ketentuan</a>
             <a href="#hero" className="hover:opacity-70 transition-opacity">Kebijakan Privasi</a>
           </div>
 
@@ -65,9 +64,9 @@ export function SiteFooter() {
         {/* Wordmark Raksasa GACOAN */}
         <h1
           style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-          className="font-black text-[48px] min-[360px]:text-[58px] min-[400px]:text-[68px] sm:text-[100px] md:text-[132px] lg:text-[160px] uppercase text-black leading-none tracking-tight select-none"
+          className="font-black text-[26px] min-[360px]:text-[32px] min-[400px]:text-[38px] sm:text-[68px] md:text-[90px] lg:text-[112px] uppercase text-black leading-none tracking-tight select-none whitespace-nowrap"
         >
-          GACOAN
+          ELON MUSK
         </h1>
       </div>
     </footer>

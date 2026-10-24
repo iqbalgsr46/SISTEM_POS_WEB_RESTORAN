@@ -1,0 +1,2106 @@
+[
+  {
+    "channel": "dine_in",
+    "code": "combat-a",
+    "stock_id": "combat-a",
+    "name": "GACOAN COMBAT A",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 0,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Gacoan Lv 1 , 1 Udang keju , 1 Udang Rambutan dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-b",
+    "stock_id": "combat-b",
+    "name": "GACOAN COMBAT B",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 1,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Hompimpa Lv 1 , 1 Udang keju , 1 Siomay dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-spesial",
+    "stock_id": "combat-spesial",
+    "name": "COMBAT SPESIAL",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 55000,
+    "station": "packing",
+    "sort_order": 2,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "Paket kombo spesial 2 Mie + 2 Dimsum Mentai + 2 Minum",
+      "shortDesc": "Paket Kombo Lengkap Baru",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-c",
+    "stock_id": "combat-c",
+    "name": "GACOAN COMBAT C",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 3,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-d",
+    "stock_id": "combat-d",
+    "name": "GACOAN COMBAT D",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 4,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-e",
+    "stock_id": "combat-e",
+    "name": "GACOAN COMBAT E",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 5,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "combat-f",
+    "stock_id": "combat-f",
+    "name": "GACOAN COMBAT F",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 6,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "paket-fest-a",
+    "stock_id": "paket-fest-a",
+    "name": "PAKET FEST A",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST DINE IN",
+    "price": 25455,
+    "station": "packing",
+    "sort_order": 7,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "paket-fest-c",
+    "stock_id": "paket-fest-c",
+    "name": "PAKET FEST C",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST DINE IN",
+    "price": 26364,
+    "station": "packing",
+    "sort_order": 8,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "mie-gacoan",
+    "stock_id": "mie-gacoan",
+    "name": "MIE GACOAN",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 9,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "mie-hompimpa",
+    "stock_id": "mie-hompimpa",
+    "name": "MIE HOMPIMPA",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 10,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "mie-suit",
+    "stock_id": "mie-suit",
+    "name": "MIE SUIT",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 11,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": false
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "mie-level-max",
+    "stock_id": "mie-level-max",
+    "name": "MIE LEVEL MAXX",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 12000,
+    "station": "wok",
+    "sort_order": 12,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Super Pedas Lv 10",
+      "description": "Sensasi mie super pedas level maksimal dengan taburan ayam cincang"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "mie-kuah-spicy",
+    "stock_id": "mie-kuah-spicy",
+    "name": "MIE KUAH SPICY",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 12500,
+    "station": "wok",
+    "sort_order": 13,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Kuah Kaldu Pedas Gurih",
+      "description": "Mie kenyal dengan kuah kaldu rempah pedas gurih hangat"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "pangsit-goreng",
+    "stock_id": "pangsit-goreng",
+    "name": "PANGSIT GORENG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 10455,
+    "station": "dimsum",
+    "sort_order": 14,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "lumpia-udang",
+    "stock_id": "lumpia-udang",
+    "name": "LUMPIA UDANG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 15,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "udang-keju",
+    "stock_id": "udang-keju",
+    "name": "UDANG KEJU",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 16,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "siomay",
+    "stock_id": "siomay",
+    "name": "SIOMAY",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 17,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "udang-rambutan",
+    "stock_id": "udang-rambutan",
+    "name": "UDANG RAMBUTAN",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 18,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "dimsum-mentai",
+    "stock_id": "dimsum-mentai",
+    "name": "DIMSUM MENTAI",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 13000,
+    "station": "dimsum",
+    "sort_order": 19,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Saus Mentai Bakar (3 pcs)",
+      "description": "Dimsum kukus lembut dengan topping saus mentai gurih dibakar lumer"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "pangsit-kuah",
+    "stock_id": "pangsit-kuah",
+    "name": "PANGSIT KUAH",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 11000,
+    "station": "dimsum",
+    "sort_order": 20,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Kuah Bawang Hangat (4 pcs)",
+      "description": "Pangsit rebus lembut gurih dengan kuah kaldu bawang segar hangat"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-gobak-sodor",
+    "stock_id": "es-gobak-sodor",
+    "name": "ES GOBAK SODOR",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 9546,
+    "station": "bar",
+    "sort_order": 21,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-petak-umpet",
+    "stock_id": "es-petak-umpet",
+    "name": "ES PETAK UMPET",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 9546,
+    "station": "bar",
+    "sort_order": 22,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-sluku-bathok",
+    "stock_id": "es-sluku-bathok",
+    "name": "ES SLUKU BATHOK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 23,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-teklek",
+    "stock_id": "es-teklek",
+    "name": "ES TEKLEK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 24,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "orange",
+    "stock_id": "orange",
+    "name": "ORANGE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 5455,
+    "station": "bar",
+    "sort_order": 25,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "lemon-tea",
+    "stock_id": "lemon-tea",
+    "name": "LEMON TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 26,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "teh-tarik",
+    "stock_id": "teh-tarik",
+    "name": "TEH TARIK",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 6819,
+    "station": "bar",
+    "sort_order": 27,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "vanilla-latte",
+    "stock_id": "vanilla-latte",
+    "name": "VANILLA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 28,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "thai-green-tea",
+    "stock_id": "thai-green-tea",
+    "name": "THAI GREEN TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 29,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "thai-tea",
+    "stock_id": "thai-tea",
+    "name": "THAI TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 7727,
+    "station": "bar",
+    "sort_order": 30,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "air-mineral",
+    "stock_id": "air-mineral",
+    "name": "AIR MINERAL",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 4091,
+    "station": "bar",
+    "sort_order": 31,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "tea",
+    "stock_id": "tea",
+    "name": "TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 4091,
+    "station": "bar",
+    "sort_order": 32,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-coklat-gacoan",
+    "stock_id": "es-coklat-gacoan",
+    "name": "ES COKLAT GACOAN",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 9000,
+    "station": "bar",
+    "sort_order": 33,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Coklat Pekat Dingin Segar",
+      "description": "Minuman coklat premium kental dingin segar penghilang dahaga"
+    }
+  },
+  {
+    "channel": "dine_in",
+    "code": "es-matcha-latte",
+    "stock_id": "es-matcha-latte",
+    "name": "ES MATCHA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 10500,
+    "station": "bar",
+    "sort_order": 34,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Matcha Creamy Dingin",
+      "description": "Perpaduan matcha jepang asli dengan susu segar creamy dingin mantap"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-a",
+    "stock_id": "combat-a",
+    "name": "GACOAN COMBAT A",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 35,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Gacoan Lv 1 , 1 Udang keju , 1 Udang Rambutan dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-b",
+    "stock_id": "combat-b",
+    "name": "GACOAN COMBAT B",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 36,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Hompimpa Lv 1 , 1 Udang keju , 1 Siomay dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-spesial",
+    "stock_id": "combat-spesial",
+    "name": "COMBAT SPESIAL",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 55000,
+    "station": "packing",
+    "sort_order": 37,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "Paket kombo spesial 2 Mie + 2 Dimsum Mentai + 2 Minum",
+      "shortDesc": "Paket Kombo Lengkap Baru",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-c",
+    "stock_id": "combat-c",
+    "name": "GACOAN COMBAT C",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 38,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-d",
+    "stock_id": "combat-d",
+    "name": "GACOAN COMBAT D",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 39,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-e",
+    "stock_id": "combat-e",
+    "name": "GACOAN COMBAT E",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 40,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "combat-f",
+    "stock_id": "combat-f",
+    "name": "GACOAN COMBAT F",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT TAKE AWAY",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 41,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "paket-fest-a",
+    "stock_id": "paket-fest-a",
+    "name": "PAKET FEST A",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST TAKE AWAY",
+    "price": 25455,
+    "station": "packing",
+    "sort_order": 42,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "paket-fest-c",
+    "stock_id": "paket-fest-c",
+    "name": "PAKET FEST C",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST TAKE AWAY",
+    "price": 26364,
+    "station": "packing",
+    "sort_order": 43,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "mie-gacoan",
+    "stock_id": "mie-gacoan",
+    "name": "MIE GACOAN",
+    "category_id": "mie",
+    "category_title": "MIE TAKE AWAY",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 44,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "rating": 4.8,
+      "reviews": "4rb+",
+      "prepTime": "15 min",
+      "description": "Sensasi pedas manis menu ini dijamin bakal bikin kamu ketagihan. Bisa pilih tingkat kepedasan, lho!",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "mie-hompimpa",
+    "stock_id": "mie-hompimpa",
+    "name": "MIE HOMPIMPA",
+    "category_id": "mie",
+    "category_title": "MIE TAKE AWAY",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 45,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "rating": 4.8,
+      "reviews": "700+",
+      "prepTime": "15 min",
+      "description": "Menu wajib untuk para pecinta rasa pedas gurih. Makin nikmat dengan pilih sendiri tingkat kepedasannya.",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "mie-suit",
+    "stock_id": "mie-suit",
+    "name": "MIE SUIT",
+    "category_id": "mie",
+    "category_title": "MIE TAKE AWAY",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 46,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": false,
+      "rating": 4.9,
+      "reviews": "300+",
+      "prepTime": "15 min",
+      "description": "Tidak suka rasa pedas? Jangan kuatir! Sensasi gurih dan asin menu ini dijamin bikin perutmu bahagia.",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "mie-level-max",
+    "stock_id": "mie-level-max",
+    "name": "MIE LEVEL MAXX",
+    "category_id": "mie",
+    "category_title": "MIE TAKE AWAY",
+    "price": 12000,
+    "station": "wok",
+    "sort_order": 47,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Super Pedas Lv 10",
+      "description": "Sensasi mie super pedas level maksimal dengan taburan ayam cincang"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "mie-kuah-spicy",
+    "stock_id": "mie-kuah-spicy",
+    "name": "MIE KUAH SPICY",
+    "category_id": "mie",
+    "category_title": "MIE TAKE AWAY",
+    "price": 12500,
+    "station": "wok",
+    "sort_order": 48,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Kuah Kaldu Pedas Gurih",
+      "description": "Mie kenyal dengan kuah kaldu rempah pedas gurih hangat"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "pangsit-goreng",
+    "stock_id": "pangsit-goreng",
+    "name": "PANGSIT GORENG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 15000,
+    "station": "dimsum",
+    "sort_order": 49,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.9,
+      "reviews": "500+",
+      "prepTime": "15 min",
+      "description": "Paling cocok dinikmati bersama mie pedasmu. Bisa buat ngemil pas kumpul sama teman-teman juga seru kok!",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "lumpia-udang",
+    "stock_id": "lumpia-udang",
+    "name": "LUMPIA UDANG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 50,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "udang-keju",
+    "stock_id": "udang-keju",
+    "name": "UDANG KEJU",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 15000,
+    "station": "dimsum",
+    "sort_order": 51,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.9,
+      "reviews": "1rb+",
+      "prepTime": "15 min",
+      "description": "Dimsum udang renyah berbalut keju mozarella lumer di mulut. Sensasi gurih keju yang meleleh!",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "siomay",
+    "stock_id": "siomay",
+    "name": "SIOMAY",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 52,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "udang-rambutan",
+    "stock_id": "udang-rambutan",
+    "name": "UDANG RAMBUTAN",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 15000,
+    "station": "dimsum",
+    "sort_order": 53,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "800+",
+      "prepTime": "15 min",
+      "description": "Bola udang berbalut kulit pangsit krispi mekar yang gurih dan renyah di setiap gigitan.",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "dimsum-mentai",
+    "stock_id": "dimsum-mentai",
+    "name": "DIMSUM MENTAI",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 13000,
+    "station": "dimsum",
+    "sort_order": 54,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Saus Mentai Bakar (3 pcs)",
+      "description": "Dimsum kukus lembut dengan topping saus mentai gurih dibakar lumer"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "pangsit-kuah",
+    "stock_id": "pangsit-kuah",
+    "name": "PANGSIT KUAH",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM TAKE AWAY",
+    "price": 11000,
+    "station": "dimsum",
+    "sort_order": 55,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Kuah Bawang Hangat (4 pcs)",
+      "description": "Pangsit rebus lembut gurih dengan kuah kaldu bawang segar hangat"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-gobak-sodor",
+    "stock_id": "es-gobak-sodor",
+    "name": "ES GOBAK SODOR",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH TAKE AWAY",
+    "price": 12000,
+    "station": "bar",
+    "sort_order": 56,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "500+",
+      "prepTime": "10 min",
+      "description": "Minuman manis segar berisi aneka buah-buahan dan cincau.",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-petak-umpet",
+    "stock_id": "es-petak-umpet",
+    "name": "ES PETAK UMPET",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH TAKE AWAY",
+    "price": 9546,
+    "station": "bar",
+    "sort_order": 57,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-sluku-bathok",
+    "stock_id": "es-sluku-bathok",
+    "name": "ES SLUKU BATHOK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH TAKE AWAY",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 58,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-teklek",
+    "stock_id": "es-teklek",
+    "name": "ES TEKLEK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH TAKE AWAY",
+    "price": 10000,
+    "station": "bar",
+    "sort_order": 59,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "300+",
+      "prepTime": "10 min",
+      "description": "Kesegaran buah asli dengan perpaduan sirup dan susu yang nikmat.",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "orange",
+    "stock_id": "orange",
+    "name": "ORANGE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 8000,
+    "station": "bar",
+    "sort_order": 60,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "100+",
+      "prepTime": "5 min",
+      "description": "Minuman rasa jeruk segar dingin yang manis dan menyegarkan.",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "lemon-tea",
+    "stock_id": "lemon-tea",
+    "name": "LEMON TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 9500,
+    "station": "bar",
+    "sort_order": 61,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "100+",
+      "prepTime": "5 min",
+      "description": "Perpaduan teh segar dan rasa lemon asam manis yang nikmat.",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "teh-tarik",
+    "stock_id": "teh-tarik",
+    "name": "TEH TARIK",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 6819,
+    "station": "bar",
+    "sort_order": 62,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "vanilla-latte",
+    "stock_id": "vanilla-latte",
+    "name": "VANILLA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 63,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "thai-green-tea",
+    "stock_id": "thai-green-tea",
+    "name": "THAI GREEN TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 64,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "thai-tea",
+    "stock_id": "thai-tea",
+    "name": "THAI TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 7727,
+    "station": "bar",
+    "sort_order": 65,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "air-mineral",
+    "stock_id": "air-mineral",
+    "name": "AIR MINERAL",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 6501,
+    "station": "bar",
+    "sort_order": 66,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "50+",
+      "prepTime": "5 min",
+      "description": "Air mineral botol kemasan dingin pelepas dahaga.",
+      "canCustom": false
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "tea",
+    "stock_id": "tea",
+    "name": "TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 6501,
+    "station": "bar",
+    "sort_order": 67,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "rating": 4.8,
+      "reviews": "300+",
+      "prepTime": "5 min",
+      "description": "Teh manis dingin segar racikan pas untuk mendampingi mie pedas.",
+      "canCustom": true
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-coklat-gacoan",
+    "stock_id": "es-coklat-gacoan",
+    "name": "ES COKLAT GACOAN",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 9000,
+    "station": "bar",
+    "sort_order": 68,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Coklat Pekat Dingin Segar",
+      "description": "Minuman coklat premium kental dingin segar penghilang dahaga"
+    }
+  },
+  {
+    "channel": "takeaway",
+    "code": "es-matcha-latte",
+    "stock_id": "es-matcha-latte",
+    "name": "ES MATCHA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES TAKE AWAY",
+    "price": 10500,
+    "station": "bar",
+    "sort_order": 69,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Matcha Creamy Dingin",
+      "description": "Perpaduan matcha jepang asli dengan susu segar creamy dingin mantap"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-a",
+    "stock_id": "combat-a",
+    "name": "GACOAN COMBAT A",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 70,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Gacoan Lv 1 , 1 Udang keju , 1 Udang Rambutan dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-b",
+    "stock_id": "combat-b",
+    "name": "GACOAN COMBAT B",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 71,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "2 Mie Hompimpa Lv 1 , 1 Udang keju , 1 Siomay dan 2 Lemon Tea Ice",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-spesial",
+    "stock_id": "combat-spesial",
+    "name": "COMBAT SPESIAL",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 55000,
+    "station": "packing",
+    "sort_order": 72,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "heroImage": "/images/silver-mountain-placeholder.svg",
+      "description": "Paket kombo spesial 2 Mie + 2 Dimsum Mentai + 2 Minum",
+      "shortDesc": "Paket Kombo Lengkap Baru",
+      "isCombo": true
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-c",
+    "stock_id": "combat-c",
+    "name": "GACOAN COMBAT C",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 73,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-d",
+    "stock_id": "combat-d",
+    "name": "GACOAN COMBAT D",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 74,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-e",
+    "stock_id": "combat-e",
+    "name": "GACOAN COMBAT E",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 75,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "combat-f",
+    "stock_id": "combat-f",
+    "name": "GACOAN COMBAT F",
+    "category_id": "gacoan-combat",
+    "category_title": "GACOAN COMBAT DINE IN",
+    "price": 50000,
+    "station": "packing",
+    "sort_order": 76,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "paket-fest-a",
+    "stock_id": "paket-fest-a",
+    "name": "PAKET FEST A",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST DINE IN",
+    "price": 25455,
+    "station": "packing",
+    "sort_order": 77,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "paket-fest-c",
+    "stock_id": "paket-fest-c",
+    "name": "PAKET FEST C",
+    "category_id": "paket-fest",
+    "category_title": "PAKET FEST DINE IN",
+    "price": 26364,
+    "station": "packing",
+    "sort_order": 78,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "mie-gacoan",
+    "stock_id": "mie-gacoan",
+    "name": "MIE GACOAN",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 79,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "mie-hompimpa",
+    "stock_id": "mie-hompimpa",
+    "name": "MIE HOMPIMPA",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 80,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "mie-suit",
+    "stock_id": "mie-suit",
+    "name": "MIE SUIT",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 10455,
+    "station": "wok",
+    "sort_order": 81,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": false
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "mie-level-max",
+    "stock_id": "mie-level-max",
+    "name": "MIE LEVEL MAXX",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 12000,
+    "station": "wok",
+    "sort_order": 82,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Super Pedas Lv 10",
+      "description": "Sensasi mie super pedas level maksimal dengan taburan ayam cincang"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "mie-kuah-spicy",
+    "stock_id": "mie-kuah-spicy",
+    "name": "MIE KUAH SPICY",
+    "category_id": "mie",
+    "category_title": "MIE DINE IN",
+    "price": 12500,
+    "station": "wok",
+    "sort_order": 83,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "canCustomLevel": true,
+      "shortDesc": "Kuah Kaldu Pedas Gurih",
+      "description": "Mie kenyal dengan kuah kaldu rempah pedas gurih hangat"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "pangsit-goreng",
+    "stock_id": "pangsit-goreng",
+    "name": "PANGSIT GORENG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 10455,
+    "station": "dimsum",
+    "sort_order": 84,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "lumpia-udang",
+    "stock_id": "lumpia-udang",
+    "name": "LUMPIA UDANG",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 85,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "udang-keju",
+    "stock_id": "udang-keju",
+    "name": "UDANG KEJU",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 86,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "siomay",
+    "stock_id": "siomay",
+    "name": "SIOMAY",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 87,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "udang-rambutan",
+    "stock_id": "udang-rambutan",
+    "name": "UDANG RAMBUTAN",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 9546,
+    "station": "dimsum",
+    "sort_order": 88,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "dimsum-mentai",
+    "stock_id": "dimsum-mentai",
+    "name": "DIMSUM MENTAI",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 13000,
+    "station": "dimsum",
+    "sort_order": 89,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Saus Mentai Bakar (3 pcs)",
+      "description": "Dimsum kukus lembut dengan topping saus mentai gurih dibakar lumer"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "pangsit-kuah",
+    "stock_id": "pangsit-kuah",
+    "name": "PANGSIT KUAH",
+    "category_id": "dimsum",
+    "category_title": "DIMSUM DINE IN",
+    "price": 11000,
+    "station": "dimsum",
+    "sort_order": 90,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Kuah Bawang Hangat (4 pcs)",
+      "description": "Pangsit rebus lembut gurih dengan kuah kaldu bawang segar hangat"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-gobak-sodor",
+    "stock_id": "es-gobak-sodor",
+    "name": "ES GOBAK SODOR",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 9546,
+    "station": "bar",
+    "sort_order": 91,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-petak-umpet",
+    "stock_id": "es-petak-umpet",
+    "name": "ES PETAK UMPET",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 9546,
+    "station": "bar",
+    "sort_order": 92,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-sluku-bathok",
+    "stock_id": "es-sluku-bathok",
+    "name": "ES SLUKU BATHOK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 93,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-teklek",
+    "stock_id": "es-teklek",
+    "name": "ES TEKLEK",
+    "category_id": "es-buah",
+    "category_title": "ES BUAH DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 94,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "orange",
+    "stock_id": "orange",
+    "name": "ORANGE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 5455,
+    "station": "bar",
+    "sort_order": 95,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "lemon-tea",
+    "stock_id": "lemon-tea",
+    "name": "LEMON TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 6364,
+    "station": "bar",
+    "sort_order": 96,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "teh-tarik",
+    "stock_id": "teh-tarik",
+    "name": "TEH TARIK",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 6819,
+    "station": "bar",
+    "sort_order": 97,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "vanilla-latte",
+    "stock_id": "vanilla-latte",
+    "name": "VANILLA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 98,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "thai-green-tea",
+    "stock_id": "thai-green-tea",
+    "name": "THAI GREEN TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 8637,
+    "station": "bar",
+    "sort_order": 99,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "thai-tea",
+    "stock_id": "thai-tea",
+    "name": "THAI TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 7727,
+    "station": "bar",
+    "sort_order": 100,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "air-mineral",
+    "stock_id": "air-mineral",
+    "name": "AIR MINERAL",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 4091,
+    "station": "bar",
+    "sort_order": 101,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "tea",
+    "stock_id": "tea",
+    "name": "TEA",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 4091,
+    "station": "bar",
+    "sort_order": 102,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-coklat-gacoan",
+    "stock_id": "es-coklat-gacoan",
+    "name": "ES COKLAT GACOAN",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 9000,
+    "station": "bar",
+    "sort_order": 103,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Coklat Pekat Dingin Segar",
+      "description": "Minuman coklat premium kental dingin segar penghilang dahaga"
+    }
+  },
+  {
+    "channel": "kios",
+    "code": "es-matcha-latte",
+    "stock_id": "es-matcha-latte",
+    "name": "ES MATCHA LATTE",
+    "category_id": "beverages",
+    "category_title": "BEVERAGES DINE IN",
+    "price": 10500,
+    "station": "bar",
+    "sort_order": 104,
+    "details": {
+      "image": "/images/silver-mountain-placeholder.svg",
+      "shortDesc": "Matcha Creamy Dingin",
+      "description": "Perpaduan matcha jepang asli dengan susu segar creamy dingin mantap"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "mie-1",
+    "stock_id": "mie-gacoan",
+    "name": "Mie Elon Musk Lv 1",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 105,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas manis level 1 dengan taburan ayam cincang & pangsit goreng",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "mie-2",
+    "stock_id": "mie-gacoan",
+    "name": "Mie Elon Musk Lv 2",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 106,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas manis level 2 sensasi pedas gurih pas di lidah",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "mie-3",
+    "stock_id": "mie-gacoan",
+    "name": "Mie Elon Musk Lv 3",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 107,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas manis level 3 untuk penikmat pedas mantap",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "mie-6",
+    "stock_id": "mie-gacoan",
+    "name": "Mie Elon Musk Lv 6",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 16500,
+    "station": "wok",
+    "sort_order": 108,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas manis level 6 dengan cabai segar melimpah",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "mie-8",
+    "stock_id": "mie-gacoan",
+    "name": "Mie Elon Musk Lv 8",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 17500,
+    "station": "wok",
+    "sort_order": 109,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Level tertinggi ekstra pedas membakar lidah juara",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "hom-1",
+    "stock_id": "mie-hompimpa",
+    "name": "Mie Hompimpa Lv 1",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 110,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas asin gurih level 1 dengan rempah istimewa",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "hom-2",
+    "stock_id": "mie-hompimpa",
+    "name": "Mie Hompimpa Lv 2",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 111,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas asin gurih level 2 aroma sedap gurih nagih",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "hom-3",
+    "stock_id": "mie-hompimpa",
+    "name": "Mie Hompimpa Lv 3",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 15000,
+    "station": "wok",
+    "sort_order": 112,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie pedas asin level 3 dengan taburan ayam gurih melimpah",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "suit-1",
+    "stock_id": "mie-suit",
+    "name": "Mie Suit Gurih",
+    "category_id": "mie",
+    "category_title": "Mie Pedas",
+    "price": 14000,
+    "station": "wok",
+    "sort_order": 113,
+    "details": {
+      "category": "mie",
+      "categoryName": "Mie Pedas",
+      "desc": "Mie original gurih tidak pedas, cocok untuk anak & penikmat gurih",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "dim-1",
+    "stock_id": "udang-keju",
+    "name": "Udang Keju Goreng",
+    "category_id": "dimsum",
+    "category_title": "Dimsum",
+    "price": 12000,
+    "station": "dimsum",
+    "sort_order": 114,
+    "details": {
+      "category": "dimsum",
+      "categoryName": "Dimsum",
+      "desc": "Dimsum udang isi keju lumer renyah di luar lembut di dalam (3 pcs)",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "dim-2",
+    "stock_id": "udang-rambutan",
+    "name": "Udang Rambutan",
+    "category_id": "dimsum",
+    "category_title": "Dimsum",
+    "price": 12000,
+    "station": "dimsum",
+    "sort_order": 115,
+    "details": {
+      "category": "dimsum",
+      "categoryName": "Dimsum",
+      "desc": "Bola udang berbalut kulit renyah kriuk khas (3 pcs)",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "dim-3",
+    "stock_id": "pangsit-goreng",
+    "name": "Pangsit Goreng Renyah",
+    "category_id": "dimsum",
+    "category_title": "Dimsum",
+    "price": 11000,
+    "station": "dimsum",
+    "sort_order": 116,
+    "details": {
+      "category": "dimsum",
+      "categoryName": "Dimsum",
+      "desc": "Pangsit goreng isi olahan ayam cincang gurih renyah (3 pcs)",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "dim-4",
+    "stock_id": "siomay",
+    "name": "Siomay Ayam Kukus",
+    "category_id": "dimsum",
+    "category_title": "Dimsum",
+    "price": 11000,
+    "station": "dimsum",
+    "sort_order": 117,
+    "details": {
+      "category": "dimsum",
+      "categoryName": "Dimsum",
+      "desc": "Siomay ayam lembut dikukus hangat dengan saus celup spesial (3 pcs)",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "dim-5",
+    "stock_id": "lumpia-udang",
+    "name": "Lumpia Udang",
+    "category_id": "dimsum",
+    "category_title": "Dimsum",
+    "price": 12000,
+    "station": "dimsum",
+    "sort_order": 118,
+    "details": {
+      "category": "dimsum",
+      "categoryName": "Dimsum",
+      "desc": "Lumpia isi udang padat dengan aroma minyak wijen (3 pcs)",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-1",
+    "stock_id": "lemon-tea",
+    "name": "Es Lemon Tea Dingin",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 7000,
+    "station": "bar",
+    "sort_order": 119,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Teh perasan lemon segar dingin pelega pedas seketika",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-2",
+    "stock_id": "es-gobak-sodor",
+    "name": "Es Gobak Sodor",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 10000,
+    "station": "bar",
+    "sort_order": 120,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Minuman es buah manis segar dengan potongan buah dan cincau",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-3",
+    "stock_id": "es-petak-umpet",
+    "name": "Es Petak Umpet",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 10000,
+    "station": "bar",
+    "sort_order": 121,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Es mocktail tropis segar dengan sirup spesial dan nata de coco",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-4",
+    "stock_id": "es-sluku-bathok",
+    "name": "Es Sluku Bathok",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 10000,
+    "station": "bar",
+    "sort_order": 122,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Es susu segar manis legit penghilang dahaga sempurna",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-5",
+    "stock_id": "tea",
+    "name": "Es Teh Manis",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 5000,
+    "station": "bar",
+    "sort_order": 123,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Teh melati seduh segar manis dingin",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-6",
+    "stock_id": "teh-tarik",
+    "name": "Teh Tarik Dingin",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 9000,
+    "station": "bar",
+    "sort_order": 124,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Teh tarik creamy berbuih lembut manis harum",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-7",
+    "stock_id": "thai-tea",
+    "name": "Thai Tea Dingin",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 9000,
+    "station": "bar",
+    "sort_order": 125,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Thai tea otentik khas dengan susu kental manis gurih",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "bev-8",
+    "stock_id": "air-mineral",
+    "name": "Air Mineral Botol",
+    "category_id": "minuman",
+    "category_title": "Minuman Es",
+    "price": 4000,
+    "station": "bar",
+    "sort_order": 126,
+    "details": {
+      "category": "minuman",
+      "categoryName": "Minuman Es",
+      "desc": "Air mineral botol 600ml dingin higienis",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "cmb-1",
+    "stock_id": "cmb-1",
+    "name": "Combat A (2 Mie + 1 Udang Keju + 2 Tea)",
+    "category_id": "combat",
+    "category_title": "Combat Combo",
+    "price": 48000,
+    "station": "packing",
+    "sort_order": 127,
+    "details": {
+      "category": "combat",
+      "categoryName": "Combat Combo",
+      "desc": "Bundle hemat 2 Mie Elon Musk + 1 Udang Keju + 2 Es Lemon Tea",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "cmb-2",
+    "stock_id": "cmb-2",
+    "name": "Combat B (2 Hompimpa + 1 Pangsit + 2 Tea)",
+    "category_id": "combat",
+    "category_title": "Combat Combo",
+    "price": 46000,
+    "station": "packing",
+    "sort_order": 128,
+    "details": {
+      "category": "combat",
+      "categoryName": "Combat Combo",
+      "desc": "Bundle hemat 2 Mie Hompimpa + 1 Pangsit Goreng + 2 Es Lemon Tea",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "cmb-3",
+    "stock_id": "cmb-3",
+    "name": "Combat C (2 Mie Lv 2 + 1 Siomay + 2 Gobak)",
+    "category_id": "combat",
+    "category_title": "Combat Combo",
+    "price": 52000,
+    "station": "packing",
+    "sort_order": 129,
+    "details": {
+      "category": "combat",
+      "categoryName": "Combat Combo",
+      "desc": "Bundle hemat 2 Mie Lv 2 + 1 Siomay Ayam + 2 Es Gobak Sodor",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "fst-1",
+    "stock_id": "fst-1",
+    "name": "Paket Fest Mantap",
+    "category_id": "fest",
+    "category_title": "Paket Fest",
+    "price": 35000,
+    "station": "packing",
+    "sort_order": 130,
+    "details": {
+      "category": "fest",
+      "categoryName": "Paket Fest",
+      "desc": "Paket lengkap 1 Mie Pedas + 1 Udang Keju + 1 Es Gobak Sodor",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "fst-2",
+    "stock_id": "fst-2",
+    "name": "Paket Fest Ramean",
+    "category_id": "fest",
+    "category_title": "Paket Fest",
+    "price": 75000,
+    "station": "packing",
+    "sort_order": 131,
+    "details": {
+      "category": "fest",
+      "categoryName": "Paket Fest",
+      "desc": "Paket ramean 3 Mie Pedas + 2 Dimsum Pilihan + 3 Minuman Es",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "snk-1",
+    "stock_id": "snk-1",
+    "name": "Kerupuk Pangsit Ekstra",
+    "category_id": "snack",
+    "category_title": "Ekstra Snack",
+    "price": 5000,
+    "station": "dimsum",
+    "sort_order": 132,
+    "details": {
+      "category": "snack",
+      "categoryName": "Ekstra Snack",
+      "desc": "Tambahan kerupuk pangsit renyah gurih 1 porsi",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  },
+  {
+    "channel": "pos",
+    "code": "snk-2",
+    "stock_id": "snk-2",
+    "name": "Saus Sambal Ekstra",
+    "category_id": "snack",
+    "category_title": "Ekstra Snack",
+    "price": 3000,
+    "station": "dimsum",
+    "sort_order": 133,
+    "details": {
+      "category": "snack",
+      "categoryName": "Ekstra Snack",
+      "desc": "Cup saus sambal khas ekstra pedas gurih",
+      "image": "/images/silver-mountain-placeholder.svg"
+    }
+  }
+]

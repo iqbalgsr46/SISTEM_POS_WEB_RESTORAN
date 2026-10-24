@@ -6,15 +6,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "node scripts/clean-project.js",
+    "test": "node scripts/backend.cjs test",
+    "dev:api": "node scripts/backend.cjs serve --host=127.0.0.1 --port=8000",
+    "db:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-local-mysql.ps1",
+    "db:migrate": "node scripts/backend.cjs migrate --seed",
+    "test:pages": "node scripts/test-e2e.js",
+    "test:integration": "node scripts/test-live-integration.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lenis": "^1.3.26",
     "lucide-react": "^0.475.0",
     "next": "^14.2.24",
+    "next-auth": "^4.24.15",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.35.5",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

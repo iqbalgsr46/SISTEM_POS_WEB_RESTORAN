@@ -1,111 +1,384 @@
-# Redesign Website Mie Gacoan Cikarang
+# Mie Gacoan Cikarang - Restaurant Omnichannel System
 
-Proyek redesign modern, berenergi tinggi, dan responsif untuk website **Mie Gacoan Cikarang**, diterjemahkan langsung dari referensi visual landing page pop-diner/streetwear restaurant (*CRISPR*) dengan standar kualitas visual matang dan arsitektur kode frontend profesional.
-
----
-
-## 🚀 Fitur Utama & Struktur Halaman
-
-1. **Top Bar & Sticky Header**:
-   - Logo ikonik Gacoan Cikarang dengan micro-animation hover.
-   - Navigasi deskopt & responsif mobile drawer.
-   - Tombol Pill CTA *"Pesan Online"*.
-
-2. **Hero Section (Centerpiece Showcase)**:
-   - Headline tipografi ultra-bold all-caps: *"PEDAS GURIH, CRISPY MIE GACOAN MENU"*.
-   - Foto hero produk porsi komplit melayang (*floating depth effect*) dengan bayangan realistis.
-   - Badge stempel sirkular 100% Halal MUI & Level 0-8.
-   - Social proof metrik (Rating 4.8/5.0 dari 12.400+ ulasan).
-
-3. **Infinite Running Marquee Tickers**:
-   - Pita banner hitam pekat melintang dengan running text promo & slogan Gacoan.
-
-4. **Featured 3-Column Showcase Cards**:
-   - 3 menu pilar: *Mie Gacoan (Manis Gurih)*, *Mie Hompimpa (Asin Nampol)*, dan *Udang Keju Lumer*.
-   - Kartu oranye-amber tebal dengan neo-brutalist pop shadows.
-
-5. **Indulgence Combo Experience**:
-   - Porsi besar kombo favorit (Mie + Dimsum Crispy + Es Gobak Sodor Dingin).
-
-6. **Interactive Menu Catalog**:
-   - Filter tab kategori (*Semua, Menu Mie, Dimsum, Minuman Es*).
-   - Panduan Level Pedas (*Level 0 Suit hingga Level 8 Sultan*).
-
-7. **Social Proof / Customer Stories**:
-   - 3 kartu potret vertikal (*squircle 4:5*) dengan ulasan nyata pelanggan setia Cikarang.
-
-8. **Outlet Resmi Cikarang**:
-   - Informasi detail Outlet Jababeka (Cikarang Utara) & Outlet Lippo Cikarang (Cikarang Selatan).
-   - Jam operasional, fasilitas, nomor telepon, dan rute Google Maps terverifikasi.
-
-9. **Mega Typography Footer**:
-   - Tagline *"PEDAS MAKSIMAL, HARGA BERSAHABAT, CIKARANG."*
-   - Navigasi 3 kolom (Menu, Outlet, Socials).
-   - Wordmark tipografi raksasa *"MIE GACOAN CIKARANG"*.
+Sistem manajemen restoran terpadu berbasis web untuk outlet Mie Gacoan Cikarang.
+Dibangun menggunakan Next.js (frontend) dan Laravel (backend API), mencakup alur
+pemesanan pelanggan, manajemen dapur, kasir POS, hingga panel administrasi.
 
 ---
 
-## 🛠️ Teknologi & Standar Kode
+## Daftar Isi
 
-- **Framework**: Next.js 14 (App Router)
-- **Bahasa**: JavaScript (`.jsx` untuk komponen React, `.js` untuk data dan utilitas)
-- **Styling**: Tailwind CSS dengan kustomisasi tema Gacoan (Warna kuning hangat, aksen cabai merah, dan pop shadows)
-- **Ikonografi**: Lucide React
-- **Mobile First**: Diuji pada resolusi 360px, 390px, 768px, 1024px, hingga 1440px+
-
----
-
-## 📦 Cara Menjalankan Proyek
-
-1. **Jalankan Development Server**:
-   ```bash
-   npm run dev
-   ```
-   Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
-
-2. **Build untuk Production**:
-   ```bash
-   npm run build
-   npm run start
-   ```
-
-3. **Pemeriksaan Linter**:
-   ```bash
-   npm run lint
-   ```
+- [Arsitektur Sistem](#arsitektur-sistem)
+- [Tech Stack](#tech-stack)
+- [Halaman dan Fitur](#halaman-dan-fitur)
+- [Alur Pemesanan](#alur-pemesanan)
+- [API Endpoints](#api-endpoints)
+- [Struktur Direktori](#struktur-direktori)
+- [Instalasi dan Menjalankan](#instalasi-dan-menjalankan)
+- [Environment Variables](#environment-variables)
+- [Autentikasi](#autentikasi)
+- [Scripts](#scripts)
 
 ---
 
-## 📁 Struktur Folder
+## Arsitektur Sistem
 
 ```
-src/
-├── app/
-│   ├── globals.css         # Styling global, custom font, dan utilitas marquee
-│   ├── layout.jsx          # Root layout, Google Font Outfit, dan SEO Metadata
-│   └── page.jsx            # Penyusun section halaman utama
-├── components/
-│   ├── layout/
-│   │   ├── marquee-banner.jsx   # Banner teks berjalan tanpa henti
-│   │   ├── site-footer.jsx      # Mega footer dengan brand wordmark
-│   │   └── site-header.jsx      # Sticky navbar dan mobile drawer
-│   └── ui/
-│       ├── badge.jsx            # Komponen badge stempel / label status
-│       ├── button.jsx           # Komponen pill button berdesain pop
-│       └── order-modal.jsx      # Modal simulasi pemesanan online / outlet
-├── data/
-│   └── restaurant-data.js  # Data menu terpusat, outlet, ulasan, & mitra
-├── features/
-│   └── home/
-│       └── components/
-│           ├── featured-showcase-section.jsx
-│           ├── hero-section.jsx
-│           ├── indulgence-combo-section.jsx
-│           ├── menu-catalog-section.jsx
-│           ├── outlet-location-section.jsx
-│           └── story-community-section.jsx
-├── lib/
-│   └── utils.js            # Fungsi helper format mata uang dan cn()
-docs/
-└── design-brief.md         # Analisis visual komparatif referensi desain
+Pelanggan (Browser / Kios)
+        |
+        v
+  Next.js Frontend (port 3000)
+        |
+        v
+  Next.js API Routes (/api/*)
+        |
+        v
+  Laravel Backend API (port 8000)
+        |
+        v
+  MySQL Database
 ```
+
+Frontend Next.js melayani seluruh antarmuka pengguna dan meneruskan request data
+ke backend Laravel melalui API Routes internal. Backend Laravel mengelola database
+MySQL untuk menyimpan data menu, pesanan, stok, dan meja.
+
+---
+
+## Tech Stack
+
+| Layer     | Teknologi                                      |
+|-----------|-------------------------------------------------|
+| Frontend  | Next.js 14, React 18, Tailwind CSS              |
+| Backend   | Laravel 11, PHP 8.2                              |
+| Database  | MySQL 8                                          |
+| Auth      | NextAuth.js (Google OAuth + Credentials)         |
+| Icons     | Google Material Symbols (SVG)                    |
+| Styling   | Tailwind CSS, CSS Modules                        |
+
+---
+
+## Halaman dan Fitur
+
+### Halaman Publik
+
+| Rute          | Deskripsi                                                              |
+|---------------|------------------------------------------------------------------------|
+| `/`           | Landing page utama restoran dengan hero section, katalog menu, lokasi outlet, dan promo. |
+| `/login`      | Halaman login untuk staf (Google OAuth atau kredensial manual). Mendukung redirect setelah login. |
+
+### Halaman Pemesanan Pelanggan
+
+| Rute          | Deskripsi                                                              |
+|---------------|------------------------------------------------------------------------|
+| `/dine-in`    | Pemesanan dine-in via scan QR meja. Menampilkan menu lengkap dengan filter kategori, kustomisasi level pedas, pilihan varian, dan keranjang belanja terintegrasi. Akses melalui parameter `?meja=07`. |
+| `/takeaway`   | Pemesanan bawa pulang (takeaway). Antarmuka serupa dine-in dengan alur checkout yang disesuaikan untuk pesanan bungkus. |
+| `/kios`       | Mode kios layar sentuh untuk pemesanan mandiri di outlet. Tampilan fullscreen tanpa navigasi browser. |
+| `/cart`       | Halaman keranjang belanja yang menampilkan ringkasan item pesanan, subtotal, dan opsi lanjut ke checkout. |
+| `/checkout`   | Halaman checkout dengan pilihan metode pembayaran (tunai / QRIS), ringkasan pesanan, dan konfirmasi. |
+
+### Halaman Operasional (Membutuhkan Login)
+
+| Rute          | Deskripsi                                                              |
+|---------------|------------------------------------------------------------------------|
+| `/kitchen`    | Kitchen Display System (KDS) untuk dapur. Menampilkan tiket pesanan aktif dengan filter stasiun masak (Wok Mie, Dimsum, Bar Minuman), indikator waktu SLA, dan tombol selesai masak. Dilengkapi sidebar navigasi dan notifikasi suara. |
+| `/pos`        | Point of Sale untuk kasir. Membuat pesanan manual, memilih meja, dan memproses pembayaran. |
+| `/pos/login`  | Halaman login khusus kasir POS. |
+| `/tables`     | Manajemen status meja restoran. Menampilkan denah meja dengan status (kosong, terisi, dipesan) dan opsi mengubah status. |
+| `/admin`      | Panel administrasi untuk mengelola menu, stok bahan, laporan pesanan, dan konfigurasi outlet. |
+| `/alur`       | Halaman dokumentasi visual alur sistem, menampilkan diagram dan penjelasan flow pemesanan dari pelanggan hingga dapur. |
+
+---
+
+## Alur Pemesanan
+
+### 1. Dine-In (Makan di Tempat)
+
+```
+Pelanggan scan QR di meja
+        |
+        v
+Buka /dine-in?meja=07
+        |
+        v
+Pilih menu, atur level pedas, pilih varian
+        |
+        v
+Tambah ke keranjang -> /cart
+        |
+        v
+Checkout -> /checkout
+        |
+        v
+Pilih metode bayar (Tunai / QRIS)
+        |
+        v
+Pesanan masuk ke sistem
+        |
+        v
+Tiket muncul di /kitchen (KDS)
+        |
+        v
+Dapur proses dan tandai selesai
+        |
+        v
+Status pesanan berubah menjadi READY
+```
+
+### 2. Takeaway (Bawa Pulang)
+
+```
+Pelanggan buka /takeaway
+        |
+        v
+Pilih menu dan kustomisasi
+        |
+        v
+Tambah ke keranjang -> checkout
+        |
+        v
+Input nama pelanggan
+        |
+        v
+Pesanan masuk ke antrean dapur
+        |
+        v
+Pelanggan menunggu nomor tiket dipanggil
+```
+
+### 3. POS (Kasir Manual)
+
+```
+Kasir login di /pos/login
+        |
+        v
+Buat pesanan baru di /pos
+        |
+        v
+Pilih meja dan tambah item menu
+        |
+        v
+Proses pembayaran
+        |
+        v
+Tiket dikirim ke /kitchen
+```
+
+---
+
+## API Endpoints
+
+### Next.js API Routes (Internal Proxy)
+
+| Method | Endpoint               | Deskripsi                       |
+|--------|------------------------|---------------------------------|
+| GET    | `/api/menu`            | Mengambil daftar menu           |
+| GET    | `/api/orders`          | Mengambil daftar pesanan        |
+| POST   | `/api/orders`          | Membuat pesanan baru            |
+| PATCH  | `/api/orders`          | Memperbarui status pesanan      |
+| GET    | `/api/stock`           | Mengambil data stok             |
+| PATCH  | `/api/stock`           | Memperbarui stok                |
+| GET    | `/api/tables`          | Mengambil daftar meja           |
+| PATCH  | `/api/tables`          | Memperbarui status meja         |
+| *      | `/api/auth/[...]`      | NextAuth.js authentication      |
+
+### Laravel Backend API
+
+| Method | Endpoint               | Controller          | Deskripsi                       |
+|--------|------------------------|----------------------|---------------------------------|
+| GET    | `/api/menu`            | MenuController       | Daftar menu restoran            |
+| GET    | `/api/orders`          | OrderController      | Daftar pesanan (filter status)  |
+| POST   | `/api/orders`          | OrderController      | Simpan pesanan baru             |
+| PATCH  | `/api/orders`          | OrderController      | Update status pesanan           |
+| GET    | `/api/stock`           | StockController      | Daftar stok bahan               |
+| PATCH  | `/api/stock`           | StockController      | Update jumlah stok              |
+| GET    | `/api/tables`          | TableController      | Daftar meja dan statusnya       |
+| PATCH  | `/api/tables`          | TableController      | Update status meja              |
+
+---
+
+## Struktur Direktori
+
+```
+.
+├── backend/                    # Laravel backend API
+│   ├── app/
+│   │   ├── Http/Controllers/   # MenuController, OrderController, dll.
+│   │   └── Models/             # MenuItem, Order, OrderItem, RestaurantTable, Stock
+│   ├── database/
+│   │   └── migrations/         # Skema tabel database
+│   ├── routes/
+│   │   └── api.php             # Definisi route API
+│   └── .env.example            # Template konfigurasi backend
+│
+├── public/
+│   ├── icons/                  # Ikon SVG Google Material Symbols
+│   ├── images/                 # Gambar menu, hero, promo, dll.
+│   └── pos/                    # Aset halaman POS
+│
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── admin/              # Panel admin
+│   │   ├── alur/               # Dokumentasi alur sistem
+│   │   ├── api/                # API Routes (proxy ke Laravel + NextAuth)
+│   │   ├── cart/               # Keranjang belanja
+│   │   ├── checkout/           # Halaman checkout
+│   │   ├── dine-in/            # Pemesanan dine-in
+│   │   ├── kios/               # Mode kios
+│   │   ├── kitchen/            # Kitchen Display System
+│   │   ├── login/              # Halaman login
+│   │   ├── pos/                # Point of Sale kasir
+│   │   ├── tables/             # Manajemen meja
+│   │   ├── takeaway/           # Pemesanan takeaway
+│   │   ├── globals.css         # Stylesheet global
+│   │   ├── layout.jsx          # Root layout
+│   │   └── page.jsx            # Landing page
+│   │
+│   ├── components/
+│   │   ├── layout/             # Header, footer, marquee banner
+│   │   ├── providers/          # AuthProvider, SmoothScrollProvider
+│   │   └── ui/                 # Badge, Button, OrderModal
+│   │
+│   ├── data/                   # Data statis (menu, restoran, takeaway, dine-in)
+│   ├── features/               # Feature modules (home sections)
+│   └── lib/                    # Utilitas (backend-proxy, notifications, dll.)
+│
+├── scripts/                    # Script pengembangan dan testing
+├── .env.example                # Template environment variables
+├── .gitignore
+├── next.config.mjs
+├── tailwind.config.js
+└── package.json
+```
+
+---
+
+## Instalasi dan Menjalankan
+
+### Prasyarat
+
+- Node.js 18 atau lebih baru
+- PHP 8.2 dengan Composer
+- MySQL 8
+- Git
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/iqbalgsr46/Mie-Gacoan-Cikarang.git
+cd Mie-Gacoan-Cikarang
+```
+
+### 2. Setup Frontend (Next.js)
+
+```bash
+npm install
+cp .env.example .env.local
+```
+
+Edit `.env.local` dan isi nilai yang diperlukan (lihat bagian [Environment Variables](#environment-variables)).
+
+### 3. Setup Backend (Laravel)
+
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Edit `backend/.env` dan sesuaikan kredensial database.
+
+### 4. Setup Database
+
+```bash
+# Pastikan MySQL berjalan, lalu jalankan migrasi:
+cd backend
+php artisan migrate --seed
+```
+
+Atau gunakan script bawaan:
+
+```bash
+# Dari root project
+npm run db:start     # Jalankan MySQL lokal (Docker)
+npm run db:migrate   # Jalankan migrasi dan seeder
+```
+
+### 5. Jalankan Aplikasi
+
+```bash
+# Terminal 1 - Backend Laravel
+npm run dev:api
+
+# Terminal 2 - Frontend Next.js
+npm run dev
+```
+
+Aplikasi tersedia di `http://localhost:3000`.
+
+---
+
+## Environment Variables
+
+### Frontend (.env.local)
+
+| Variable               | Deskripsi                                    | Contoh                                      |
+|------------------------|----------------------------------------------|---------------------------------------------|
+| `LARAVEL_API_URL`      | URL backend Laravel (server-side only)       | `http://127.0.0.1:8000/api`                 |
+| `NEXTAUTH_URL`         | URL aplikasi Next.js                         | `http://localhost:3000`                      |
+| `NEXTAUTH_SECRET`      | Secret key untuk NextAuth.js                 | Hasil dari `openssl rand -hex 32`           |
+| `GOOGLE_CLIENT_ID`     | Client ID Google OAuth                       | Dari Google Cloud Console                   |
+| `GOOGLE_CLIENT_SECRET` | Client Secret Google OAuth                   | Dari Google Cloud Console                   |
+| `NEXT_PUBLIC_APP_NAME` | Nama aplikasi (tampil di browser)            | `Mie Gacoan Cikarang`                       |
+| `NEXT_PUBLIC_STORE_LOCATION` | Lokasi outlet                          | `Cikarang, Jawa Barat`                      |
+
+### Backend (backend/.env)
+
+| Variable       | Deskripsi                  | Contoh                    |
+|----------------|----------------------------|---------------------------|
+| `APP_KEY`      | Laravel application key    | Hasil `php artisan key:generate` |
+| `DB_HOST`      | Host database MySQL        | `127.0.0.1`               |
+| `DB_PORT`      | Port database MySQL        | `3306`                    |
+| `DB_DATABASE`  | Nama database              | `mie_elon_musk`           |
+| `DB_USERNAME`  | Username database          | `root`                    |
+| `DB_PASSWORD`  | Password database          | Sesuaikan                 |
+
+---
+
+## Autentikasi
+
+Sistem menggunakan NextAuth.js dengan dua provider:
+
+1. **Google OAuth** - Login menggunakan akun Google. Memerlukan konfigurasi
+   Google Cloud Console dengan Authorized redirect URI:
+   `http://localhost:3000/api/auth/callback/google`
+
+2. **Credentials** - Login manual dengan username dan password untuk staf
+   kasir dan dapur.
+
+Halaman yang memerlukan login (`/kitchen`, `/pos`, `/admin`, `/tables`)
+akan otomatis mengarahkan pengguna ke `/login` jika belum terautentikasi.
+
+---
+
+## Scripts
+
+| Perintah                 | Deskripsi                                          |
+|--------------------------|----------------------------------------------------|
+| `npm run dev`            | Jalankan Next.js development server                |
+| `npm run build`          | Build production Next.js                           |
+| `npm run start`          | Jalankan production server                         |
+| `npm run lint`           | Jalankan ESLint                                    |
+| `npm run dev:api`        | Jalankan backend Laravel development server        |
+| `npm run db:start`       | Jalankan MySQL lokal via Docker                    |
+| `npm run db:migrate`     | Jalankan migrasi database dan seeder               |
+| `npm run test:pages`     | Tes otomatis semua 13 rute halaman                 |
+| `npm run test:integration` | Tes integrasi dengan backend                     |
+| `npm run clean`          | Bersihkan file sementara proyek                    |
+
+---
+
+## Lisensi
+
+Proyek ini dikembangkan untuk keperluan akademik mata kuliah Pemrograman Web 1.

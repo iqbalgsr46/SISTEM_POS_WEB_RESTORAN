@@ -28,7 +28,7 @@ export function MenuCatalogSection({ onOpenOrder }) {
           </span>
           <h2 className="font-display font-black text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter text-gacoan-black leading-[0.95] select-none">
             PILIHAN MENU <br />
-            <span className="text-gacoan-red">GACOAN CIKARANG</span>
+            <span className="text-gacoan-red">ELON MUSK CIKARANG</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base font-extrabold text-neutral-800">
             Dibuat fresh setiap pesanan dengan bahan-bahan berkualitas tinggi, bersertifikasi halal, dan harga super terjangkau.

@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, ExternalLink, MapPin, CheckCircle2, AlertCircle } from "lucide-react";
+import { X, ExternalLink, MapPin, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { restaurantInfo } from "@/data/restaurant-data";
 
 export function OrderModal({ isOpen, onClose }) {
   const [selectedOutlet, setSelectedOutlet] = useState(restaurantInfo.outlets[0].id);
-  const [isSimulatedSubmitted, setIsSimulatedSubmitted] = useState(false);
 
   if (!isOpen) return null;
 

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi Sistem Resmi — Mie Elon Musk ROS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              orange: '#EA580C',
+              amber: '#F5A623',
+              dark: '#0D0D11',
+              card: '#16161D',
+              border: '#2A2B36',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0D0D11; color: #E4E4E7; }
+    .mermaid { background: transparent; }
+    pre, code { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white">
+
+  <!-- Top Corporate Navbar -->
+  <header class="sticky top-0 z-50 bg-[#121217]/95 backdrop-blur-md border-b border-[#2A2B36] px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-orange-500/20">
+        🍜
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-black text-white tracking-tight">Mie Elon Musk</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
+            ENTERPRISE DOCS v1.0
+          </span>
+        </div>
+        <p class="text-[11px] text-neutral-400 font-medium">Dokumentasi Standar Rekayasa Perangkat Lunak Restoran</p>
+      </div>
+    </div>
+
+    <!-- Quick Portal Links -->
+    <div class="hidden lg:flex items-center gap-2 text-xs font-bold text-neutral-300">
+      <a href="http://localhost:3000/" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">Portal Landing</a>
+      <a href="http://localhost:3000/alur" target="_blank" class="px-3 py-1.5 rounded-xl bg-orange-600/20 text-orange-400 border border-orange-500/30 hover:bg-orange-600 hover:text-white transition-all">🗺️ Alur Sistem</a>
+      <a href="http://localhost:3000/dine-in?meja=7" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">Dine-In</a>
+      <a href="http://localhost:3000/takeaway" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">Takeaway</a>
+      <a href="http://localhost:3000/kios" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">Kios Lobby</a>
+      <a href="http://localhost:3000/kasir" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">POS Kasir</a>
+      <a href="http://localhost:3000/dapur" target="_blank" class="px-3 py-1.5 rounded-xl bg-orange-600 text-white shadow-md shadow-orange-500/20 hover:bg-orange-500 transition-all">KDS Dapur</a>
+      <a href="http://localhost:3000/manager" target="_blank" class="px-3 py-1.5 rounded-xl bg-[#1A1A22] border border-[#2A2B36] hover:text-white hover:border-neutral-500 transition-all">Manager Hub</a>
+    </div>
+  </header>
+
+  <div class="flex-1 flex max-w-[1600px] w-full mx-auto">
+    <!-- Left Sticky Sidebar -->
+    <aside class="w-72 shrink-0 border-r border-[#2A2B36] bg-[#121217] p-5 hidden md:flex flex-col justify-between sticky top-[61px] h-[calc(100vh-61px)] overflow-y-auto">
+      <div class="space-y-6">
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-neutral-500 block mb-3">Daftar Dokumen Sistem</span>
+          <nav class="space-y-1" id="nav-tabs">
+            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-left transition-all bg-orange-600 text-white shadow-md shadow-orange-500/20">
+              <span>📌</span>
+              <span>1. Overview & Ekosistem</span>
+            </button>
+            <button onclick="switchTab('srs')" id="btn-srs" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-400 hover:text-white hover:bg-[#1A1A22] text-left transition-all">
+              <span>📋</span>
+              <span>2. Kebutuhan Sistem (SRS)</span>
+            </button>
+            <button onclick="switchTab('architecture')" id="btn-architecture" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-400 hover:text-white hover:bg-[#1A1A22] text-left transition-all">
+              <span>🏛️</span>
+              <span>3. Arsitektur & C4 (SAD)</span>
+            </button>
+            <button onclick="switchTab('api')" id="btn-api" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-400 hover:text-white hover:bg-[#1A1A22] text-left transition-all">
+              <span>🔌</span>
+              <span>4. Spesifikasi API (Contract)</span>
+            </button>
+            <button onclick="switchTab('database')" id="btn-database" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-400 hover:text-white hover:bg-[#1A1A22] text-left transition-all">
+              <span>🗄️</span>
+              <span>5. Database & ERD</span>
+            </button>
+            <button onclick="switchTab('sop')" id="btn-sop" class="tab-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-400 hover:text-white hover:bg-[#1A1A22] text-left transition-all">
+              <span>🛠️</span>
+              <span>6. SOP & Operational Runbook</span>
+            </button>
+          </nav>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-[#1A1A22] border border-[#2A2B36] space-y-2">
+          <span class="text-[10px] font-black uppercase text-amber-400 block tracking-wider">Garansi Tanpa Auto-Pause</span>
+          <p class="text-[11px] text-neutral-400 leading-relaxed">
+            Arsitektur cloud terisolasi menggunakan Smart Polling 2s. Laptop kasir bebas dimatikan saat outlet tutup tanpa memutus antrean cloud.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-[#2A2B36] text-[11px] text-neutral-500">
+        <p>Mie Elon Musk ROS © 2026</p>
+        <p class="text-[10px] text-neutral-600 mt-0.5">Software Engineering Documentation</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-6 md:p-10 max-w-5xl mx-auto overflow-y-auto">
+
+      <!-- TAB 1: OVERVIEW -->
+      <section id="tab-overview" class="tab-content space-y-8">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Master Blueprint</span>
+          <h1 class="text-3xl font-black text-white mt-1">Ekosistem Omnichannel Restaurant Operating System (ROS)</h1>
+          <p class="text-sm text-neutral-400 mt-2 leading-relaxed">
+            Dokumentasi komprehensif implementasi teknologi restoran berkecepatan tinggi untuk **Mie Elon Musk**, mengintegrasikan 7 portal resmi dengan sinkronisasi antrean dapur instan (2 detik Smart Polling) dan proteksi privasi tanpa meminta data sensitif pelanggan.
+          </p>
+        </div>
+
+        <!-- 7 Portals Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">📱</span>
+            <h3 class="text-sm font-black text-white">1. Dine-In Mobile (/dine-in)</h3>
+            <p class="text-xs text-neutral-400">Pemesanan QR di meja (?meja=7), auto-lock meja, kustomisasi pedas Lv 0-8, dan pelacakan live stasiun masak.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">🛍️</span>
+            <h3 class="text-sm font-black text-white">2. Takeaway Mobile (/takeaway)</h3>
+            <p class="text-xs text-neutral-400">Zero-data checkout (tanpa akun/password), pelacakan antrean bungkus #T-032, dan instruksi counter saji.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">🖥️</span>
+            <h3 class="text-sm font-black text-white">3. Kios Mandiri (/kios)</h3>
+            <p class="text-xs text-neutral-400">Touchscreen display 24"+, screensaver attract mode otomatis, simulasi QRIS, dan cetak tiket struk #K-017.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">💼</span>
+            <h3 class="text-sm font-black text-white">4. POS Kasir Resmi (/kasir)</h3>
+            <p class="text-xs text-neutral-400">Layout 3-kolom GoMeal Rupiah (Rp), tombol uang pas tunai, hitung kembalian, dan cetak struk #C-044.</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">🍳</span>
+            <h3 class="text-sm font-black text-white">5. KDS Layar Dapur (/dapur)</h3>
+            <p class="text-xs text-neutral-400">Filter stasiun (Wok, Dimsum, Bar), SLA timer alert warna, Web Audio bell chime, dan bump bar [SELESAI MASAK].</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <span class="text-2xl">📊</span>
+            <h3 class="text-sm font-black text-white">6. Manager Hub (/manager)</h3>
+            <p class="text-xs text-neutral-400">Saklar darurat Sold-Out, denah visual meja 01-16, dan laporan omzet penjualan harian.</p>
+          </div>
+        </div>
+
+        <!-- High Level Architecture Flowchart -->
+        <div class="p-6 rounded-3xl bg-[#16161D] border border-[#2A2B36] space-y-4">
+          <h3 class="text-base font-black text-white flex items-center gap-2">
+            <span>Diagram Alir Integrasi Omnichannel</span>
+            <span class="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 text-[10px] font-bold">MERMAID DIAGRAM</span>
+          </h3>
+          <div class="mermaid">
+flowchart TD
+    subgraph Channels["4 Input Channel Pesanan"]
+        D["📱 Dine-In Mobile (D-07-XX)"]
+        T["🛍️ Takeaway Bungkus (T-0XX)"]
+        K["🖥️ Kios Lobby (K-0XX)"]
+        C["💼 POS Kasir Fisik (C-0XX)"]
+    end
+
+    subgraph Core["Next.js REST API & Central Store"]
+        API["/api/orders (POST, GET, PATCH)"]
+        STORE["Centralized Store / MySQL Cloud<br/>(Bebas Auto-Pause Seumur Hidup)"]
+    end
+
+    subgraph Dapur["Layar KDS Dapur (/dapur)"]
+        KDS["Monitor Antrean Masak FIFO<br/>• Wok Mie Lv 0-8<br/>• Dimsum Fryer<br/>• Bar Minuman Dingin"]
+        BUMP["Tombol Bump [SELESAI MASAK]"]
+    end
+
+    D & T & K & C -->|POST Pesanan Baru| API
+    API <--> STORE
+    STORE <-->|Smart Polling 2s| KDS
+    KDS --> BUMP
+    BUMP -->|PATCH status: READY| API
+    API -->|Live Polling 2s Update| D & T
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: SRS -->
+      <section id="tab-srs" class="tab-content hidden space-y-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Document SRS-MEM-2026-V1.0</span>
+          <h2 class="text-2xl font-black text-white mt-1">Software Requirements Specification (SRS)</h2>
+          <p class="text-xs text-neutral-400 mt-1">Standar kebutuhan fungsional dan non-fungsional sistem restoran.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-orange-400">FR-ORD-01 s/d FR-ORD-04: Modul Pemesanan Pelanggan</h4>
+            <ul class="text-xs text-neutral-300 space-y-1.5 list-disc pl-5">
+              <li><strong>Auto-Lock Meja:</strong> Mendeteksi parameter URL <code>?meja=XX</code> dan menguncinya ke sesi transaksi.</li>
+              <li><strong>Kustomisasi Pedas Lv 0-8:</strong> Pengaturan tingkat kepedasan dan varian dimsum tanpa hambatan.</li>
+              <li><strong>Zero-Friction Checkout:</strong> Tidak mewajibkan registrasi akun, password, ataupun verifikasi OTP.</li>
+              <li><strong>Live Tracking 3 Tahap:</strong> Status <em>Diterima ➔ Dimasak ➔ Siap Diantar</em> dengan getar Vibrate API.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-amber-400">FR-KDS-01 s/d FR-KDS-05: Modul Terminal Dapur (KDS)</h4>
+            <ul class="text-xs text-neutral-300 space-y-1.5 list-disc pl-5">
+              <li><strong>Multi-Channel Ingestion:</strong> Seluruh pesanan dari 4 channel berbaris otomatis dalam antrean FIFO.</li>
+              <li><strong>Filter Stasiun Kerja:</strong> Koki dapat menyaring tiket Wok Mie, Dimsum Fryer, dan Bar Minuman.</li>
+              <li><strong>SLA Timer Alert:</strong> Indikator warna Hijau (&lt;6m), Kuning (6-12m), dan Merah (&gt;12m Overdue!).</li>
+              <li><strong>Web Audio Bell Chime:</strong> Notifikasi bunyi dua nada synthesized audio saat ada tiket baru / selesai.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-emerald-400">NFR-01 s/d NFR-03: Kualitas & Keamanan (Non-Functional)</h4>
+            <ul class="text-xs text-neutral-300 space-y-1.5 list-disc pl-5">
+              <li><strong>Latensi Smart Polling &lt; 2.000 ms:</strong> Interval sinkronisasi 2 detik yang ringan dan hemat bandwidth.</li>
+              <li><strong>Proteksi Privasi WhatsApp (Masking):</strong> Nomor WA pelanggan disensor otomatis (<code>0812-****-8821</code>) agar terbebas dari penyalahgunaan staf.</li>
+              <li><strong>Ketahanan Tanpa Laptop 24/7:</strong> Laptop kasir toko bebas dimatikan saat outlet tutup tanpa merusak data transaksi cloud.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: SAD (Architecture) -->
+      <section id="tab-architecture" class="tab-content hidden space-y-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Document SAD-MEM-2026-V1.0</span>
+          <h2 class="text-2xl font-black text-white mt-1">System Architecture Document (C4 Model)</h2>
+          <p class="text-xs text-neutral-400 mt-1">Spesifikasi kontainer, komponen, dan diagram urutan alur transaksi.</p>
+        </div>
+
+        <!-- Sequence Diagram -->
+        <div class="p-6 rounded-3xl bg-[#16161D] border border-[#2A2B36] space-y-4">
+          <h3 class="text-sm font-black text-white">Sequence Diagram: Siklus Pemesanan hingga Masakan Diantar</h3>
+          <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor C as Pelanggan Meja 07
+    participant UI as /dine-in (Mobile Web)
+    participant API as /api/orders
+    participant DB as Central Store / Cloud DB
+    participant KDS as /dapur (Terminal KDS)
+    actor Cook as Koki Dapur
+
+    C->>UI: Checkout Menu Pedas Lv 1
+    UI->>API: POST /api/orders
+    API->>DB: Injeksi Tiket D-07-06
+    API-->>UI: 201 Created (Ticket D-07-06)
+    
+    loop Polling 2s
+        KDS->>API: GET /api/orders?status=active
+        API-->>KDS: Tiket Baru D-07-06 Muncul
+    end
+    
+    KDS->>KDS: Play Bell Chime 🔔
+    Cook->>KDS: Klik [SELESAI MASAK]
+    KDS->>API: PATCH /api/orders (status: READY)
+    API->>DB: Update Status READY
+    
+    UI->>API: Polling Deteksi Status READY
+    API-->>UI: Status READY
+    UI->>C: HP Bergetar + Banner Makanan Siap Diantar!
+          </div>
+        </div>
+
+        <!-- State Diagram -->
+        <div class="p-6 rounded-3xl bg-[#16161D] border border-[#2A2B36] space-y-4">
+          <h3 class="text-sm font-black text-white">State Machine: Siklus Status Tiket</h3>
+          <div class="mermaid">
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> PENDING_PAYMENT: Klik Checkout
+    PENDING_PAYMENT --> PAID: QRIS / Kasir Terverifikasi
+    PAID --> COOKING: Otomatis Masuk Antrean KDS
+    COOKING --> READY: Koki Tap Selesai Masak
+    READY --> COMPLETED: Makanan Disajikan ke Meja
+    COMPLETED --> [*]
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: API SPEC -->
+      <section id="tab-api" class="tab-content hidden space-y-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Document API-MEM-2026-V1.0</span>
+          <h2 class="text-2xl font-black text-white mt-1">REST API Contract & Endpoints Specification</h2>
+          <p class="text-xs text-neutral-400 mt-1">Spesifikasi format payload JSON dan kode status HTTP.</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Endpoint 1 -->
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs font-bold">GET</span>
+              <span class="font-mono text-xs font-bold text-white">/api/orders?status=active</span>
+            </div>
+            <p class="text-xs text-neutral-400">Mengambil seluruh pesanan aktif yang belum berstatus COMPLETED untuk monitor KDS.</p>
+            <pre class="p-3 bg-[#0D0D11] rounded-xl text-[11px] text-neutral-300 font-mono overflow-x-auto">
+// Response 200 OK
+[
+  {
+    "id": "ORD-1792584928433",
+    "ticketNumber": "D-07-06",
+    "source": "Dine-In",
+    "tableNumber": "07",
+    "status": "COOKING",
+    "totalAmount": 55000,
+    "elapsedSeconds": 14,
+    "slaStatus": "green",
+    "items": [
+      { "name": "2x Mie Elon Musk Lv 1", "qty": 2, "price": 15000, "station": "wok", "ready": false }
+    ]
+  }
+]</pre>
+          </div>
+
+          <!-- Endpoint 2 -->
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 font-mono text-xs font-bold">POST</span>
+              <span class="font-mono text-xs font-bold text-white">/api/orders</span>
+            </div>
+            <p class="text-xs text-neutral-400">Membuat pesanan baru dari Dine-In, Takeaway, Kios, atau Kasir.</p>
+            <pre class="p-3 bg-[#0D0D11] rounded-xl text-[11px] text-neutral-300 font-mono overflow-x-auto">
+// Payload Request
+{
+  "source": "Dine-In",
+  "tableNumber": "07",
+  "customerName": "Tamu Meja 07",
+  "totalAmount": 55000,
+  "items": [ ... ]
+}</pre>
+          </div>
+
+          <!-- Endpoint 3 -->
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-xs font-bold">PATCH</span>
+              <span class="font-mono text-xs font-bold text-white">/api/orders</span>
+            </div>
+            <p class="text-xs text-neutral-400">Memperbarui status pesanan menjadi READY saat koki selesai memasak.</p>
+            <pre class="p-3 bg-[#0D0D11] rounded-xl text-[11px] text-neutral-300 font-mono overflow-x-auto">
+// Payload Request
+{
+  "id": "D-07-06",
+  "status": "READY"
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: DATABASE -->
+      <section id="tab-database" class="tab-content hidden space-y-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Document DB-MEM-2026-V1.0</span>
+          <h2 class="text-2xl font-black text-white mt-1">Database Schema & Entity Relationship Diagram (ERD)</h2>
+          <p class="text-xs text-neutral-400 mt-1">Relasi tabel relasional MySQL dan skema Prisma ORM.</p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-[#16161D] border border-[#2A2B36] space-y-4">
+          <h3 class="text-sm font-black text-white">Diagram ERD MySQL Restoran</h3>
+          <div class="mermaid">
+erDiagram
+    TABLES ||--o{ ORDERS : assigned_to
+    ORDERS ||--|{ ORDER_ITEMS : contains
+    MENU_ITEMS ||--o{ ORDER_ITEMS : references
+
+    TABLES {
+        int id PK
+        string table_number UK
+        enum status
+        timestamp updated_at
+    }
+
+    ORDERS {
+        string id PK
+        string ticket_number UK
+        enum source
+        int table_id FK
+        string customer_name
+        enum status
+        enum payment_method
+        decimal total_amount
+        timestamp created_at
+    }
+
+    ORDER_ITEMS {
+        string id PK
+        string order_id FK
+        string name
+        int qty
+        decimal unit_price
+        int spicy_level
+        enum station
+        boolean is_ready
+    }
+
+    MENU_ITEMS {
+        string id PK
+        string name
+        decimal base_price
+        enum station
+        boolean is_available
+    }
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: SOP -->
+      <section id="tab-sop" class="tab-content hidden space-y-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Document SOP-MEM-2026-V1.0</span>
+          <h2 class="text-2xl font-black text-white mt-1">Standard Operating Procedures & Operational Runbook</h2>
+          <p class="text-xs text-neutral-400 mt-1">Prosedur operasional baku bagi Store Manager, Kasir, dan Kru Dapur.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-emerald-400">09:00 WIB — SOP Pembukaan Outlet (Store Opening)</h4>
+            <p class="text-xs text-neutral-300">1. Pastikan router Wi-Fi toko aktif.<br>2. Buka layar /dapur di monitor wall dalam mode Fullscreen (F11); lakukan uji suara bel chime.<br>3. Nyalakan mesin kios lobby /kios.<br>4. Kasir membuka /kasir dan menginput modal kas laci Rp500.000.</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-amber-400">Rush Hour — SOP Darurat Bahan Baku Habis (Sold-Out)</h4>
+            <p class="text-xs text-neutral-300">Saat stok bahan baku habis mendadak di jam ramai, Store Manager membuka <code>/manager</code> dan mematikan saklar menu bersangkutan. Menu seketika terkunci abu-abu di seluruh HP pelanggan, Kios, dan Kasir tanpa perlu menghapus data.</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-[#16161D] border border-[#2A2B36] space-y-2">
+            <h4 class="text-sm font-black text-blue-400">22:30 WIB — SOP Penutupan Toko (Store Closing)</h4>
+            <p class="text-xs text-neutral-300">1. Pastikan antrean KDS kosong (0 tiket aktif).<br>2. Lakukan settlement transaksi di kasir.<br>3. <strong>Laptop Kasir & Layar KDS BEBAS DIMATIKAN SETIAP MALAM</strong> karena seluruh data transaksi disimpan permanen di cloud server.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-orange-600', 'text-white', 'shadow-md', 'shadow-orange-500/20');
+        btn.classList.add('text-neutral-400');
+      });
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-neutral-400');
+        activeBtn.classList.add('bg-orange-600', 'text-white', 'shadow-md', 'shadow-orange-500/20');
+      }
+    }
+  </script>
+</body>
+</html>

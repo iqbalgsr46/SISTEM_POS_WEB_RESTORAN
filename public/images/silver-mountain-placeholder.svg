@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="silverBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" />
+      <stop offset="50%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+    <linearGradient id="mountain1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#94A3B8" />
+      <stop offset="100%" stop-color="#64748B" />
+    </linearGradient>
+    <linearGradient id="mountain2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#CBD5E1" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded Silver Card Body -->
+  <rect x="8" y="8" width="104" height="104" rx="20" fill="url(#silverBg)" stroke="#CBD5E1" stroke-width="2" />
+
+  <!-- Inner Frame -->
+  <rect x="18" y="18" width="84" height="84" rx="14" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2.5" />
+
+  <!-- Sun -->
+  <circle cx="42" cy="42" r="7" fill="#94A3B8" />
+
+  <!-- Back Mountain -->
+  <polygon points="52,86 76,54 100,86" fill="url(#mountain2)" />
+
+  <!-- Front Mountain -->
+  <polygon points="20,86 46,46 74,86" fill="url(#mountain1)" />
+
+  <!-- Silver Baseline -->
+  <line x1="20" y1="86" x2="100" y2="86" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" />
+</svg>

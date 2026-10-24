@@ -14,8 +14,17 @@
 }
 
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 body {
-  background-color: #FFC903;
+  background-color: #F8F9FA;
   color: #0A0A0A;
   overflow-x: hidden;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -27,20 +36,20 @@ body {
   color: #FDB813;
 }
 
-/* Custom Scrollbar */
+/* Custom Clean Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FDB813;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0A0A0A;
+  background: #C4C4C4;
   border-radius: 9999px;
-  border: 2px solid #FDB813;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E11D48;
+  background: #999999;
 }
 
 /* Utilitas Teks Display Ekstra Tebal Rounded Persis Sesuai Referensi CRISPR */
@@ -84,4 +93,59 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* POS Clean Subtle Scrollbar */
+.pos-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #94A3B8 #F1F5F9;
+}
+.pos-scrollbar::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+.pos-scrollbar::-webkit-scrollbar-track {
+  background: #F1F5F9 !important;
+  border-radius: 9999px !important;
+}
+.pos-scrollbar::-webkit-scrollbar-thumb {
+  background: #94A3B8 !important;
+  border-radius: 9999px !important;
+  border: 1.5px solid #F1F5F9 !important;
+}
+.pos-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748B !important;
+}
+
+/* Smooth Transition Utilities for Views, Modals & Sheets */
+.view-enter-smooth {
+  animation: viewEnterSmooth 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.view-exit-smooth {
+  animation: viewExitSmooth 150ms cubic-bezier(0.7, 0, 0.84, 0) forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes viewEnterSmooth {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes viewExitSmooth {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }

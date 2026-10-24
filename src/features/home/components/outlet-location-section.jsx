@@ -25,10 +25,10 @@ export function OutletLocationSection() {
           </span>
           <h2 className="font-display font-black text-3xl sm:text-5xl md:text-6xl uppercase tracking-tighter text-gacoan-black leading-[0.95] select-none">
             OUTLET RESMI <br />
-            <span className="text-gacoan-red">GACOAN CIKARANG</span>
+            <span className="text-gacoan-red">ELON MUSK CIKARANG</span>
           </h2>
           <p className="mt-3 text-sm sm:text-base font-extrabold text-neutral-800">
-            Temukan outlet Mie Gacoan terdekat di area Cikarang untuk pengalaman makan di tempat yang asyik bersama sahabat dan keluarga.
+            Temukan outlet Mie Elon Musk terdekat di area Cikarang untuk pengalaman makan di tempat yang asyik bersama sahabat dan keluarga.
           </p>
         </div>
 

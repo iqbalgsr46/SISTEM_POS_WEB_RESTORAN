@@ -9,6 +9,7 @@
 
 # next.js
 /.next/
+/.next-build/
 /out/
 
 # production
@@ -23,8 +24,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# environment & secrets
+.env
+.env.local
 .env*.local
+.env.production
+.env.staging
 
 # vercel
 .vercel
@@ -33,8 +38,23 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# scratch / temp files
+# scratch / temp / local dev data
 /scratch/
+/.local/
+
+# backend vendor (install via composer)
+/backend/vendor/
+/backend/.env
+/backend/storage/logs/*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
 
 # Temporary test & debug screenshots
 20260927_*.png

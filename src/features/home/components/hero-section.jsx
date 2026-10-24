@@ -493,7 +493,7 @@ export function HeroSection() {
             className="font-bold text-[22px] min-[360px]:text-[26px] min-[400px]:text-[30px] sm:text-[52px] md:text-[68px] lg:text-[86px] uppercase tracking-tight text-black leading-[0.88] select-none"
           >
             <span className="block whitespace-nowrap">PEDAS GURIH, CRISPY</span>
-            <span className="block whitespace-nowrap">MIE GACOAN MENU</span>
+            <span className="block whitespace-nowrap">MIE ELON MUSK MENU</span>
           </h1>
         </div>
 

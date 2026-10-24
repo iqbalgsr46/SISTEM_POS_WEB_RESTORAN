@@ -1,7 +1,7 @@
 export const restaurantInfo = {
-  brandName: "Mie Gacoan",
+  brandName: "Mie Elon Musk",
   locationName: "Cikarang",
-  fullName: "Mie Gacoan Cikarang",
+  fullName: "Mie Elon Musk Cikarang",
   tagline: "Mie Pedas No. 1 di Indonesia, Hadir Lebih Dekat di Cikarang!",
   subTagline: "Sensasi mie pedas berpadu dimsum lumer dan es segar dengan harga yang ramah di kantong.",
   operatingHours: "Setiap Hari | 09.00 - 23.00 WIB",

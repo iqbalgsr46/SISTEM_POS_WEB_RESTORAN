@@ -22,7 +22,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Mie Gacoan Cikarang - Sensasi Pedas No. 1 di Cikarang",
+  title: "Mie Elon Musk Cikarang - Sensasi Pedas No. 1 di Cikarang",
   description:
     "Website resmi redesign Mie Gacoan Cikarang (Jababeka & Lippo Cikarang). Cek daftar menu mie pedas level 0-8, dimsum krispi lumer, es segar khas gacoan, dan info outlet resmi.",
   keywords: [
@@ -37,14 +37,17 @@ export const metadata = {
 };
 
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
+import AuthProvider from "@/components/providers/auth-provider";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${outfit.variable} ${fredoka.variable}`}>
-      <body className="font-sans antialiased bg-gacoan-yellow text-gacoan-black selection:bg-gacoan-black selection:text-gacoan-yellow">
-        <SmoothScrollProvider>
-          {children}
-        </SmoothScrollProvider>
+      <body className="font-sans antialiased text-gacoan-black selection:bg-gacoan-black selection:text-gacoan-yellow">
+        <AuthProvider>
+          <SmoothScrollProvider>
+            {children}
+          </SmoothScrollProvider>
+        </AuthProvider>
       </body>
     </html>
   );
