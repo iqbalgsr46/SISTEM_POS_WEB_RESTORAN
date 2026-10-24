@@ -1,6 +1,6 @@
-# Mie Gacoan Cikarang - Restaurant Omnichannel System
+# Mie Elon Musk - Restaurant Omnichannel System
 
-Sistem manajemen restoran terpadu berbasis web untuk outlet Mie Gacoan Cikarang.
+Sistem manajemen restoran terpadu berbasis web untuk outlet Mie Elon Musk Cikarang.
 Dibangun menggunakan Next.js (frontend) dan Laravel (backend API), mencakup alur
 pemesanan pelanggan, manajemen dapur, kasir POS, hingga panel administrasi.
 
@@ -265,8 +265,8 @@ Tiket dikirim ke /kitchen
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/iqbalgsr46/Mie-Gacoan-Cikarang.git
-cd Mie-Gacoan-Cikarang
+git clone https://github.com/iqbalgsr46/SISTEM_POS_WEB_RESTORAN.git
+cd SISTEM_POS_WEB_RESTORAN
 ```
 
 ### 2. Setup Frontend (Next.js)
@@ -330,7 +330,7 @@ Aplikasi tersedia di `http://localhost:3000`.
 | `NEXTAUTH_SECRET`      | Secret key untuk NextAuth.js                 | Hasil dari `openssl rand -hex 32`           |
 | `GOOGLE_CLIENT_ID`     | Client ID Google OAuth                       | Dari Google Cloud Console                   |
 | `GOOGLE_CLIENT_SECRET` | Client Secret Google OAuth                   | Dari Google Cloud Console                   |
-| `NEXT_PUBLIC_APP_NAME` | Nama aplikasi (tampil di browser)            | `Mie Gacoan Cikarang`                       |
+| `NEXT_PUBLIC_APP_NAME` | Nama aplikasi (tampil di browser)            | `Mie Elon Musk Cikarang`                    |
 | `NEXT_PUBLIC_STORE_LOCATION` | Lokasi outlet                          | `Cikarang, Jawa Barat`                      |
 
 ### Backend (backend/.env)
