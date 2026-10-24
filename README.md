@@ -84,7 +84,7 @@ MySQL untuk menyimpan data menu, pesanan, stok, dan meja.
 | `/kitchen`    | Kitchen Display System (KDS) untuk dapur. Menampilkan tiket pesanan aktif dengan filter stasiun masak (Wok Mie, Dimsum, Bar Minuman), indikator waktu SLA, dan tombol selesai masak. Dilengkapi sidebar navigasi dan notifikasi suara. |
 | `/pos`        | Point of Sale untuk kasir. Membuat pesanan manual, memilih meja, dan memproses pembayaran. |
 | `/pos/login`  | Halaman login khusus kasir POS. |
-| `/tables`     | Manajemen status meja restoran. Menampilkan denah meja dengan status (kosong, terisi, dipesan) dan opsi mengubah status. |
+| `/tables`     | Manajemen meja dan simulasi QR. Menampilkan denah meja dengan status (kosong, terisi, dipesan), opsi mengubah status, serta generate QR code per meja. Scan QR atau klik link untuk langsung membuka halaman `/dine-in?meja=XX` sesuai nomor meja. |
 | `/admin`      | Panel administrasi untuk mengelola menu, stok bahan, laporan pesanan, dan konfigurasi outlet. |
 | `/alur`       | Halaman dokumentasi visual alur sistem, menampilkan diagram dan penjelasan flow pemesanan dari pelanggan hingga dapur. |
 
@@ -95,10 +95,13 @@ MySQL untuk menyimpan data menu, pesanan, stok, dan meja.
 ### 1. Dine-In (Makan di Tempat)
 
 ```
-Pelanggan scan QR di meja
+Buka /tables untuk melihat denah meja
         |
         v
-Buka /dine-in?meja=07
+Klik meja untuk generate QR code (simulasi)
+        |
+        v
+Scan QR atau klik link -> /dine-in?meja=07
         |
         v
 Pilih menu, atur level pedas, pilih varian
