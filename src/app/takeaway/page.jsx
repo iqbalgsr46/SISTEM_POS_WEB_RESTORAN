@@ -153,6 +153,7 @@ function TakeawayContent() {
   // Katalog harga diambil dari backend Laravel.
   const [categories, setCategories] = useState(dineInCategories);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const [submittedOrder, setSubmittedOrder] = useState(null);
 
   useEffect(() => {
@@ -199,7 +200,7 @@ function TakeawayContent() {
     const timer = setInterval(() => {
       if (isBannerPausedRef.current || isDragging) return;
       setIsTransitioning(true);
-      setCurrentSlide((prev) => prev + 1);
+      setCurrentSlide((prev) => (prev >= 4 ? 1 : prev + 1));
     }, 6500); // Ritme santai: 5.25 detik baca + 1.25 detik animasi kurva lambat
     return () => clearInterval(timer);
   }, [isDragging]);
@@ -811,7 +812,12 @@ function TakeawayContent() {
 
   // Buka pelacakan hanya setelah backend berhasil menyimpan pesanan.
   const handleProceedPayment = async () => {
-    if (selectedCartItems.length === 0 || isSubmittingOrder) return;
+    if (isSubmittingOrder) return;
+    if (selectedCartItems.length === 0) {
+      setPaymentError("Pilih minimal satu item di keranjang sebelum melanjutkan.");
+      return;
+    }
+    setPaymentError("");
     setIsSubmittingOrder(true);
     try {
       const orderPayload = {
@@ -847,7 +853,10 @@ function TakeawayContent() {
         createdAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
         estimatedMinutes: 10,
         progressPercent: 55,
-        items: selectedCartItems.map((item, index) => ({ ...item, price: result.data.items[index].price })),
+        items: selectedCartItems.map((item, index) => ({
+          ...item,
+          price: result.data.items?.[index]?.price ?? item.price,
+        })),
         notes: extraNotes,
         subtotal: result.data.subtotal,
         pb1Tax: result.data.taxAmount,
@@ -875,6 +884,7 @@ function TakeawayContent() {
       navigateView("tracking");
     } catch (err) {
       console.error("Payment error:", err);
+      setPaymentError(err.message || "Pesanan belum dapat disimpan. Silakan coba kembali.");
     } finally {
       setIsSubmittingOrder(false);
     }
@@ -895,25 +905,69 @@ function TakeawayContent() {
       result = result.filter((it) => {
         if (activeCircleCategory === "mie") return it.categoryId === "mie";
         if (activeCircleCategory === "dimsum") return it.categoryId === "dimsum";
-        if (activeCircleCategory === "combat") return it.categoryId === "gacoan-combat" || it.isCombo;
+        if (activeCircleCategory === "combat") return it.categoryId === "gacoan-combat" || it.isCombo || it.categoryId === "combat";
         if (activeCircleCategory === "beverage") return it.categoryId === "beverage" || it.categoryId === "minuman" || it.categoryId === "es-buah" || it.categoryId === "beverages";
         if (activeCircleCategory === "camilan") return it.categoryId === "camilan" || it.id.includes("pangsit");
         return true;
       });
+
+      if (activeCircleCategory === "mie") {
+        const miePriority = ["elon-dark-matter", "tesla-reactor", "spacex-orbit-crunch", "full-stack", "mars-colony-curry"];
+        result = [...result].sort((a, b) => {
+          const idxA = miePriority.indexOf(a.id);
+          const idxB = miePriority.indexOf(b.id);
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return 0;
+        });
+      }
+
+      // Priority sort for signature Mie Mas Elon items to appear first
+      if (activeCircleCategory === "beverage") {
+        const bevPriority = ["starlink-blue", "grok-choco", "neuralink-matcha", "tesla-caramel-latte", "mars-strawberry-milk", "air-putih"];
+        result = [...result].sort((a, b) => {
+          const idxA = bevPriority.indexOf(a.id);
+          const idxB = bevPriority.indexOf(b.id);
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return 0;
+        });
+      }
+
+      if (activeCircleCategory === "camilan") {
+        const snackPriority = ["rocket-pop-chicken", "orbit-crunch", "fusion-cheese-bites", "neuralink-enoki", "mars-potato-wedges"];
+        result = [...result].sort((a, b) => {
+          const idxA = snackPriority.indexOf(a.id);
+          const idxB = snackPriority.indexOf(b.id);
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return 0;
+        });
+      }
     } else if (!searchQuery.trim() && selectedSpicyFilter === "all") {
-      // Saat 'all', prioritas urutan meal yang variatif persis seperti referensi (mie, dimsum, kombo, minuman)
+      // Saat 'all', prioritas menu utama Mie Mas Elon agar variatif & langsung terlihat di layar
       const priorityOrder = [
-        "mie-hompimpa",
-        "udang-keju",
+        "elon-dark-matter",
+        "starlink-blue",
+        "rocket-pop-chicken",
+        "tesla-reactor",
+        "fusion-cheese-bites",
+        "tesla-caramel-latte",
+        "spacex-orbit-crunch",
+        "grok-choco",
+        "orbit-crunch",
+        "full-stack",
+        "neuralink-matcha",
+        "neuralink-enoki",
+        "mars-colony-curry",
+        "mars-strawberry-milk",
+        "mars-potato-wedges",
+        "air-putih",
         "combat-a",
-        "mie-gacoan",
-        "pangsit-goreng",
-        "es-gobak-sodor",
-        "udang-rambutan",
         "combat-b",
-        "siomay",
-        "mie-suit",
-        "lemon-tea",
       ];
       result = [...result].sort((a, b) => {
         const idxA = priorityOrder.indexOf(a.id);
@@ -951,23 +1005,23 @@ function TakeawayContent() {
   const popularMeals = useMemo(() => {
     return allItems.filter(
       (it) =>
-        it.id === "mie-hompimpa" ||
-        it.id === "mie-gacoan" ||
-        it.id === "udang-keju" ||
-        it.id === "combat-a" ||
-        it.id === "pangsit-goreng" ||
-        it.id === "es-gobak-sodor"
+        it.id === "elon-dark-matter" ||
+        it.id === "rocket-pop-chicken" ||
+        it.id === "fusion-cheese-bites" ||
+        it.id === "tesla-reactor" ||
+        it.id === "starlink-blue" ||
+        it.id === "tesla-caramel-latte" ||
+        it.id === "combat-a"
     );
   }, [allItems]);
 
   // Kategori icon circular data dengan gambar transparan tanpa kotak
   const categoryChips = [
-    { id: "all", label: "All", img: "/images/silver-mountain-placeholder.svg" },
-    { id: "mie", label: "Mie Pedas", img: "/images/silver-mountain-placeholder.svg" },
-    { id: "dimsum", label: "Dimsum", img: "/images/silver-mountain-placeholder.svg" },
-    { id: "combat", label: "Combat", img: "/images/silver-mountain-placeholder.svg" },
-    { id: "beverage", label: "Minuman", img: "/images/silver-mountain-placeholder.svg" },
-    { id: "camilan", label: "Camilan", img: "/images/silver-mountain-placeholder.svg" },
+    { id: "all", label: "All", img: "/images/mie-elon-musk-combo-nobg.png" },
+    { id: "mie", label: "Mie Pedas", img: "/images/menu/elon-dark-matter.png" },
+    { id: "camilan", label: "Camilan", img: "/images/menu/fusion-cheese-bites.png" },
+    { id: "beverage", label: "Minuman", img: "/images/menu/starlink-blue.png" },
+    { id: "combat", label: "Combat", img: "/images/mie-elon-musk-combo-nobg.png" },
   ];
 
   // 3 Promo Banners bertema senada dengan aset studio unik (100% kloning referensi McDonald's)
@@ -986,8 +1040,8 @@ function TakeawayContent() {
       buttonShadow: "shadow-[0_4px_16px_rgba(255,188,13,0.35)]",
       buttonTextColor: "text-gray-950",
       buttonArrowColor: "text-gray-950",
-      image: "/images/silver-mountain-placeholder.svg",
-      imageAlt: "Paket Kombo Favorit",
+      image: "/images/mie-elon-musk-combo-nobg.png",
+      imageAlt: "Paket Kombo Mie Elon Musk",
       spotlightGradient:
         "radial-gradient(circle, rgba(255, 120, 20, 0.35) 0%, rgba(255, 107, 0, 0.12) 45%, rgba(255, 107, 0, 0) 70%)",
       itemId: "combat-a",
@@ -1328,25 +1382,25 @@ function TakeawayContent() {
                 {extendedBanners.map((banner, index) => (
                   <div
                     key={`${banner.id}-${index}`}
-                    className="w-full shrink-0 relative bg-gradient-to-b from-[#180A04] via-[#120502] to-[#0A0201] text-white min-h-[212px] sm:min-h-[224px] flex items-center overflow-hidden pl-5 sm:pl-6 pr-0 pt-4 pb-6"
+                    className="w-full shrink-0 relative bg-gradient-to-b from-[#180A04] via-[#120502] to-[#0A0201] text-white min-h-[222px] sm:min-h-[236px] flex items-center overflow-hidden pl-5 sm:pl-6 pr-0 pt-4 pb-6"
                   >
                     {/* Warm Ambient Spotlight Effect - Contained behind food so it never touches edges */}
                     <div
                       className="absolute top-1/2 -translate-y-1/2 pointer-events-none rounded-full"
                       style={{
                         right: "6%",
-                        width: "210px",
-                        height: "210px",
+                        width: "240px",
+                        height: "240px",
                         background: banner.spotlightGradient,
                         filter: "blur(28px)",
                       }}
                     />
                     {/* Dark Grounding Tabletop Base */}
-                    <div className="absolute bottom-0 inset-x-0 h-14 bg-gradient-to-t from-black/90 via-black/45 to-transparent pointer-events-none z-10" />
+                    <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/90 via-black/45 to-transparent pointer-events-none z-10" />
 
                     <div className="w-full h-full flex items-center justify-between relative z-10">
                       {/* Left Text Column */}
-                      <div className="w-[43%] sm:w-[41%] pr-1 flex flex-col justify-center py-1">
+                      <div className="w-[40%] sm:w-[38%] pr-1 flex flex-col justify-center py-1 relative z-20">
                         <span
                           className={`${banner.badgeBg} ${banner.badgeText} font-bold text-[9px] sm:text-[9.5px] tracking-wider uppercase px-2 py-0.5 rounded-[4px] self-start inline-block mb-1.5 shadow-xs leading-tight`}
                           style={{
@@ -1414,15 +1468,21 @@ function TakeawayContent() {
                       </div>
 
                       {/* Right Food Image / Placeholder */}
-                      <div className="absolute right-0 bottom-0 top-0 w-[50%] sm:w-[52%] flex items-center justify-end pr-3 sm:pr-5 pointer-events-none z-10">
-                        <div className="relative w-28 h-28 sm:w-32 sm:h-32 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
+                      <div className="absolute -right-3 sm:-right-1 bottom-0 top-0 w-[65%] sm:w-[67%] flex items-center justify-end pointer-events-none z-10">
+                        <div
+                          className={`relative ${
+                            banner.image.endsWith(".svg")
+                              ? "w-28 h-28 sm:w-32 sm:h-32"
+                              : "w-[275px] h-[185px] sm:w-[325px] sm:h-[215px]"
+                          } drop-shadow-[0_18px_36px_rgba(0,0,0,0.75)]`}
+                        >
                           <Image
                             src={banner.image}
                             alt={banner.imageAlt}
                             fill
                             priority={index === 1}
                             draggable={false}
-                            className="object-contain pointer-events-none select-none"
+                            className="object-contain object-right pointer-events-none select-none scale-105 sm:scale-110 origin-right"
                           />
                         </div>
                       </div>
@@ -1521,17 +1581,17 @@ function TakeawayContent() {
             </div>
 
             {/* 7. PRODUCT CARDS GRID (Cloning persis kartu putih 3-kolom screenshot) */}
-            <div className="mt-2.5 grid grid-cols-3 gap-2">
-              {(activeCircleCategory === "all" ? filteredItems.slice(0, 12) : filteredItems).map((item) => {
+            <div className="mt-2.5 grid grid-cols-3 gap-2 sm:gap-2.5">
+              {(activeCircleCategory === "all" ? filteredItems.slice(0, 18) : filteredItems).map((item) => {
                 return (
                   <div
                     key={item.id}
                     onClick={() => handleOpenCustomize(item)}
-                    className="bg-white rounded-[20px] border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] p-2 flex flex-col justify-between relative hover:border-gray-200 hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-shadow duration-150 cursor-pointer group"
+                    className="bg-white rounded-[20px] border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] p-2.5 sm:p-3 flex flex-col justify-between relative hover:border-gray-200 hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-shadow duration-150 cursor-pointer group min-h-[178px]"
                   >
 
                     {/* Centered Food Image */}
-                    <div className="relative w-full aspect-square max-h-[82px] my-1 flex items-center justify-center pointer-events-none select-none">
+                    <div className="relative w-full h-[86px] sm:h-[92px] my-1 flex items-center justify-center pointer-events-none select-none">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -1543,30 +1603,30 @@ function TakeawayContent() {
 
                     {/* Title & Description */}
                     <div className="mt-1">
-                      <h3 className="font-semibold text-[11.5px] text-gray-900 tracking-tight leading-snug line-clamp-1">
+                      <h3 className="font-semibold text-[11.5px] sm:text-[12px] text-gray-900 tracking-tight leading-snug line-clamp-2 min-h-[28px] sm:min-h-[30px]">
                         {item.name
                           .toLowerCase()
                           .split(" ")
                           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                           .join(" ")}
                       </h3>
-                      <p className="text-[9px] text-gray-400 font-normal leading-tight mt-0.5 truncate">
+                      <p className="text-[9.5px] sm:text-[10px] text-gray-400 font-normal leading-tight mt-0.5 truncate">
                         {getItemSubtitle(item)}
                       </p>
                     </div>
 
                     {/* Bottom Row: Price & Red Circular Plus Button */}
                     <div className="flex items-center justify-between pt-1.5 mt-1 border-t border-gray-50">
-                      <span className="font-bold text-[11.5px] text-gray-900 tracking-tight">
+                      <span className="font-bold text-[12px] sm:text-[12.5px] text-gray-900 tracking-tight">
                         {item.formattedPrice || `Rp${item.price.toLocaleString("id-ID")}`}
                       </span>
 
                       <button
                         onClick={(e) => handleQuickAdd(item, e)}
                         aria-label={`Tambah ${item.name}`}
-                        className="w-[22px] h-[22px] rounded-full bg-[#FFD400] hover:bg-[#E6BF00] text-gray-950 flex items-center justify-center shadow-xs active:scale-90 transition-transform cursor-pointer shrink-0"
+                        className="w-[24px] h-[24px] rounded-full bg-[#FFD400] hover:bg-[#E6BF00] text-gray-950 flex items-center justify-center shadow-xs active:scale-90 transition-transform cursor-pointer shrink-0"
                       >
-                        <Plus className="w-2.5 h-2.5 text-gray-950 stroke-[2.2]" />
+                        <Plus className="w-3 h-3 text-gray-950 stroke-[2.2]" />
                       </button>
                     </div>
                   </div>
@@ -1605,10 +1665,10 @@ function TakeawayContent() {
               {/* Center-Right Large Prominent Food Image (100% Opacity, Sharp, Studio-grade) */}
               <div className="absolute right-12 sm:right-14 top-1/2 -translate-y-1/2 w-[165px] sm:w-[185px] h-[105px] sm:h-[115px] z-10 pointer-events-none select-none flex items-center justify-center">
                 <Image
-                  src="/images/promo-offer-combo.png"
-                  alt="Promo food combo"
+                  src="/images/mie-elon-musk-combo-nobg.png"
+                  alt="Paket Kombo Mie Elon Musk"
                   fill
-                  className="object-contain pointer-events-none select-none"
+                  className="object-contain pointer-events-none select-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.22)]"
                   priority
                 />
               </div>
@@ -2355,6 +2415,7 @@ function TakeawayContent() {
               >
                 {isSubmittingOrder ? "Memproses..." : "Konfirmasi & Bayar"}
               </button>
+              {paymentError && <p role="alert" className="absolute bottom-full inset-x-0 bg-red-50 px-4 py-3 text-xs text-red-700">{paymentError}</p>}
             </div>
           </div>
         )}
@@ -3088,6 +3149,22 @@ function getCartItemVariantText(cartItem) {
 function getItemSubtitle(item) {
   if (item.shortDesc) return item.shortDesc;
   const id = item.id;
+  if (id === "elon-dark-matter") return "Mie Hitam Cumi & Garlic";
+  if (id === "tesla-reactor") return "Miso Pedas Mentega & Telur";
+  if (id === "spacex-orbit-crunch") return "Mie Sarang Crispy & Sapi";
+  if (id === "full-stack") return "Mie Komplit Developer";
+  if (id === "mars-colony-curry") return "Kuah Kari Kental Mars";
+  if (id === "starlink-blue") return "Soda Lemon Biru Segar";
+  if (id === "grok-choco") return "Cokelat Creamy Pekat";
+  if (id === "neuralink-matcha") return "Matcha Susu Creamy";
+  if (id === "tesla-caramel-latte") return "Espresso & Karamel Manis";
+  if (id === "mars-strawberry-milk") return "Susu Stroberi Fruity";
+  if (id === "air-putih") return "Air Mineral Botol Dingin";
+  if (id === "rocket-pop-chicken") return "Ayam Crispy Saus Pedas";
+  if (id === "orbit-crunch") return "Pangsit Renyah Saus Mayo";
+  if (id === "fusion-cheese-bites") return "Bola Keju Lumer Renyah";
+  if (id === "neuralink-enoki") return "Jamur Enoki Krispi Mayo";
+  if (id === "mars-potato-wedges") return "Kentang Tebal & Saus Keju";
   if (id === "mie-hompimpa") return "Pedas Asin Gurih";
   if (id === "mie-gacoan") return "Pedas Manis Gurih";
   if (id === "mie-suit") return "Gurih Original (0 Cabai)";

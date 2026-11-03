@@ -10,18 +10,30 @@ export function StoryCommunitySection() {
       className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-14 sm:pb-20 overflow-visible"
     >
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
-        {/* Doodle Kentang Goreng (French Fries) Sesuai Referensi CRISPR (media_1790447664741.png) */}
+        {/* Doodle Kentang Goreng (French Fries) Sesuai Referensi CRISPR */}
         <div
-          className="absolute -left-2 sm:left-2 md:left-6 -top-6 sm:-top-8 md:-top-10 w-16 sm:w-22 md:w-28 pointer-events-none z-10 select-none"
+          className="absolute -left-2 sm:left-2 md:left-6 -top-6 sm:-top-8 md:-top-10 w-16 sm:w-22 md:w-28 pointer-events-none z-10 select-none text-neutral-900/80"
           aria-hidden="true"
         >
-          <Image
-            src="/images/doodle-french-fries.png"
-            alt="Doodle Kentang Goreng CRISPR / Gacoan"
-            width={609}
-            height={804}
-            className="w-full h-auto object-contain opacity-90 select-none"
-          />
+          <svg
+            viewBox="0 0 100 120"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-full h-full transform -rotate-12"
+          >
+            {/* Box */}
+            <path d="M 20 50 L 30 110 L 70 110 L 80 50 Z" />
+            <path d="M 20 50 C 35 60, 65 60, 80 50" />
+            {/* Fries sticks */}
+            <rect x="25" y="20" width="8" height="35" rx="1.5" />
+            <rect x="36" y="10" width="8" height="45" rx="1.5" />
+            <rect x="47" y="5" width="8" height="50" rx="1.5" />
+            <rect x="58" y="12" width="8" height="42" rx="1.5" />
+            <rect x="68" y="25" width="8" height="30" rx="1.5" />
+          </svg>
         </div>
 
         {/* Doodle Taco / Food Wrap di Kanan Bawah Sesuai Gambar Referensi */}

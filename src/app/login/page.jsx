@@ -94,6 +94,22 @@ export default function LoginPage() {
       data-lenis-prevent="true"
       className="min-h-screen w-full relative overflow-hidden bg-[#FAF7F2] font-sans text-[#161616] flex items-center justify-center select-none"
     >
+      {/* Tombol Kembali ke Halaman Sebelumnya (Pojok Kiri Atas, Clean & Ringkas) */}
+      <button
+        type="button"
+        onClick={() => {
+          if (typeof window !== "undefined" && window.history.length > 1) {
+            router.back();
+          } else {
+            router.push("/");
+          }
+        }}
+        aria-label="Kembali ke halaman sebelumnya"
+        className="fixed top-5 left-5 z-50 px-3.5 py-1.5 rounded-full bg-white/90 hover:bg-white text-neutral-800 text-xs font-semibold shadow-sm hover:shadow transition-all border border-black/10 active:scale-95 backdrop-blur-sm cursor-pointer"
+      >
+        <span>Kembali</span>
+      </button>
+
       {/* Toast Notifikasi Bersih */}
       {toastMessage && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-60 bg-[#161616] text-white text-xs font-medium px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-white/10 animate-fade-in">

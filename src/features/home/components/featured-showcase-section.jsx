@@ -59,18 +59,28 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
 
         {/* 3 Featured Product Cards Persis Referensi CRISPR (media_1790413582346.png & media_1790313049356.png) */}
         <div className="relative max-w-[820px] mx-auto px-2 min-[380px]:px-3 sm:px-6">
-          {/* Floating Doodle Gelas Minuman Es di Sisi Kiri Sesuai Referensi CRISPR (media_1790447646312.png & media_1790449618475.png) */}
+          {/* Floating Doodle Gelas Minuman Es di Sisi Kiri Sesuai Referensi CRISPR */}
           <div
-            className="absolute -left-4 min-[360px]:-left-5 min-[400px]:-left-6 sm:-left-10 md:-left-14 lg:-left-16 -top-18 min-[360px]:-top-20 min-[400px]:-top-22 sm:-top-28 md:-top-32 lg:-top-36 w-12 min-[360px]:w-14 min-[400px]:w-16 sm:w-22 md:w-26 lg:w-30 pointer-events-none z-10 select-none block"
+            className="absolute -left-4 min-[360px]:-left-5 min-[400px]:-left-6 sm:-left-10 md:-left-14 lg:-left-16 -top-18 min-[360px]:-top-20 min-[400px]:-top-22 sm:-top-28 md:-top-32 lg:-top-36 w-12 min-[360px]:w-14 min-[400px]:w-16 sm:w-22 md:w-26 lg:w-30 pointer-events-none z-10 select-none block text-neutral-900/80"
             aria-hidden="true"
           >
-            <Image
-              src="/images/doodle-drink-cup.png"
-              alt="Doodle Gelas Minuman Es Mie Gacoan"
-              width={623}
-              height={1015}
-              className="w-full h-auto object-contain opacity-90 select-none"
-            />
+            <svg
+              viewBox="0 0 100 140"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-full h-full transform -rotate-6"
+            >
+              <path d="M 25 35 L 32 125 C 33 132, 67 132, 68 125 L 75 35 Z" />
+              <path d="M 20 35 L 80 35" strokeWidth="3.2" />
+              <path d="M 25 35 C 25 28, 75 28, 75 35" />
+              <path d="M 50 28 L 50 10 L 65 5" strokeWidth="3" />
+              <rect x="36" y="55" width="12" height="12" rx="2" strokeWidth="2.2" />
+              <rect x="52" y="75" width="14" height="14" rx="2" strokeWidth="2.2" />
+              <rect x="38" y="95" width="13" height="13" rx="2" strokeWidth="2.2" />
+            </svg>
           </div>
 
           {/* Floating Doodle Dimsum di Sisi Kanan Sesuai Referensi */}
@@ -86,20 +96,20 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
           </div>
 
           {/* 3 Kolom Sejajar Langsung (Kesamping) Baik di Mobile Maupun Desktop */}
-          <div className="grid grid-cols-3 gap-2 min-[380px]:gap-2.5 sm:gap-4 md:gap-5">
+          <div className="grid grid-cols-3 gap-2.5 min-[380px]:gap-3 sm:gap-4 md:gap-5">
             {highlightCards.map((card) => (
               <div
                 key={card.id}
                 onClick={onOpenOrder}
-                className="group relative bg-[#FF5412] rounded-[18px] min-[360px]:rounded-[22px] min-[400px]:rounded-[26px] sm:rounded-[36px] md:rounded-[42px] p-0 overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer aspect-[1/1.05] select-none flex items-center justify-center"
+                className="group relative rounded-[20px] min-[360px]:rounded-[24px] min-[400px]:rounded-[28px] sm:rounded-[34px] md:rounded-[38px] p-0 overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer aspect-square select-none flex items-center justify-center bg-transparent"
               >
-                {/* Gambar Lengkap (Sticker Judul + Makanan) Pas & Proporsional */}
-                <div className="relative w-full h-full flex items-center justify-center">
+                {/* Poster Menu Penuh (Elon Dark Matter, Full Stack, Fusion Cheese Bites) Pas & Proporsional */}
+                <div className="relative w-full h-full overflow-hidden">
                   <Image
                     src={card.image}
                     alt={card.title}
                     fill
-                    className="object-contain object-bottom scale-[1.01] sm:scale-[1.02] translate-y-0.5 sm:translate-y-1 group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 640px) 33vw, 280px"
                     priority
                   />

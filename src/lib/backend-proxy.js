@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function proxyToBackend(request, resource) {
-  const baseUrl = process.env.LARAVEL_API_URL || "http://127.0.0.1:8000/api";
+  const baseUrl = process.env.LARAVEL_API_URL || "http://127.0.0.1:8010/api";
   const query = new URL(request.url).search;
 
   try {
@@ -10,7 +10,7 @@ export async function proxyToBackend(request, resource) {
       headers: { Accept: "application/json", "Content-Type": "application/json" },
       body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.text(),
       cache: "no-store",
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(1500),
     });
 
     const data = await response.json();

@@ -30,15 +30,8 @@ export default function HomePage() {
       {/* 2. Hero Section: Kubah garis HANYA berisi doodle merah. Headline dan foto piring mie di luar garis */}
       <HeroSection />
 
-      {/* 3. Area Bodi & Footer: Garis vertikal terusan (z-0) berjalan dari bawah hero hingga footer */}
+      {/* 3. Area Bodi & Footer */}
       <div className="relative w-full flex flex-col">
-        {/* Dua Garis Vertikal Latar Belakang (Lebar Pas 860px) Terusan dari Kubah Hero ke Footer */}
-        <div
-          className="absolute inset-0 pointer-events-none flex justify-center z-0"
-          aria-hidden="true"
-        >
-          <div className="w-[340px] sm:w-[540px] md:w-[720px] lg:w-[860px] h-full border-l-[1.5px] border-r-[1.5px] border-orange-500/40" />
-        </div>
 
         {/* 3.1 Running Marquee Ticker 1 (BITE INTO HAPPINESS) Miring & Bergambar Mie Gacoan */}
         <div className="relative z-20 -mt-14 min-[400px]:-mt-18 sm:-mt-24 md:-mt-32 lg:-mt-36 mb-2 sm:mb-4">

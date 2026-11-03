@@ -62,25 +62,25 @@ export const marqueeItems = [
 
 export const highlightCards = [
   {
-    id: "mie-gacoan",
-    tag: "GACOAN",
-    title: "MIE GACOAN",
-    subtitle: "MANIS GURIH PEDAS",
-    image: "/images/card-gacoan-new.png",
+    id: "elon-dark-matter",
+    tag: "ELON DARK MATTER",
+    title: "Elon Dark Matter",
+    subtitle: "Gurih • Creamy • Smoky",
+    image: "/images/card-elon-dark-matter.png",
   },
   {
-    id: "mie-hompimpa",
-    tag: "HOMPIMPA",
-    title: "MIE HOMPIMPA",
-    subtitle: "ASIN GURIH PEDAS",
-    image: "/images/card-hompimpa-new.png",
+    id: "full-stack",
+    tag: "FULL STACK",
+    title: "Full Stack",
+    subtitle: "Rame Topping • Gurih • Nagih",
+    image: "/images/card-full-stack.png",
   },
   {
-    id: "udang-keju",
-    tag: "UDANG KEJU",
-    title: "UDANG KEJU",
-    subtitle: "LUMER & RENYAH",
-    image: "/images/card-udang-keju-new.png",
+    id: "fusion-cheese-bites",
+    tag: "FUSION CHEESE BITES",
+    title: "Fusion Cheese Bites",
+    subtitle: "Crispy & Cheesy",
+    image: "/images/card-fusion-cheese-bites.png",
   },
 ];
 
