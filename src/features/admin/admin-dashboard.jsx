@@ -265,17 +265,17 @@ export default function AdminDashboard({
         </div>
       </aside>
 
-      {/* 2. MAIN CONTENT WRAPPER: FRAMED WITH DARK BEZEL, CONCENTRIC OUTER LINE, AND ROUNDED WHITE PANEL */}
-      <div className="flex-1 lg:ml-64 p-2.5 sm:p-3.5 lg:p-4 bg-[#070A11] flex flex-col min-w-0">
+      {/* 2. MAIN CONTENT WRAPPER: SLIM BEZEL AND REFINED CORNERS (NOT OVERLY THICK, NOT OVERLY WIDE) */}
+      <div className="flex-1 lg:ml-64 p-1.5 sm:p-2 lg:p-2.5 bg-[#070A11] flex flex-col min-w-0">
         
-        {/* CONCENTRIC OUTER BEZEL FRAME WITH VISIBLE OUTLINE AROUND THE WHITE CONTAINER */}
-        <div className="flex-1 p-1 sm:p-1.5 rounded-[34px] sm:rounded-[38px] lg:rounded-[42px] border border-slate-800/80 bg-slate-950/70 shadow-2xl flex flex-col">
+        {/* SLIM OUTER BEZEL FRAME (SLIM LINE, CONCENTRIC WITH WHITE CONTAINER) */}
+        <div className="flex-1 p-1 sm:p-1.5 rounded-[22px] sm:rounded-[24px] lg:rounded-[26px] border border-slate-800/70 bg-[#0B0F19]/80 shadow-xl flex flex-col">
           
-          {/* WHITE DASHBOARD CANVAS WITH IDENTICAL LARGE CORNER CURVE (rounded-[28px] / rounded-[32px]) */}
-          <div className="flex-1 bg-white text-slate-800 rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">
+          {/* REFINED WHITE DASHBOARD CANVAS (CLEAN 18PX-20PX CORNER RADIUS, NOT TOO WIDE) */}
+          <div className="flex-1 bg-white text-slate-800 rounded-[18px] sm:rounded-[20px] lg:rounded-[22px] border border-slate-200/90 shadow-xs flex flex-col min-w-0 overflow-hidden">
             
             {/* Header Section (Matching Axiom: Welcome back + theme/bell/profile) */}
-            <header className="px-6 sm:px-8 pt-7 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100">
+            <header className="px-5 sm:px-7 pt-5 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
                   Welcome back, {adminFirstName}!
@@ -352,7 +352,7 @@ export default function AdminDashboard({
             </header>
 
             {/* Content Body */}
-            <main className="p-6 sm:p-8 space-y-6 flex-1">
+            <main className="p-5 sm:p-6 space-y-5 flex-1">
               
               {/* Status Message Notification */}
               {message && (
