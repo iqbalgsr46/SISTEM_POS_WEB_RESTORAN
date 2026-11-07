@@ -26,3 +26,11 @@ test('proxy obtains server identity, validates same origin and never forwards cl
  assert.match(proxy,/getServerSession/); assert.match(proxy,/origin/); assert.match(proxy,/googleSub/);
  assert.match(proxy,/staffBackend/);
 });
+test('login page auto-redirects approved accounts and displays waiting card only for pending accounts',()=>{
+ const login=read('src/app/login/page.jsx');
+ assert.match(login, /router\.replace\(targetWorkspace\)/);
+ assert.doesNotMatch(login, /Buka ruang kerja/);
+ assert.match(login, /Menunggu Persetujuan Admin/);
+ assert.match(login, /Cek Status Persetujuan/);
+ assert.match(login, /Keluar \/ Ganti Akun/);
+});
