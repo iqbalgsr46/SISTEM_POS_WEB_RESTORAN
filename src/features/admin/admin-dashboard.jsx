@@ -156,7 +156,7 @@ export default function AdminDashboard({
     <div className="min-h-screen bg-[#070A11] text-slate-100 flex flex-col lg:flex-row antialiased">
       
       {/* 1. DARK SIDEBAR NAVIGATION */}
-      <aside className="w-full lg:w-64 bg-[#070A11] text-slate-300 flex flex-col justify-between shrink-0 lg:fixed lg:inset-y-0 z-30 border-r border-slate-800/60">
+      <aside className="w-full lg:w-64 bg-[#070A11] text-slate-300 flex flex-col justify-between shrink-0 lg:fixed lg:inset-y-0 z-30">
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Brand Header */}
           <div className="h-20 flex items-center gap-3 px-6 border-b border-slate-800/50 shrink-0">
@@ -265,16 +265,13 @@ export default function AdminDashboard({
         </div>
       </aside>
 
-      {/* 2. MAIN CONTENT WRAPPER: SLIM BEZEL AND REFINED CORNERS (NOT OVERLY THICK, NOT OVERLY WIDE) */}
-      <div className="flex-1 lg:ml-64 p-1.5 sm:p-2 lg:p-2.5 bg-[#070A11] flex flex-col min-w-0">
+      {/* 2. MAIN CONTENT WRAPPER */}
+      <div className="flex-1 lg:ml-64 p-2 sm:p-2.5 lg:p-3 bg-[#070A11] flex flex-col min-w-0">
         
-        {/* SLIM OUTER BEZEL FRAME (SLIM LINE, CONCENTRIC WITH WHITE CONTAINER) */}
-        <div className="flex-1 p-1 sm:p-1.5 rounded-[22px] sm:rounded-[24px] lg:rounded-[26px] border border-slate-800/70 bg-[#0B0F19]/80 shadow-xl flex flex-col">
+        {/* WHITE DASHBOARD CANVAS */}
+        <div className="flex-1 bg-white text-slate-800 rounded-[18px] sm:rounded-[20px] lg:rounded-[22px] shadow-sm flex flex-col min-w-0 overflow-hidden">
           
-          {/* REFINED WHITE DASHBOARD CANVAS (CLEAN 18PX-20PX CORNER RADIUS, NOT TOO WIDE) */}
-          <div className="flex-1 bg-white text-slate-800 rounded-[18px] sm:rounded-[20px] lg:rounded-[22px] border border-slate-200/90 shadow-xs flex flex-col min-w-0 overflow-hidden">
-            
-            {/* Header Section (Matching Axiom: Welcome back + theme/bell/profile) */}
+          {/* Header Section (Matching Axiom: Welcome back + theme/bell/profile) */}
             <header className="px-5 sm:px-7 pt-5 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
@@ -1330,7 +1327,6 @@ export default function AdminDashboard({
             </main>
           </div>
         </div>
-      </div>
     </div>
   );
 }
