@@ -1,5 +1,5 @@
 export async function loadAdminResources(request) {
-  const entries = await Promise.all(['orders', 'stock', 'tables', 'menu'].map(async resource => {
+  const entries = await Promise.all(['orders', 'stock', 'tables', 'menu', 'accounts'].map(async resource => {
     try {
       const data = await request(resource === 'menu' ? 'menu?channel=dine_in' : resource);
       if (!Array.isArray(data)) throw new Error('Format respons server tidak valid.');

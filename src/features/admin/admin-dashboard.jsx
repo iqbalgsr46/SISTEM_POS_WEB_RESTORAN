@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { LayoutDashboard, ReceiptText, UtensilsCrossed, PackageCheck, Armchair, ChartNoAxesCombined, ChefHat, ArrowUpRight, RefreshCw, LogOut } from 'lucide-react';
+import { LayoutDashboard, ReceiptText, UtensilsCrossed, PackageCheck, Armchair, ChartNoAxesCombined, ChefHat, ArrowUpRight, RefreshCw, LogOut, Users } from 'lucide-react';
 import { jakartaDate, summarizeOrders } from './admin-data.mjs';
 
-const navigation = [['Dashboard', LayoutDashboard], ['Pesanan', ReceiptText], ['Menu', UtensilsCrossed], ['Ketersediaan', PackageCheck], ['Meja', Armchair], ['Laporan', ChartNoAxesCombined]];
+const navigation = [['Dashboard', LayoutDashboard], ['Pesanan', ReceiptText], ['Menu', UtensilsCrossed], ['Ketersediaan', PackageCheck], ['Meja', Armchair], ['Akun Staf', Users], ['Laporan', ChartNoAxesCombined]];
 const money = value => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
 const statusLabels = { COOKING: 'Dimasak', READY: 'Siap disajikan', COMPLETED: 'Selesai', CANCELLED: 'Dibatalkan', available: 'Kosong', occupied: 'Terisi', cleaning: 'Dibersihkan' };
 const panel = 'rounded-2xl border border-slate-200 bg-white p-5 shadow-sm';
@@ -53,7 +53,52 @@ export default function AdminDashboard({ resources = {}, onRefresh, onMutate, on
         {(tab === 'Dashboard' || tab === 'Pesanan') && <section className={panel}><div className="mb-4 flex flex-wrap items-center justify-between gap-3"><h2 className="font-bold">{tab === 'Dashboard' ? 'Pesanan terbaru' : 'Daftar pesanan'}</h2>{tab === 'Dashboard' ? <button className="text-sm font-semibold text-orange-700" onClick={() => setTab('Pesanan')}>Lihat semua →</button> : <div className="flex flex-wrap gap-2"><input aria-label="Cari pesanan" placeholder="Cari tiket, pelanggan, meja…" value={search} onChange={e => setSearch(e.target.value)} className="rounded-lg border p-2 text-sm" /><select aria-label="Filter stasiun" value={station} onChange={e => setStation(e.target.value)} className={button}><option value="all">Semua stasiun</option><option value="wok">Wok</option><option value="dimsum">Dimsum</option><option value="bar">Bar</option></select></div>}</div><ResourceNotice resource={resources.orders} empty="Belum ada pesanan tersimpan." />{report && <><div className="overflow-x-auto"><table className="w-full whitespace-nowrap text-left text-sm"><thead className="border-y border-slate-100 bg-slate-50 text-xs text-slate-500"><tr>{['Pesanan', 'Pelanggan / meja', 'Total', 'Pembayaran', 'Status', ...(tab === 'Pesanan' ? ['Tindakan'] : [])].map(label => <th key={label} className="px-3 py-3 font-medium">{label}</th>)}</tr></thead><tbody>{(tab === 'Dashboard' ? matchingOrders.slice(0, 5) : matchingOrders).map(order => <React.Fragment key={order.id}><tr className="border-b border-slate-100"><td className="px-3 py-4 font-semibold">{order.ticketNumber}<span className="mt-1 block text-xs font-normal text-slate-400">{order.source}</span></td><td className="px-3 py-4">{order.customerName || 'Pelanggan'}<span className="block text-xs text-slate-400">{order.tableNumber ? `Meja ${order.tableNumber}` : 'Tanpa meja'}</span></td><td className="px-3 py-4">{money(order.totalAmount)}</td><td className="px-3 py-4">{order.paymentStatus === 'paid' ? 'Lunas' : order.paymentStatus || '—'}</td><td className="px-3 py-4"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${order.status === 'CANCELLED' ? 'bg-red-50 text-red-700' : order.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-800'}`}>{statusLabels[order.status] || order.status}</span></td>{tab === 'Pesanan' && <td className="px-3 py-4">{['COOKING', 'READY'].includes(order.status) ? <button className={button} disabled={busy} onClick={() => onMutate('orders', { id: order.id, status: order.status === 'COOKING' ? 'READY' : 'COMPLETED' })}>{order.status === 'COOKING' ? 'Tandai siap' : 'Selesaikan'}</button> : '—'}</td>}</tr>{tab === 'Pesanan' && <tr><td colSpan={6} className="bg-slate-50/50 px-3 py-3"><details><summary className="cursor-pointer text-xs text-slate-500">Rincian item · {new Date(order.createdAt).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB</summary><div className="mt-3 flex flex-wrap gap-2">{order.items?.map(item => <button key={item.id} disabled={busy || !['COOKING', 'READY'].includes(order.status)} onClick={() => onMutate('orders', { id: order.id, items: [{ id: item.id, ready: !item.ready }] })} aria-pressed={item.ready} className={button + (item.ready ? ' text-emerald-700' : '')}>{item.ready ? '✓ ' : ''}{item.name} · {item.station}</button>)}</div>{order.notes && <p className="mt-2 text-xs">Catatan: {order.notes}</p>}</details></td></tr>}</React.Fragment>)}</tbody></table></div>{!matchingOrders.length && <p className="py-6 text-sm text-slate-500">Tidak ada pesanan yang sesuai periode atau pencarian.</p>}</>}</section>}
         {(tab === 'Ketersediaan' || tab === 'Menu') && <section className={panel}><h2 className="font-bold">{tab === 'Menu' ? 'Katalog menu · Dine-in' : 'Ketersediaan menu'}</h2><p className="mb-5 mt-1 text-sm text-slate-500">{tab === 'Menu' ? 'Katalog baca-saja dari API. Pengubahan harga dan menu belum tersedia.' : 'Perubahan disimpan ke server dan berlaku untuk menu yang terhubung.'}</p><ResourceNotice resource={resources[tab === 'Menu' ? 'menu' : 'stock']} empty="Belum ada menu tersimpan." /><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{(tab === 'Menu' ? menus.flatMap(category => category.items.map(item => ({ ...item, category: category.title, id: `${category.id}-${item.id}` }))) : stock).map(item => <article key={item.id} className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4"><div><p className="text-sm font-semibold">{item.name}</p><p className="mt-1 text-xs text-slate-500">{item.category}{tab === 'Menu' ? ` · ${money(item.price)}` : ''}</p></div>{tab === 'Menu' ? <span className="text-xs">{item.available ? 'Tersedia' : 'Habis'}</span> : <button role="switch" aria-checked={item.available} aria-label={`Ketersediaan ${item.name}`} disabled={busy} onClick={() => onMutate('stock', { id: item.id, available: !item.available })} className={`rounded-full px-3 py-2 text-xs font-semibold disabled:opacity-50 ${item.available ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'}`}>{item.available ? 'Tersedia' : 'Habis'}</button>}</article>)}</div></section>}
         {(tab === 'Meja' || tab === 'Dashboard') && <section className={panel}><div className="mb-4 flex items-center justify-between"><h2 className="font-bold">Status meja</h2><a href="/tables" className="text-sm font-semibold text-orange-700">Kelola QR meja ↗</a></div><ResourceNotice resource={resources.tables} empty="Belum ada meja tersimpan." /><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">{tables.map(table => <article key={table.id} className={`rounded-xl border p-3 ${table.status === 'available' ? 'border-emerald-200 bg-emerald-50/40' : table.status === 'occupied' ? 'border-orange-200 bg-orange-50/50' : 'border-slate-200 bg-slate-50'}`}><p className="text-xs text-slate-500">Meja</p><p className="mt-1 text-xl font-bold">{table.number}</p><p className="mt-2 text-[11px]">{statusLabels[table.status] || table.status}</p>{table.ticket && <p className="mt-1 break-all text-[10px] text-slate-500">{table.ticket}</p>}{tab === 'Meja' && table.status !== 'occupied' && <button disabled={busy} onClick={() => onMutate('tables', { id: table.id, status: table.status === 'cleaning' ? 'available' : 'cleaning' })} className="mt-3 text-left text-xs font-semibold text-orange-800 underline disabled:opacity-50">{table.status === 'cleaning' ? 'Selesai bersih' : 'Bersihkan meja'}</button>}</article>)}</div></section>}
-        <p className="text-xs text-slate-400">Sumber: API orders, menu, stock dan tables · angka nol hanya ditampilkan setelah data berhasil dimuat.</p>
+        {tab === 'Akun Staf' && <section className={panel}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-bold">Persetujuan & Kelola Akun Staf</h2>
+              <p className="mt-1 text-xs text-slate-500">Setujui staf baru dari pendaftaran Google, tentukan peran (Kasir / Dapur / Admin), atau nonaktifkan akses.</p>
+            </div>
+            <a href="/admin/accounts" className="text-xs font-semibold text-orange-700 underline">Buka halaman manajemen terpisah ↗</a>
+          </div>
+          <ResourceNotice resource={resources.accounts} empty="Belum ada akun terdaftar." />
+          {Array.isArray(resources.accounts?.data) && <div className="space-y-3">
+            {resources.accounts.data.length === 0 && <p className="py-6 text-sm text-slate-500">Belum ada akun Google staf yang mendaftar.</p>}
+            {resources.accounts.data.map(acc => <article key={acc.id} className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-slate-900">{acc.name || 'Tanpa Nama'}</p>
+                  <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${acc.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : acc.status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}`}>
+                    {acc.status === 'approved' ? 'Disetujui' : acc.status === 'pending' ? 'Menunggu' : acc.status}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-slate-500">{acc.email} · Peran saat ini: <strong className="text-slate-700">{acc.role ? (acc.role === 'cashier' ? 'Kasir' : acc.role === 'kitchen' ? 'Dapur' : 'Admin') : 'Belum ditentukan'}</strong></p>
+              </div>
+              <form className="flex flex-wrap items-center gap-2" onSubmit={e => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const role = form.elements.namedItem('role').value;
+                onMutate('accounts', { id: acc.id, status: 'approved', role });
+              }}>
+                <select name="role" aria-label={`Peran untuk ${acc.email}`} defaultValue={acc.role || 'cashier'} className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-2xs">
+                  <option value="cashier">Kasir (POS)</option>
+                  <option value="kitchen">Dapur (Kitchen)</option>
+                  <option value="admin">Admin Restoran</option>
+                </select>
+                <button type="submit" disabled={busy} className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs hover:bg-emerald-700 disabled:opacity-50">
+                  Setujui / Simpan Peran
+                </button>
+                {acc.status !== 'rejected' && <button type="button" disabled={busy} onClick={() => onMutate('accounts', { id: acc.id, status: 'rejected', role: acc.role })} className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-50">
+                  Tolak
+                </button>}
+                {acc.status !== 'disabled' && <button type="button" disabled={busy} onClick={() => onMutate('accounts', { id: acc.id, status: 'disabled', role: acc.role })} className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50">
+                  Nonaktifkan
+                </button>}
+              </form>
+            </article>)}
+          </div>}
+        </section>}
+        <p className="text-xs text-slate-400">Sumber: API orders, menu, stock, tables dan accounts · pembaruan status berlaku seketika.</p>
       </div>
     </main>
   </div>;

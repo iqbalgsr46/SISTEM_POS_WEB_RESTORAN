@@ -19,7 +19,7 @@ test('admin renders conventional navigation and honest unavailable data', async 
   component.require = name => name === 'lucide-react' ? icons : originalRequire(name);
   component._compile(result.code, filename);
   const html = renderToStaticMarkup(React.createElement(component.exports.default, { resources: {}, onRefresh() {}, onMutate() {}, onLogout() {} }));
-  for (const label of ['Dashboard', 'Pesanan', 'Menu', 'Ketersediaan', 'Meja', 'Laporan', 'Belum tersedia']) assert.ok(html.includes(label), label);
+  for (const label of ['Dashboard', 'Pesanan', 'Menu', 'Ketersediaan', 'Meja', 'Akun Staf', 'Laporan', 'Belum tersedia']) assert.ok(html.includes(label), label);
   assert.ok(!html.includes('4.850.000'));
   const errorHtml = renderToStaticMarkup(React.createElement(component.exports.default, { resources: { orders: { data: null, error: 'Backend offline' } }, onRefresh() {}, onMutate() {}, onLogout() {} }));
   assert.ok(errorHtml.includes('Backend offline'));
