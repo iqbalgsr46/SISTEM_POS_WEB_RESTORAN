@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { getMenuCategories, requestRestaurant } from "@/lib/restaurant-api";
 import {
   Search,
@@ -327,34 +327,9 @@ const ALL_DISHES = [
 
 export default function KasirPOSPage() {
   const router = useRouter();
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
-
-  const [cashierUser, setCashierUser] = useState({
-    name: "Kasir 01 (Siti)",
-    email: "kasir01@mieelonmusk.com",
-    provider: "credentials",
-  });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isAuth = localStorage.getItem("pos_authenticated");
-      if (!isAuth || isAuth !== "true") {
-        router.replace("/login?redirect=/pos");
-      } else {
-        const savedName = localStorage.getItem("pos_user_name");
-        const savedEmail = localStorage.getItem("pos_user_email");
-        const savedProvider = localStorage.getItem("pos_auth_provider");
-        if (savedName || savedEmail) {
-          setCashierUser({
-            name: savedName || "Kasir 01 (Siti)",
-            email: savedEmail || "kasir01@mieelonmusk.com",
-            provider: savedProvider || "credentials",
-          });
-        }
-        setIsAuthChecking(false);
-      }
-    }
-  }, [router]);
+  const { data: session } = useSession();
+  const isAuthChecking = false; // Server layout enforces access; API rechecks DB each request.
+  const cashierUser = {name:session?.user?.name || 'Staff', email:session?.user?.email || '', provider:'google'};
 
   // Navigation State
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -690,14 +665,6 @@ export default function KasirPOSPage() {
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem("pos_authenticated");
-                  localStorage.removeItem("pos_user_email");
-                  localStorage.removeItem("pos_user_name");
-                  localStorage.removeItem("pos_auth_provider");
-                  localStorage.removeItem("pos_user_role");
-                  localStorage.removeItem("pos_user_image");
-                }
                 signOut({ callbackUrl: "/login" });
               }}
               className="text-[10px] font-semibold text-[#F5A623] hover:underline block mt-1.5 pt-1.5 border-t border-[#EBE5DC] w-full text-left cursor-pointer"

@@ -5,34 +5,13 @@ import { requestRestaurant } from "@/lib/restaurant-api";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function DapurKDSPage() {
   const router = useRouter();
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
-  const [kitchenUser, setKitchenUser] = useState({
-    name: "Chef Hendra",
-    provider: "credentials",
-  });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isAuth = localStorage.getItem("pos_authenticated");
-      if (!isAuth || isAuth !== "true") {
-        router.replace("/login?redirect=/kitchen");
-      } else {
-        const savedName = localStorage.getItem("pos_user_name");
-        const savedProvider = localStorage.getItem("pos_auth_provider");
-        if (savedName) {
-          setKitchenUser({
-            name: savedName,
-            provider: savedProvider || "credentials",
-          });
-        }
-        setIsAuthChecking(false);
-      }
-    }
-  }, [router]);
+  const { data: session } = useSession();
+  const isAuthChecking = false; // Server layout enforces access; API rechecks DB each request.
+  const kitchenUser = {name:session?.user?.name || 'Staff', email:session?.user?.email || '', provider:'google'};
 
   // Stasiun aktif: 'all', 'wok' (Mie), 'dimsum', 'bar' (Minuman)
   const [activeStation, setActiveStation] = useState("all");
@@ -332,14 +311,6 @@ export default function DapurKDSPage() {
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem("pos_authenticated");
-                  localStorage.removeItem("pos_user_email");
-                  localStorage.removeItem("pos_user_name");
-                  localStorage.removeItem("pos_auth_provider");
-                  localStorage.removeItem("pos_user_role");
-                  localStorage.removeItem("pos_user_image");
-                }
                 signOut({ callbackUrl: "/login" });
               }}
               title="Keluar dari Kitchen"

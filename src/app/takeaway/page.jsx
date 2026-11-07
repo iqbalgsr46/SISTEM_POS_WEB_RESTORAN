@@ -339,20 +339,15 @@ function TakeawayContent() {
 
     const syncRealtimeOrder = async () => {
       try {
-        const res = await fetch("/api/orders?status=active");
+        const targetId = trackedOrder?.id || trackedOrder?.orderNumber || trackedOrder?.ticketNumber;
+        if (!targetId) return;
+
+        const res = await fetch(`/api/orders?id=${encodeURIComponent(targetId)}`);
         if (!res.ok) return;
-        const activeOrders = await res.json();
-        if (!Array.isArray(activeOrders) || activeOrders.length === 0) return;
+        const matched = await res.json();
+        if (!matched || !matched.status) return;
 
-        const targetId = trackedOrder?.id || trackedOrder?.orderNumber;
-
-        const matched = activeOrders.find((o) => {
-          if (targetId && (o.id === targetId || o.orderNumber === targetId)) return true;
-          if (o.source === "Takeaway" && o.status !== "COMPLETED" && o.status !== "CANCELLED") return true;
-          return false;
-        });
-
-        if (matched && isMounted) {
+        if (isMounted) {
           const rawStatus = (matched.status || "").toUpperCase();
           let stage = 1;
           if (rawStatus === "COOKING") stage = 2;
@@ -405,7 +400,7 @@ function TakeawayContent() {
       isMounted = false;
       clearInterval(interval);
     };
-  }, [trackedOrder?.id, trackedOrder?.orderNumber, addNotification]);
+  }, [trackedOrder?.id, trackedOrder?.orderNumber, trackedOrder?.ticketNumber, addNotification]);
 
   // State tampilan panel kanan khusus ukuran layar laptop ('cart' | 'checkout' | 'tracking')
   const [desktopRightView, setDesktopRightView] = useState(() => {

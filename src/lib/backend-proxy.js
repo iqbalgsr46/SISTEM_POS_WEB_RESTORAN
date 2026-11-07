@@ -1,31 +1,19 @@
-import { NextResponse } from "next/server";
-
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './auth-options';
+import { staffBackend } from './staff-backend';
 export async function proxyToBackend(request, resource) {
-  const baseUrl = process.env.LARAVEL_API_URL || "http://127.0.0.1:8010/api";
-  const query = new URL(request.url).search;
-
-  try {
-    const response = await fetch(`${baseUrl.replace(/\/$/, "")}/${resource}${query}`, {
-      method: request.method,
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.text(),
-      cache: "no-store",
-      signal: AbortSignal.timeout(1500),
-    });
-
-    const data = await response.json();
-    if (response.status >= 500) {
-      return NextResponse.json({ message: "Layanan restoran sedang tidak tersedia." }, { status: 503 });
-    }
-
-    return NextResponse.json(data, {
-      status: response.status,
-      headers: { "Cache-Control": "no-store" },
-    });
-  } catch {
-    return NextResponse.json(
-      { message: "Backend restoran tidak dapat dihubungi. Silakan coba kembali." },
-      { status: 503 }
-    );
-  }
+ const url = new URL(request.url);
+ const mutation = !['GET','HEAD'].includes(request.method);
+ if (mutation && request.headers.get('origin') !== new URL(process.env.NEXTAUTH_URL || url.origin).origin)
+  return NextResponse.json({message:'Origin rejected'}, {status:403});
+ try {
+  const session = await getServerSession(authOptions);
+  const claims = session?.user?.googleSub ? {purpose:'staff',sub:session.user.googleSub} : undefined;
+  const data = await staffBackend(resource+url.search,{method:request.method,body:mutation ? await request.text() : '',claims});
+  return NextResponse.json(data,{status:request.method==='POST'?201:200,headers:{'Cache-Control':'no-store'}});
+ } catch(error) {
+  const status = error.status && error.status < 500 ? error.status : 503;
+  return NextResponse.json({message:status===503?'Layanan restoran tidak tersedia.':error.message},{status,headers:{'Cache-Control':'no-store'}});
+ }
 }

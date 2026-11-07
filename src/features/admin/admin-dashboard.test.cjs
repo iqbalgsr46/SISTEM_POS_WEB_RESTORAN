@@ -1,0 +1,30 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const Module = require('node:module');
+const React = require('react');
+const { renderToStaticMarkup } = require('react-dom/server');
+
+test('admin renders conventional navigation and honest unavailable data', async () => {
+  const filename = path.join(__dirname, 'admin-dashboard.jsx');
+  assert.ok(fs.existsSync(filename), 'admin dashboard component must exist');
+  const { transform } = require('next/dist/build/swc');
+  const result = await transform(fs.readFileSync(filename, 'utf8'), { filename, jsc: { parser: { syntax: 'ecmascript', jsx: true }, transform: { react: { runtime: 'automatic' } } }, module: { type: 'commonjs' } });
+  const component = new Module(filename, module);
+  component.filename = filename;
+  component.paths = module.paths;
+  const icons = await import('lucide-react');
+  const originalRequire = component.require.bind(component);
+  component.require = name => name === 'lucide-react' ? icons : originalRequire(name);
+  component._compile(result.code, filename);
+  const html = renderToStaticMarkup(React.createElement(component.exports.default, { resources: {}, onRefresh() {}, onMutate() {}, onLogout() {} }));
+  for (const label of ['Dashboard', 'Pesanan', 'Menu', 'Ketersediaan', 'Meja', 'Laporan', 'Belum tersedia']) assert.ok(html.includes(label), label);
+  assert.ok(!html.includes('4.850.000'));
+  const errorHtml = renderToStaticMarkup(React.createElement(component.exports.default, { resources: { orders: { data: null, error: 'Backend offline' } }, onRefresh() {}, onMutate() {}, onLogout() {} }));
+  assert.ok(errorHtml.includes('Backend offline'));
+  assert.ok(!errorHtml.includes('Rp0'));
+  const emptyHtml = renderToStaticMarkup(React.createElement(component.exports.default, { resources: { orders: { data: [], error: null } }, onRefresh() {}, onMutate() {}, onLogout() {} }));
+  assert.ok(emptyHtml.includes('Belum ada transaksi lunas'));
+  assert.ok(emptyHtml.includes('Belum ada pesanan tersimpan'));
+});

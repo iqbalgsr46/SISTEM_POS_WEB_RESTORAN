@@ -40,7 +40,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full transition-colors duration-200 select-none ${
+      className={`sticky top-0 z-50 w-full transition-colors duration-200 select-none ${
         isScrolled
           ? "bg-gacoan-yellow/95 backdrop-blur-md shadow-sm py-3.5"
           : "bg-gacoan-yellow py-4 sm:py-5"
@@ -72,7 +72,7 @@ export function SiteHeader() {
         {/* SISI KANAN: Hamburger navigasi */}
         <div className="relative flex items-center gap-2 sm:gap-3" ref={menuRef} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}>
 
-          <button ref={toggleRef} type="button" aria-label={open ? "Tutup navigasi" : "Buka navigasi"} aria-expanded={open} aria-controls="header-navigation" onClick={() => setOpen(!open)} className="relative w-11 h-11 rounded-full hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black transition-colors">
+          <button ref={toggleRef} type="button" aria-label={open ? "Tutup navigasi" : "Buka navigasi"} aria-expanded={open} aria-controls="header-navigation" onClick={() => setOpen(!open)} className="relative z-10 w-11 h-11 rounded-full hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black transition-colors cursor-pointer">
             <span className={`absolute left-3 w-5 h-0.5 bg-neutral-900 rounded-full transition-transform duration-300 motion-reduce:transition-none ${open ? 'top-[21px] rotate-45' : 'top-[15px]'}`} />
             <span className={`absolute left-3 top-[21px] w-5 h-0.5 bg-neutral-900 rounded-full transition-opacity duration-200 ${open ? 'opacity-0' : 'opacity-100'}`} />
             <span className={`absolute left-3 w-5 h-0.5 bg-neutral-900 rounded-full transition-transform duration-300 motion-reduce:transition-none ${open ? 'top-[21px] -rotate-45' : 'top-[27px]'}`} />

@@ -3,90 +3,24 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   CheckCircle2,
-  Eye,
-  EyeOff,
   Loader2,
 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [email, setEmail] = useState("kasir01@mieelonmusk.com");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [redirectPath, setRedirectPath] = useState("/pos");
-
+  const [toastMessage, setToastMessage] = useState('');
+  const account = session?.user?.account;
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const redir = params.get("redirect");
-      if (redir) {
-        setRedirectPath(redir);
-      }
-    }
+    if (new URLSearchParams(window.location.search).has('error')) setToastMessage('Login ditolak atau konfigurasi Google belum sesuai. Hubungi admin.');
   }, []);
-
-  // Jika sudah login via Google (session aktif), langsung redirect
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("pos_authenticated", "true");
-        localStorage.setItem("pos_user_email", session.user.email || "");
-        localStorage.setItem("pos_user_name", session.user.name || "Staff");
-        localStorage.setItem("pos_auth_provider", "google");
-        localStorage.setItem("pos_user_image", session.user.image || "");
-      }
-      setToastMessage(`Login Google Berhasil! Selamat datang, ${session.user.name}`);
-      setTimeout(() => {
-        router.push(redirectPath || "/pos");
-      }, 800);
-    }
-  }, [status, session, router, redirectPath]);
-
-  const handleLogin = (e) => {
-    if (e) e.preventDefault();
-    setIsLoading(true);
-    setToastMessage("Login berhasil! Mengalihkan ke sistem...");
-
-    const emailLower = (email || "").toLowerCase().trim();
-    let target = redirectPath || "/pos";
-
-    if (typeof window !== "undefined" && !window.location.search.includes("redirect=")) {
-      if (emailLower.includes("dapur") || emailLower.includes("kitchen")) {
-        target = "/kitchen";
-      } else if (emailLower.includes("admin") || emailLower.includes("manager")) {
-        target = "/admin";
-      } else {
-        target = "/pos";
-      }
-    }
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("pos_authenticated", "true");
-      localStorage.setItem("pos_user_email", email || "kasir01@mieelonmusk.com");
-      const namePart = email.split("@")[0].replace(/[0-9_.]/g, " ").trim();
-      localStorage.setItem(
-        "pos_user_name",
-        namePart ? namePart.charAt(0).toUpperCase() + namePart.slice(1) : "Kasir"
-      );
-      localStorage.setItem("pos_auth_provider", "credentials");
-    }
-
-    setTimeout(() => {
-      router.push(target);
-    }, 700);
-  };
-
   const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
-    setToastMessage("Menghubungkan ke Google...");
-    signIn("google", { callbackUrl: `${window.location.origin}/login?redirect=${redirectPath}` });
+    signIn('google', {callbackUrl:'/login'});
   };
 
   return (
@@ -371,81 +305,13 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Form Login Manual */}
-          <form onSubmit={handleLogin} className="space-y-3.5">
-            {/* Input Email */}
-            <div>
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-                className="w-full h-11 sm:h-12 px-6 rounded-full bg-[#EAECEF] hover:bg-[#E3E6EA] focus:bg-white text-xs sm:text-sm font-medium text-[#161616] placeholder-[#9CA3AF] border border-transparent focus:border-[#70B92B] focus:outline-none focus:ring-2 focus:ring-[#70B92B]/20 transition-all shadow-2xs"
-              />
-            </div>
-
-            {/* Input Kata Sandi */}
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Kata Sandi"
-                required
-                className="w-full h-11 sm:h-12 pl-6 pr-12 rounded-full bg-[#EAECEF] hover:bg-[#E3E6EA] focus:bg-white text-xs sm:text-sm font-medium text-[#161616] placeholder-[#9CA3AF] border border-transparent focus:border-[#70B92B] focus:outline-none focus:ring-2 focus:ring-[#70B92B]/20 transition-all shadow-2xs"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#161616] p-1.5 focus:outline-none transition-colors cursor-pointer"
-                aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-              >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4 text-[#70B92B]" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-
-            {/* Link Lupa Kata Sandi */}
-            <div className="flex justify-end pt-0.5">
-              <a
-                href="#forgot"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setToastMessage("Silakan hubungi Manager Outlet untuk reset kata sandi.");
-                }}
-                className="text-[11px] font-semibold text-[#70B92B] hover:text-[#5FA800] hover:underline transition-colors cursor-pointer"
-              >
-                Lupa kata sandi?
-              </a>
-            </div>
-
-            {/* Tombol Masuk */}
-            <div className="flex justify-center pt-2">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-32 sm:w-36 h-10 sm:h-11 rounded-xl bg-[#70B92B] hover:bg-[#62A422] text-white text-xs sm:text-sm font-bold shadow-md shadow-[#70B92B]/25 transition-all active:scale-95 flex items-center justify-center cursor-pointer"
-              >
-                {isLoading ? (
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                ) : (
-                  "Masuk"
-                )}
-              </button>
-            </div>
-          </form>
-
-          {/* Garis Pemisah */}
-          <div className="relative flex items-center justify-center my-4">
-            <div className="w-full border-t border-[#E5E7EB]"></div>
-            <span className="absolute bg-[#FAF7F2] px-3 text-xs font-semibold text-[#70B92B]">
-              atau
-            </span>
-          </div>
+          <p className="text-sm text-center text-slate-600">Daftar atau masuk dengan Google. Akun baru menunggu persetujuan admin sebelum mengakses sistem staf.</p>
+          {status === 'authenticated' && <div role="status" className="space-y-3 rounded-xl bg-white p-4 text-sm">
+            <p>{session.user.email}</p>
+            <p>Status akun: {account?.status || 'Tidak tersedia — akses ditutup'}</p>
+            {account?.status === 'approved' && <a className="block font-semibold text-green-700" href={{admin:'/admin',cashier:'/pos',kitchen:'/kitchen'}[account.role] || '/login'}>Buka ruang kerja</a>}
+            <button onClick={() => signOut({callbackUrl:'/login'})}>Keluar / ganti akun</button>
+          </div>}
 
           {/* Tombol Login Google Asli */}
           <div>

@@ -23,9 +23,12 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-gacoan-yellow relative overflow-x-clip scrollbar-yellow">
+    <main className="min-h-screen flex flex-col bg-gacoan-yellow relative scrollbar-yellow">
       {/* 1. Header / Navbar Sticky Sesuai Referensi CRISPR */}
       <SiteHeader />
+
+      {/* Wrapper overflow-x-clip agar marquee miring tidak menimbulkan horizontal scroll */}
+      <div className="relative w-full flex flex-col overflow-x-clip">
 
       {/* 2. Hero Section: Kubah garis HANYA berisi doodle merah. Headline dan foto piring mie di luar garis */}
       <HeroSection />
@@ -80,6 +83,8 @@ export default function HomePage() {
       {/* 4. Sub-footer Copyright Sesuai Referensi CRISPR */}
       <div className="relative z-10 w-[340px] sm:w-[540px] md:w-[720px] lg:w-[860px] mx-auto py-4 px-3 text-xs font-bold text-black flex items-center justify-start select-none">
         <p>© 2026 PT Pesta Pora Abadi (Mie Elon Musk Cikarang). All rights reserved.</p>
+      </div>
+
       </div>
 
       {/* Modal Dialog Pemesanan Online */}

@@ -349,23 +349,15 @@ function DineInContent() {
 
     const syncRealtimeOrder = async () => {
       try {
-        const res = await fetch("/api/orders?status=active");
+        const targetId = trackedOrder?.id || trackedOrder?.orderNumber || trackedOrder?.ticketNumber;
+        if (!targetId) return;
+
+        const res = await fetch(`/api/orders?id=${encodeURIComponent(targetId)}`);
         if (!res.ok) return;
-        const activeOrders = await res.json();
-        if (!Array.isArray(activeOrders) || activeOrders.length === 0) return;
+        const matched = await res.json();
+        if (!matched || !matched.status) return;
 
-        const currentTable = tableNumber || tableFromUrl?.replace(/\D/g, "");
-        const targetId = trackedOrder?.id || trackedOrder?.orderNumber;
-
-        const matched = activeOrders.find((o) => {
-          if (targetId && (o.id === targetId || o.orderNumber === targetId)) return true;
-          if (o.tableNumber && currentTable && String(o.tableNumber).padStart(2, "0") === String(currentTable).padStart(2, "0")) {
-            return o.status !== "COMPLETED" && o.status !== "CANCELLED";
-          }
-          return false;
-        });
-
-        if (matched && isMounted) {
+        if (isMounted) {
           const rawStatus = (matched.status || "").toUpperCase();
           let stage = 1;
           if (rawStatus === "COOKING") stage = 2;
@@ -419,7 +411,7 @@ function DineInContent() {
       isMounted = false;
       clearInterval(interval);
     };
-  }, [trackedOrder?.id, trackedOrder?.orderNumber, tableNumber, tableFromUrl, addNotification]);
+  }, [trackedOrder?.id, trackedOrder?.orderNumber, trackedOrder?.ticketNumber, tableNumber, tableFromUrl, addNotification]);
 
   // State tampilan panel kanan khusus ukuran layar laptop ('cart' | 'checkout' | 'tracking')
   const [desktopRightView, setDesktopRightView] = useState(() => {
