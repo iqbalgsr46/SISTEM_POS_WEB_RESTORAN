@@ -1,13 +1,14 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { requestRestaurant } from '@/lib/restaurant-api';
 import AdminDashboard from '@/features/admin/admin-dashboard';
 import { loadAdminResources } from '@/features/admin/admin-data.mjs';
 
 export default function AdminPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [authenticated, setAuthenticated] = useState(false);
   const [resources, setResources] = useState({});
   const [refreshing, setRefreshing] = useState(false);
@@ -49,7 +50,7 @@ export default function AdminPage() {
   const logout = () => {
     signOut({ callbackUrl: '/login' });
   };
-  if (!authenticated) return <div role="status" className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">Memeriksa sesi admin…</div>;
-  return <AdminDashboard resources={resources} onRefresh={refresh} onMutate={mutate} onLogout={logout} refreshing={refreshing} busy={busy} message={message} updatedAt={updatedAt} />;
+  if (!authenticated) return <div role="status" className="flex min-h-screen items-center justify-center bg-slate-900 text-sm text-slate-400">Memeriksa sesi admin…</div>;
+  return <AdminDashboard session={session} resources={resources} onRefresh={refresh} onMutate={mutate} onLogout={logout} refreshing={refreshing} busy={busy} message={message} updatedAt={updatedAt} />;
 }
 

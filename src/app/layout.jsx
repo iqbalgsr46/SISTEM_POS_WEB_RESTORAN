@@ -1,16 +1,14 @@
-import { Outfit, Fredoka } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+const outfit = localFont({
+  src: "./fonts/Outfit-Variable.woff2",
   variable: "--font-outfit",
   display: "swap",
 });
 
-const fredoka = Fredoka({
-  subsets: ["latin"],
-  weight: ["600", "700"],
+const fredoka = localFont({
+  src: "./fonts/Fredoka-Variable.woff2",
   variable: "--font-fredoka",
   display: "swap",
 });
