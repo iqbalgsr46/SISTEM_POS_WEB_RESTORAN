@@ -13,7 +13,8 @@
     "db:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-local-mysql.ps1",
     "db:migrate": "node scripts/backend.cjs migrate --seed",
     "test:pages": "node scripts/test-e2e.js",
-    "test:integration": "node scripts/test-live-integration.js"
+    "test:integration": "node scripts/test-live-integration.js",
+    "docs:verify": "node scripts/sync-docs.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
