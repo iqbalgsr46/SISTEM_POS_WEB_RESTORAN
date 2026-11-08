@@ -158,13 +158,13 @@ export default function AdminDashboard({
     <div className="min-h-screen bg-[#070A11] text-slate-100 flex flex-col lg:flex-row antialiased">
       
       {/* 1. DARK SIDEBAR NAVIGATION */}
-      <aside className="w-full lg:w-64 bg-[#070A11] text-slate-300 flex flex-col justify-between shrink-0 lg:fixed lg:inset-y-0 z-30 select-none">
-        <div className="flex flex-col flex-1 overflow-y-auto">
+      <aside className="w-full lg:w-64 bg-[#070A11] text-slate-300 flex flex-col justify-between shrink-0 lg:fixed lg:inset-y-0 z-30 select-none overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden">
           {/* Axiom Brand Header */}
-          <div className="h-16 flex items-center justify-between px-4 border-b border-slate-800/40 shrink-0">
+          <div className="h-14 flex items-center justify-between px-4 border-b border-slate-800/40 shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#FFC903] flex items-center justify-center text-slate-950 font-bold shadow-xs">
-                <UtensilsCrossed size={16} strokeWidth={2.2} />
+              <div className="w-7 h-7 rounded-full bg-[#FFC903] flex items-center justify-center text-slate-950 font-bold shadow-xs">
+                <UtensilsCrossed size={14} strokeWidth={2.2} />
               </div>
               <div>
                 <p className="text-sm font-semibold text-white tracking-tight leading-none lowercase">mie elon musk</p>
@@ -174,16 +174,16 @@ export default function AdminDashboard({
             <button
               type="button"
               title="Panel navigasi"
-              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-slate-800/50"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1 rounded-lg hover:bg-slate-800/50"
             >
-              <PanelLeft size={18} />
+              <PanelLeft size={16} />
             </button>
           </div>
 
-          {/* Axiom Search Bar with ⌘K Badge */}
-          <div className="px-3.5 pt-4 pb-2">
-            <div className="flex items-center gap-2 bg-[#151922] border border-slate-800/80 rounded-full px-3.5 py-2 w-full text-slate-400 focus-within:border-slate-700 focus-within:bg-[#1A202C] transition-all">
-              <Search size={14} className="text-slate-400 shrink-0" />
+          {/* Axiom Search Bar with ⌘K Badge (Single Source of Truth) */}
+          <div className="px-3.5 pt-3 pb-1 shrink-0">
+            <div className="flex items-center gap-2 bg-[#151922] border border-slate-800/80 rounded-full px-3 py-1.5 w-full text-slate-400 focus-within:border-slate-700 focus-within:bg-[#1A202C] transition-all">
+              <Search size={13} className="text-slate-400 shrink-0" />
               <input
                 type="text"
                 placeholder="Search here..."
@@ -191,19 +191,19 @@ export default function AdminDashboard({
                 onChange={e => setSearch(e.target.value)}
                 className="bg-transparent text-xs w-full text-slate-200 placeholder:text-slate-500 focus:outline-hidden"
               />
-              <kbd className="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded-md font-mono border border-slate-700/60 shrink-0 select-none">
+              <kbd className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded-md font-mono border border-slate-700/60 shrink-0 select-none">
                 ⌘K
               </kbd>
             </div>
           </div>
 
           {/* Axiom Section 1: MAIN MENU */}
-          <div className="px-3.5 py-2 space-y-5 flex-1">
+          <div className="px-3.5 py-1.5 space-y-3.5 flex-1 overflow-hidden">
             <div>
-              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-1.5">
+              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-1">
                 MAIN MENU
               </p>
-              <nav aria-label="Navigasi admin" className="space-y-1">
+              <nav aria-label="Navigasi admin" className="space-y-0.5">
                 {navigation.map(([label, Icon]) => {
                   const isActive = tab === label;
                   return (
@@ -211,18 +211,18 @@ export default function AdminDashboard({
                       key={label}
                       onClick={() => { setTab(label); setSearch(''); }}
                       aria-current={isActive ? 'page' : undefined}
-                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                         isActive
                           ? 'bg-[#FFC903] text-slate-950 shadow-xs'
                           : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <Icon size={16} className={isActive ? 'text-slate-950' : 'text-slate-400'} />
+                      <div className="flex items-center gap-2.5">
+                        <Icon size={15} className={isActive ? 'text-slate-950' : 'text-slate-400'} />
                         <span className={isActive ? 'text-slate-950' : ''}>{label}</span>
                       </div>
                       {label === 'Akun Staf' && pendingAccounts.length > 0 && (
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
                           isActive
                             ? 'bg-slate-950 text-[#FFC903]'
                             : 'bg-[#FFC903] text-slate-950'
@@ -236,71 +236,56 @@ export default function AdminDashboard({
               </nav>
             </div>
 
-            {/* Axiom Section 2: SETTINGS & WORKSPACES */}
+            {/* Axiom Section 2: WORKSPACE & OPERASIONAL (NO DUPLICATE STAFF LINKS) */}
             <div>
-              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-1.5">
+              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-1">
                 SETTINGS
               </p>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <a
                   href="/pos"
-                  className="flex items-center gap-3 px-3.5 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all"
+                  className="flex items-center gap-2.5 px-3 py-1.5 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all"
                 >
-                  <Store size={16} className="text-slate-400" />
+                  <Store size={15} className="text-slate-400" />
                   <span>Layar Kasir (POS)</span>
                 </a>
                 <a
                   href="/kitchen"
-                  className="flex items-center gap-3 px-3.5 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all"
+                  className="flex items-center gap-2.5 px-3 py-1.5 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all"
                 >
-                  <ChefHat size={16} className="text-slate-400" />
+                  <ChefHat size={15} className="text-slate-400" />
                   <span>Layar Dapur (KDS)</span>
                 </a>
-                <a
-                  href="/admin/accounts"
-                  className="flex items-center gap-3 px-3.5 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all"
-                >
-                  <ShieldCheck size={16} className="text-slate-400" />
-                  <span>Persetujuan akun staf</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setTab('Akun Staf')}
-                  className="w-full flex items-center gap-3 px-3.5 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition-all text-left cursor-pointer"
-                >
-                  <Settings size={16} className="text-slate-400" />
-                  <span>Pengaturan Sistem</span>
-                </button>
               </div>
             </div>
           </div>
         </div>
 
         {/* Profile Card Bottom Sidebar */}
-        <div className="p-2.5 mx-3 mb-3 rounded-2xl bg-slate-900/80 border border-slate-800/70 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="p-2 mx-3 mb-2.5 rounded-xl bg-slate-900/80 border border-slate-800/70 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
             {adminImage ? (
               <img
                 src={adminImage}
                 alt={adminName}
-                className="w-8 h-8 rounded-full object-cover border border-slate-700 shrink-0"
+                className="w-7 h-7 rounded-full object-cover border border-slate-700 shrink-0"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-medium text-slate-200 shrink-0">
+              <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[11px] font-medium text-slate-200 shrink-0">
                 {adminInitials}
               </div>
             )}
             <div className="min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{adminName}</p>
-              <p className="text-[10px] text-slate-400 truncate">{adminEmail}</p>
+              <p className="text-xs font-semibold text-white truncate max-w-[120px]">{adminName}</p>
+              <p className="text-[10px] text-slate-400 truncate max-w-[120px]">{adminEmail}</p>
             </div>
           </div>
           <button
             onClick={onLogout}
             title="Keluar admin"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
+            className="p-1 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
           >
-            <LogOut size={15} />
+            <LogOut size={14} />
           </button>
         </div>
       </aside>
@@ -312,78 +297,62 @@ export default function AdminDashboard({
         <div className="flex-1 bg-white text-slate-800 rounded-[18px] sm:rounded-[20px] lg:rounded-[22px] shadow-sm flex flex-col min-w-0 overflow-hidden">
           
           {/* Header Section (Matching Axiom: Welcome back + theme/bell/profile) */}
-            <header className="px-5 sm:px-7 pt-5 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100">
+            <header className="px-5 sm:px-7 pt-4 pb-3.5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100">
               <div>
                 <h1 className="text-base sm:text-lg font-semibold tracking-tight text-slate-800">
                   Welcome back, {adminFirstName}!
                 </h1>
-                <p className="text-xs text-slate-400 mt-1 font-medium">
+                <p className="text-xs text-slate-400 mt-0.5 font-medium">
                   Track key metrics and stay in control of your growth.
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
-                {/* Search Bar */}
-                <div className="relative hidden xl:block w-52">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="Cari pesanan, meja..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="w-full h-9 pl-8 pr-3 text-xs bg-slate-50 border border-slate-200 rounded-full placeholder:text-slate-400 text-slate-800 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-slate-900 transition-all"
-                  />
-                </div>
-
-                {/* Circular Action Button: Theme Toggle (Moon) */}
+              <div className="flex items-center gap-2.5">
+                {/* Theme Toggle (Moon) */}
                 <button
                   type="button"
                   title="Tampilan mode gelap"
-                  className="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
-                  <Moon size={15} />
+                  <Moon size={14} />
                 </button>
 
-                {/* Circular Action Button: Notification Bell */}
+                {/* Notification Bell */}
                 <button
                   type="button"
                   onClick={() => setTab('Akun Staf')}
                   title={pendingAccounts.length > 0 ? `${pendingAccounts.length} akun menunggu persetujuan` : 'Notifikasi'}
-                  className="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors relative cursor-pointer"
+                  className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors relative cursor-pointer"
                 >
-                  <Bell size={15} />
+                  <Bell size={14} />
                   {pendingAccounts.length > 0 && (
-                    <span className="w-2 h-2 rounded-full bg-[#FFC903] absolute top-2 right-2 ring-2 ring-white animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[#FFC903] absolute top-1.5 right-1.5 ring-2 ring-white animate-pulse" />
                   )}
                 </button>
 
-                {/* Circular Action Button: Refresh */}
+                {/* Refresh Data */}
                 <button
                   onClick={onRefresh}
                   disabled={refreshing}
                   title="Muat ulang data"
-                  className="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer disabled:opacity-50"
+                  className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
+                  <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
                 </button>
 
-                {/* User Profile Info Pill */}
-                <div className="flex items-center gap-2.5 pl-1">
+                {/* User Avatar Circle (Non-duplicated, Axiom Style) */}
+                <div className="pl-1">
                   {adminImage ? (
                     <img
                       src={adminImage}
                       alt={adminName}
-                      className="w-9 h-9 rounded-full object-cover border border-slate-200"
+                      className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-2xs"
                     />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-slate-900 text-white text-xs font-medium flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-slate-900 text-white text-xs font-medium flex items-center justify-center shadow-2xs">
                       {adminInitials}
                     </div>
                   )}
-                  <div className="text-left">
-                    <p className="text-xs font-semibold text-slate-800 leading-tight truncate max-w-[150px]">{adminName}</p>
-                    <p className="text-[10px] text-slate-400 font-medium truncate max-w-[160px]">{adminEmail}</p>
-                  </div>
                 </div>
               </div>
             </header>
@@ -1168,9 +1137,9 @@ export default function AdminDashboard({
                     </div>
                     <a
                       href="/admin/accounts"
-                      className="text-xs font-semibold text-slate-900 hover:underline"
+                      className="text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
                     >
-                      Buka manajemen terpisah
+                      Rute mandiri: /admin/accounts
                     </a>
                   </div>
 
