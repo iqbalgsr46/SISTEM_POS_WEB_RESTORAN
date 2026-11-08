@@ -163,8 +163,7 @@ async function assertActionBar(page, route, view) {
         assert.deepEqual(actual.brokenImages, [], `${route} ${width}: broken images`);
         assert.equal(await page.locator('main').count(), 1);
         if (width >= 1024) {
-          assert.ok(actual.main.width >= 850 && actual.main.width <= 960, `${route} ${width}: laptop canvas ${actual.main.width}px must be bounded to 850–960px`);
-          assert.ok(Math.abs(actual.main.x - (actual.contentWidth - actual.main.width) / 2) <= 1, `${route} ${width}: canvas not centered`);
+          assert.ok(Math.abs(actual.main.width - actual.contentWidth) <= 1 && Math.abs(actual.main.x) <= 1, `${route} ${width}: laptop canvas must use the full viewport width`);
           assert.ok(actual.hero.height <= 240, `${route} ${width}: banner too tall (${actual.hero.height})`);
           assert.ok(actual.headingSize <= 24 && actual.heroHeadingSize <= 30, `${route} ${width}: oversized heading`);
           assert.equal(actual.columns, 5, `${route} ${width}: compact five-column grid`);

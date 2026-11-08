@@ -170,7 +170,14 @@
 
 @media (min-width: 1024px) {
   .header {
-    margin: -22px -24px 14px;
+    width: 100%;
+    margin: 0 0 14px;
     padding: 18px 24px 16px;
+  }
+
+  .content {
+    max-width: 912px;
+    margin-inline: auto;
+    width: 100%;
   }
 }
