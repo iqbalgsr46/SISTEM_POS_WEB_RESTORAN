@@ -1,0 +1,176 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  isolation: isolate;
+  margin: -16px -16px 12px;
+  padding: max(16px, env(safe-area-inset-top)) 16px 14px;
+  color: #302600;
+  background: #ffd400;
+}
+
+/* Alternating outlined/filled four-petal rosettes, not a stretched raster. */
+.header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: url("/images/ordering-nav-pattern.svg");
+  background-size: 88px 88px;
+  background-repeat: repeat;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.content {
+  min-width: 0;
+}
+
+.identity {
+  margin-bottom: 12px;
+}
+
+.greeting {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #604b09;
+}
+
+.identity h1 {
+  margin: 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.identity p {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: #604b09;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border-radius: 8px;
+  background: #fffdf5;
+  color: #735c19;
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  margin-left: 12px;
+  margin-right: 8px;
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 10px 0 0;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+  background: transparent;
+  color: #302600;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  appearance: none;
+}
+
+.search input::placeholder {
+  color: #796839;
+  opacity: 1;
+}
+
+.search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search:focus-within {
+  outline: 2px solid #514000;
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.action,
+.clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.action {
+  position: relative;
+}
+
+.action:hover {
+  background: rgb(255 255 255 / 22%);
+}
+
+.clear:hover {
+  background: rgb(48 38 0 / 6%);
+}
+
+.action:focus-visible,
+.clear:focus-visible {
+  outline: 2px solid #514000;
+  outline-offset: 2px;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1.5px solid #ffd400;
+  border-radius: 999px;
+  background: #fffdf5;
+  color: #513d00;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    margin: -22px -24px 14px;
+    padding: 18px 24px 16px;
+  }
+}

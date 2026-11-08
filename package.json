@@ -14,6 +14,8 @@
     "db:migrate": "node scripts/backend.cjs migrate --seed",
     "test:pages": "node scripts/test-e2e.js",
     "test:ordering": "node scripts/test-ordering-compact.cjs",
+    "test:navbar": "node scripts/test-ordering-navbar.cjs",
+    "test:sticky": "node scripts/test-ordering-sticky.cjs",
     "test:integration": "node scripts/test-live-integration.js",
     "docs:verify": "node scripts/sync-docs.mjs"
   },

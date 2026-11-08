@@ -1,3 +1,10 @@
+/* Clip horizontal bleed without creating a scrolling ancestor that would
+   prevent the shared navbar from sticking to the viewport on phones. */
+.canvas[data-ordering-view="menu"] {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 /* The approved phone UI remains the base. These rules only reflow that
    same DOM on laptop screens, without alternative data or event handlers. */
 @media (min-width: 1024px) {
@@ -23,7 +30,7 @@
     --ordering-width: min(720px, calc(100vw - 64px));
   }
 
-  /* Keep the phone header order and sizing: greeting/icons, status, then mode.
+  /* Keep the phone header order and sizing: navbar, status, then mode.
      The catalog's existing flex column already gives each row its full width. */
   .canvas [data-ordering="catalog"] {
     padding: 22px 24px 0;

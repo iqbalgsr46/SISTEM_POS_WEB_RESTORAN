@@ -36,9 +36,10 @@ async function snapshot(page) {
     return {
       main: box(document.querySelector('main')),
       header: box(get('menu-header')),
+      headerContent: box(get('navbar-content')),
       status: status ? box(status) : null,
       mode: box(get('mode')),
-      headerButtons: [...get('menu-header').querySelectorAll('button')].map(box),
+      headerButtons: [...get('menu-header').querySelectorAll('[data-ordering-action]')].map(box),
       hero: box(get('hero')),
       cardBoxes: cards.map(box),
       items: cards.map(card => card.innerText),
@@ -62,10 +63,10 @@ function assertHeaderLayout(layout, label) {
   assert.ok(layout.mode.y >= bottom(previous), `${label}: order mode must be below the greeting/status, like phone`);
   if (layout.status) {
     assert.ok(layout.status.y >= bottom(layout.header), `${label}: status must be below the greeting`);
-    assert.ok(Math.abs(layout.status.width - layout.header.width) <= 1, `${label}: status width must align with header`);
+    assert.ok(Math.abs(layout.status.width - layout.headerContent.width) <= 1, `${label}: status width must align with header`);
   }
-  assert.ok(Math.abs(layout.mode.x - layout.header.x) <= 1 && Math.abs(layout.mode.width - layout.header.width) <= 1, `${label}: mode badge must occupy its own full-width row`);
-  assert.ok(Math.abs(right(layout.headerButtons.at(-1)) - right(layout.header)) <= 1, `${label}: cart button must be at the right edge of header`);
+  assert.ok(Math.abs(layout.mode.x - layout.headerContent.x) <= 1 && Math.abs(layout.mode.width - layout.headerContent.width) <= 1, `${label}: mode badge must occupy its own full-width row`);
+  assert.ok(Math.abs(right(layout.headerButtons.at(-1)) - right(layout.headerContent)) <= 1, `${label}: cart button must be at the right edge of header`);
   assert.ok(layout.hero.y >= bottom(layout.mode), `${label}: promo must follow the order mode`);
 }
 
@@ -128,10 +129,24 @@ async function assertActionBar(page, route, view) {
       }
       if (fs.existsSync(baselinePath)) {
         const before = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
-        for (const key of ['main', 'header', 'hero', 'cardBoxes', 'items', 'categories', 'offer']) {
+        // Navbar was deliberately redesigned. All existing content below it
+        // must retain its phone sizing, with only a uniform vertical offset.
+        const shift = phone.hero.y - before.hero.y;
+        for (const key of ['items', 'categories', 'offer']) {
           assert.deepEqual(phone[key], before[key], `${route}: phone ${key} changed`);
         }
-        console.log(`PASS ${route}: saved mobile geometry and content unchanged`);
+        for (const key of ['x', 'y', 'width']) {
+          assert.equal(phone.main[key], before.main[key], `${route}: phone main ${key}`);
+        }
+        assert.ok(Math.abs(phone.main.height - before.main.height - shift) < 1, `${route}: only navbar may alter page height`);
+        const assertShifted = (actual, original, label) => {
+          for (const key of ['x', 'width', 'height']) assert.ok(Math.abs(actual[key] - original[key]) < 1, `${route}: ${label} ${key} changed`);
+          assert.ok(Math.abs(actual.y - original.y - shift) < 1, `${route}: ${label} vertical rhythm changed`);
+        };
+        assertShifted(phone.hero, before.hero, 'hero');
+        assert.equal(phone.cardBoxes.length, before.cardBoxes.length);
+        phone.cardBoxes.forEach((box, index) => assertShifted(box, before.cardBoxes[index], `card ${index}`));
+        console.log(`PASS ${route}: existing phone geometry/content preserved below redesigned navbar`);
       } else {
         console.warn(`SKIP ${route}: saved phone baseline absent; only current mobile/laptop parity will be checked`);
       }

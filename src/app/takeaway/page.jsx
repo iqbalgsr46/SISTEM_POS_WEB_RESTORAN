@@ -2,6 +2,7 @@
 "use client";
 
 import NotificationDrawer from "@/components/notification-drawer";
+import OrderingNavbar from "@/components/ordering-navbar";
 import orderingStyles from "@/components/ordering-responsive.module.css";
 import { useOrderNotifications } from "@/lib/use-order-notifications";
 
@@ -977,7 +978,7 @@ function TakeawayContent() {
 
     // Filter search text
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.trim().toLowerCase();
       result = result.filter(
         (it) =>
           it.name.toLowerCase().includes(q) ||
@@ -1235,59 +1236,15 @@ function TakeawayContent() {
         {view === "menu" && (
           <div data-ordering="catalog" className="flex flex-col px-4 pt-4 animate-in fade-in duration-200">
             
-            {/* 1. TOP HEADER */}
-            <header data-ordering="menu-header" className="flex items-center justify-between pb-3.5 pt-0.5">
-              {/* Greeting & Headline */}
-              <div className="flex-1 min-w-0 pr-2 flex flex-col justify-center">
-                <span
-                  suppressHydrationWarning
-                  className="text-[11.5px] text-gray-500 font-medium flex items-center gap-1 leading-none mb-1.5"
-                >
-                  {greetingInfo.text}
-                </span>
-                <h1 className="text-[18px] font-bold text-gray-950 tracking-[-0.025em] leading-[1.15] mb-1 truncate">
-                  Craving Elon Musk?
-                </h1>
-                <p className="text-[10.5px] text-gray-400 font-normal leading-none truncate">
-                  Delicious favorites, delivered fast.
-                </p>
-              </div>
-
-              {/* Right: Notification Bell & Shopping Bag Cart */}
-              <div className="flex items-center gap-2 shrink-0">
-                {/* Notification Bell */}
-                <button
-                  onClick={() => { setIsDrawerOpen(true); markAllAsRead(); }}
-                  aria-label="Lihat notifikasi promo"
-                  className="w-11 h-11 bg-white rounded-2xl border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-all relative cursor-pointer group"
-                >
-                  <span className="relative w-[18px] h-[18px] flex items-center justify-center">
-                    <Image src="/images/icon-bell-notification.png" alt="Notifikasi" width={18} height={18} className="w-full h-full object-contain" />
-                  </span>
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFD400] text-gray-950 text-[9px] font-extrabold flex items-center justify-center shadow-xs animate-in zoom-in duration-150">
-                      {unreadCount}
-                    </span>
-                  )}
-                </button>
-
-                {/* Shopping Cart Button */}
-                <button
-                  onClick={() => navigateView("cart")}
-                  aria-label="Buka keranjang belanja"
-                  className="w-11 h-11 bg-white rounded-2xl border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-all relative cursor-pointer group"
-                >
-                  <span className="relative w-[18px] h-[18px] flex items-center justify-center">
-                    <Image src="/images/icon-cart-trolley-black.png" alt="Keranjang" width={18} height={18} className="w-full h-full object-contain" />
-                  </span>
-                  {totalCartItems > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFD400] text-gray-950 text-[9px] font-extrabold flex items-center justify-center shadow-xs animate-in zoom-in duration-150">
-                      {totalCartItems}
-                    </span>
-                  )}
-                </button>
-              </div>
-            </header>
+            <OrderingNavbar
+              greeting={greetingInfo.text}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              unreadCount={unreadCount}
+              totalCartItems={totalCartItems}
+              onNotifications={() => { setIsDrawerOpen(true); markAllAsRead(); }}
+              onCart={() => navigateView("cart")}
+            />
 
             {/* Active Order Tracking Floating Banner (if order is active) */}
             {trackedOrder && (
@@ -1555,7 +1512,9 @@ function TakeawayContent() {
             <div data-ordering="menu-heading" className="mt-5 px-0.5 flex items-center justify-between">
               <div>
                 <h2 className="text-[17px] font-bold text-gray-950 tracking-[-0.02em]">
-                  {activeCircleCategory === "all"
+                  {searchQuery.trim()
+                    ? "Hasil Pencarian"
+                    : activeCircleCategory === "all"
                     ? "Popular Meals"
                     : activeCircleCategory === "mie"
                     ? "Pilihan Mie Pedas"
@@ -1569,7 +1528,7 @@ function TakeawayContent() {
                     ? "Pilihan Camilan"
                     : "Daftar Menu"}
                 </h2>
-                <p className="text-[10px] text-gray-400 font-medium mt-0.5">
+                <p aria-live="polite" aria-atomic="true" className="text-[10px] text-gray-400 font-medium mt-0.5">
                   {filteredItems.length} menu tersedia
                 </p>
               </div>
@@ -1577,7 +1536,7 @@ function TakeawayContent() {
 
             {/* 7. PRODUCT CARDS GRID (Cloning persis kartu putih 3-kolom screenshot) */}
             <div data-ordering="products" className="mt-2.5 grid grid-cols-3 gap-2 sm:gap-2.5">
-              {(activeCircleCategory === "all" ? filteredItems.slice(0, 18) : filteredItems).map((item) => {
+              {(activeCircleCategory === "all" && !searchQuery.trim() ? filteredItems.slice(0, 18) : filteredItems).map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -1628,6 +1587,25 @@ function TakeawayContent() {
                   </div>
                 );
               })}
+
+              {filteredItems.length === 0 && (
+                <div className="col-span-3 py-10 flex flex-col items-center justify-center text-center p-4 bg-white rounded-2xl border border-gray-150">
+                  <Utensils className="w-8 h-8 text-gray-300 mb-2" />
+                  <p className="text-xs font-bold text-gray-700">Menu tidak ditemukan</p>
+                  <p className="max-w-full [overflow-wrap:anywhere] text-[11px] text-gray-400 mt-0.5">
+                    Tidak ada menu yang cocok dengan &quot;{searchQuery}&quot;
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setActiveCircleCategory("all");
+                    }}
+                    className="mt-3 px-3 py-1.5 rounded-full bg-[#FFD400] hover:bg-[#E6BF00] text-gray-950 text-xs font-bold transition-all cursor-pointer"
+                  >
+                    Reset Pencarian
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* 8. BOTTOM PROMOTIONAL CARD (Cloning persis kartu Exclusive Offer 30% OFF) */}
