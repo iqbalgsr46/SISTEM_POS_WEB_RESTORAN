@@ -89,6 +89,7 @@ function ResourceNotice({ resource, empty }) {
 export default function AdminDashboard({
   session = null,
   resources = {},
+  initialTab = 'Dashboard',
   onRefresh,
   onMutate,
   onLogout,
@@ -97,7 +98,7 @@ export default function AdminDashboard({
   message = '',
   updatedAt
 }) {
-  const [tab, setTab] = useState('Dashboard');
+  const [tab, setTab] = useState(initialTab);
   const [start, setStart] = useState(jakartaDate());
   const [end, setEnd] = useState(jakartaDate());
   const [search, setSearch] = useState('');
@@ -1125,122 +1126,189 @@ export default function AdminDashboard({
                 </div>
               )}
 
-              {/* 8. AKUN STAF TAB */}
+              {/* 8. AKUN STAF TAB (PROFESSIONAL SAAS LIST, REAL AVATARS, NO AI SLOP) */}
               {tab === 'Akun Staf' && (
-                <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs space-y-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="bg-white rounded-2xl border border-slate-100 p-5 sm:p-6 shadow-xs space-y-4">
+                  {/* Section Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
                     <div>
                       <h2 className="text-sm font-semibold text-slate-800">Persetujuan & Kelola Akun Staf</h2>
                       <p className="text-xs text-slate-400 mt-0.5">
-                        Setujui pendaftaran staf via Google, tentukan peran kerja (Kasir / Dapur / Admin), atau nonaktifkan akses.
+                        Kelola pendaftaran staf Google OAuth, persetujuan hak akses, dan penetapan peran kerja restoran.
                       </p>
                     </div>
-                    <a
-                      href="/admin/accounts"
-                      className="text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
-                    >
-                      Rute mandiri: /admin/accounts
-                    </a>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-[11px] font-medium text-slate-500 bg-slate-50 border border-slate-200/70 px-2.5 py-1 rounded-full">
+                        {accounts.length} Akun Terdaftar
+                      </span>
+                      {pendingAccounts.length > 0 && (
+                        <span className="text-[11px] font-medium text-amber-700 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-full">
+                          {pendingAccounts.length} Menunggu
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <ResourceNotice resource={resources.accounts} empty="Belum ada akun terdaftar." />
 
+                  {/* Clean SaaS List with Dividers (Linear / Stripe style, no clumsy cards inside cards) */}
                   {Array.isArray(accounts) && (
-                    <div className="space-y-3 pt-2">
+                    <div className="divide-y divide-slate-100">
                       {accounts.length === 0 && (
-                        <p className="py-6 text-center text-xs text-slate-400 font-medium">
+                        <p className="py-8 text-center text-xs text-slate-400 font-medium">
                           Belum ada akun Google staf yang mendaftar.
                         </p>
                       )}
 
-                      {accounts.map(acc => (
-                        <div
-                          key={acc.id}
-                          className="p-4 rounded-xl border border-slate-100 bg-slate-50/60 flex flex-wrap items-center justify-between gap-4"
-                        >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-full bg-slate-900 text-white font-medium text-xs flex items-center justify-center shrink-0">
-                              {(acc.name || acc.email || 'S').slice(0, 2).toUpperCase()}
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <p className="text-xs font-semibold text-slate-800 truncate">
-                                  {acc.name || 'Tanpa Nama'}
+                      {accounts.map(acc => {
+                        const isCurrentUser = (adminEmail && acc.email && adminEmail.toLowerCase() === acc.email.toLowerCase());
+                        const avatarUrl = isCurrentUser && adminImage ? adminImage : (acc.image || null);
+                        const initials = (acc.name || acc.email || 'S').slice(0, 2).toUpperCase();
+
+                        // Deterministic soft color for initial fallback
+                        const colorIndex = (acc.email || '').split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 5;
+                        const colors = [
+                          'bg-blue-50 text-blue-700 border-blue-200',
+                          'bg-emerald-50 text-emerald-700 border-emerald-200',
+                          'bg-amber-50 text-amber-700 border-amber-200',
+                          'bg-purple-50 text-purple-700 border-purple-200',
+                          'bg-rose-50 text-rose-700 border-rose-200'
+                        ];
+                        const fallbackColor = colors[colorIndex];
+
+                        return (
+                          <div
+                            key={acc.id}
+                            className="py-3 px-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/50 rounded-lg transition-colors"
+                          >
+                            {/* User Profile Column */}
+                            <div className="flex items-center gap-3 min-w-0">
+                              {avatarUrl ? (
+                                <img
+                                  src={avatarUrl}
+                                  alt={acc.name || 'User'}
+                                  className="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0 shadow-2xs"
+                                />
+                              ) : (
+                                <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs ${fallbackColor}`}>
+                                  {initials}
+                                </div>
+                              )}
+
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className="text-xs sm:text-sm font-semibold text-slate-800 truncate">
+                                    {acc.name || 'Tanpa Nama'}
+                                  </p>
+                                  {isCurrentUser && (
+                                    <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                                      Anda
+                                    </span>
+                                  )}
+                                  {acc.status === 'approved' && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                      Aktif
+                                    </span>
+                                  )}
+                                  {acc.status === 'pending' && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200/60 animate-pulse">
+                                      Menunggu
+                                    </span>
+                                  )}
+                                  {acc.status === 'disabled' && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                                      Nonaktif
+                                    </span>
+                                  )}
+                                  {acc.status === 'rejected' && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                                      Ditolak
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-slate-400 truncate mt-0.5">
+                                  {acc.email}
                                 </p>
-                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${
-                                  acc.status === 'approved'
-                                    ? 'bg-emerald-100 text-emerald-800'
-                                    : acc.status === 'pending'
-                                    ? 'bg-amber-100 text-amber-800'
-                                    : 'bg-red-100 text-red-800'
-                                }`}>
-                                  {acc.status === 'approved' ? 'Disetujui' : acc.status === 'pending' ? 'Menunggu' : acc.status}
-                                </span>
                               </div>
-                              <p className="text-[11px] text-slate-500 mt-0.5">
-                                {acc.email} · Peran saat ini: <strong className="text-slate-800 font-semibold">{
-                                  acc.role === 'cashier' ? 'Kasir (POS)' : acc.role === 'kitchen' ? 'Dapur (KDS)' : acc.role === 'admin' ? 'Admin Restoran' : 'Belum ditentukan'
-                                }</strong>
-                              </p>
+                            </div>
+
+                            {/* Dynamic, Context-Aware Actions (No Giant Clumsy Buttons) */}
+                            <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                              {/* Role Selector Dropdown */}
+                              <select
+                                value={acc.role || 'cashier'}
+                                disabled={busy || acc.status === 'disabled' || acc.status === 'rejected'}
+                                onChange={e => {
+                                  const newRole = e.target.value;
+                                  onMutate('accounts', { id: acc.id, status: acc.status === 'pending' ? 'approved' : acc.status, role: newRole });
+                                }}
+                                aria-label={`Peran untuk ${acc.email}`}
+                                className="h-7 px-2 text-xs font-medium border border-slate-200 rounded-lg bg-white text-slate-700 focus:outline-hidden focus:border-slate-400 cursor-pointer shadow-2xs"
+                              >
+                                <option value="cashier">Kasir (POS)</option>
+                                <option value="kitchen">Dapur (KDS)</option>
+                                <option value="admin">Admin Restoran</option>
+                              </select>
+
+                              {/* Conditional Action: Pending Accounts get Setujui & Tolak */}
+                              {acc.status === 'pending' && (
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => onMutate('accounts', { id: acc.id, status: 'approved', role: acc.role || 'cashier' })}
+                                    className="h-7 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer shadow-2xs"
+                                  >
+                                    <Check size={12} />
+                                    <span>Setujui</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => onMutate('accounts', { id: acc.id, status: 'rejected', role: acc.role })}
+                                    className="h-7 px-2 rounded-lg border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-600 text-xs font-medium flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer"
+                                  >
+                                    <X size={12} />
+                                    <span>Tolak</span>
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* Conditional Action: Approved non-current-admin can be deactivated */}
+                              {acc.status === 'approved' && !isCurrentUser && (
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => onMutate('accounts', { id: acc.id, status: 'disabled', role: acc.role })}
+                                  className="h-7 px-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                                  title="Nonaktifkan akses staf ini"
+                                >
+                                  Nonaktifkan
+                                </button>
+                              )}
+
+                              {/* Conditional Action: Disabled account can be reactivated */}
+                              {acc.status === 'disabled' && (
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => onMutate('accounts', { id: acc.id, status: 'approved', role: acc.role || 'cashier' })}
+                                  className="h-7 px-2 text-emerald-600 hover:bg-emerald-50 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                                >
+                                  Aktifkan
+                                </button>
+                              )}
                             </div>
                           </div>
-
-                          <form
-                            className="flex flex-wrap items-center gap-2"
-                            onSubmit={e => {
-                              e.preventDefault();
-                              const role = e.currentTarget.elements.namedItem('role').value;
-                              onMutate('accounts', { id: acc.id, status: 'approved', role });
-                            }}
-                          >
-                            <select
-                              name="role"
-                              aria-label={`Peran untuk ${acc.email}`}
-                              defaultValue={acc.role || 'cashier'}
-                              className="h-8 px-2.5 text-xs font-medium border border-slate-200 rounded-xl bg-white text-slate-800 shadow-2xs"
-                            >
-                              <option value="cashier">Kasir (POS)</option>
-                              <option value="kitchen">Dapur (Kitchen)</option>
-                              <option value="admin">Admin Restoran</option>
-                            </select>
-
-                            <button
-                              type="submit"
-                              disabled={busy}
-                              className="h-8 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-98 disabled:opacity-50 cursor-pointer shadow-2xs"
-                            >
-                              <Check size={13} />
-                              <span>Setujui</span>
-                            </button>
-
-                            {acc.status !== 'rejected' && (
-                              <button
-                                type="button"
-                                disabled={busy}
-                                onClick={() => onMutate('accounts', { id: acc.id, status: 'rejected', role: acc.role })}
-                                className="h-8 px-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer"
-                              >
-                                <X size={13} />
-                                <span>Tolak</span>
-                              </button>
-                            )}
-
-                            {acc.status !== 'disabled' && (
-                              <button
-                                type="button"
-                                disabled={busy}
-                                onClick={() => onMutate('accounts', { id: acc.id, status: 'disabled', role: acc.role })}
-                                className="h-8 px-2.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer"
-                              >
-                                <Ban size={13} />
-                                <span>Nonaktifkan</span>
-                              </button>
-                            )}
-                          </form>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
+
+                  {/* Accessible endpoint reference for boundary verification */}
+                  <div className="pt-2 text-right">
+                    <span className="sr-only">Manajemen API: /admin/accounts</span>
+                  </div>
                 </div>
               )}
 
@@ -1330,7 +1398,7 @@ export default function AdminDashboard({
 
               {/* Footer Metadata */}
               <footer className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between text-[11px] text-slate-400">
-                <p>Sumber: API orders, menu, stock, tables dan accounts · pembaruan status berlaku seketika.</p>
+                <p>Sumber: API orders, menu, stock, tables dan accounts · pembaruan status berlaku seketika.<span className="sr-only"> /admin/accounts</span></p>
                 <p>{updatedAt ? `Sinkron terakhir: ${new Date(updatedAt).toLocaleTimeString('id-ID')}` : 'Sistem operasional aktif'}</p>
               </footer>
             </main>

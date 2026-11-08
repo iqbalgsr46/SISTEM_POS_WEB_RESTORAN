@@ -36,6 +36,7 @@ async function main() {
 
   const html = ReactDOMServer.renderToStaticMarkup(
     React.createElement(AdminDashboard, {
+      initialTab: 'Akun Staf',
       session: {
         user: {
           name: 'Tubagus Iqbal Husaeni',
@@ -65,7 +66,9 @@ async function main() {
         accounts: {
           data: [
             { id: 1, name: 'Tubagus Iqbal Husaeni', email: 'ikbalgsr46@gmail.com', role: 'admin', status: 'approved' },
-            { id: 2, name: 'Devtech Duabelas', email: 'devtechduabelas@gmail.com', role: 'cashier', status: 'pending' }
+            { id: 2, name: 'devtech tiga', email: 'devtechtiga@gmail.com', role: 'cashier', status: 'approved' },
+            { id: 3, name: 'devtech 12', email: 'devtechduabelas@gmail.com', role: 'kitchen', status: 'approved' },
+            { id: 4, name: 'Ahmad Fauzi', email: 'ahmadfauzi@gmail.com', role: 'cashier', status: 'pending' },
           ]
         }
       },
