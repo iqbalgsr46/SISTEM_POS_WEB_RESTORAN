@@ -12,8 +12,8 @@ export function HeroSection() {
     >
       {/* GARIS LENGKUNG KUBAH: DI DALAMNYA HANYA BERISI GAMBAR DOODLE MERAH (PERSIS REFERENSI) */}
       <div className="absolute inset-0 pointer-events-none flex items-start justify-center overflow-visible z-0" aria-hidden="true">
-        {/* Kontainer Kubah: Lebar 860px, hanya menampung doodle merah */}
-        <div className="w-[340px] sm:w-[540px] md:w-[720px] lg:w-[860px] rounded-t-full border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-b-0 border-orange-500/40 absolute top-3 sm:top-5 bottom-0 overflow-hidden">
+        {/* Kontainer Kubah: Lebar terkalibrasi proporsional di layar laptop */}
+        <div className="w-[340px] sm:w-[440px] md:w-[520px] lg:w-[600px] rounded-t-full border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-b-0 border-orange-500/40 absolute top-3 sm:top-5 bottom-0 overflow-hidden">
           
           {/* SVG DOODLE MERAH PADAT DI DALAM KUBAH & TERPOTONG RAPI DI SEPANJANG GARIS KUBAH */}
           <svg
@@ -487,18 +487,18 @@ export function HeroSection() {
       <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center z-10">
         
         {/* LAYER 1 (BELAKANG): TEKS DENGAN GAYA FONT FREDOKA ROUNDED - MELINTAS DI LUAR GARIS KUBAH */}
-        <div className="relative w-full text-center z-10 pt-2 sm:pt-4 md:pt-6">
+        <div className="relative w-full text-center z-10 pt-2 sm:pt-5 md:pt-7 lg:pt-8">
           <h1
             style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-            className="font-bold text-[22px] min-[360px]:text-[26px] min-[400px]:text-[30px] sm:text-[52px] md:text-[68px] lg:text-[86px] uppercase tracking-tight text-black leading-[0.88] select-none"
+            className="font-bold text-[22px] min-[360px]:text-[26px] min-[400px]:text-[30px] sm:text-[36px] md:text-[44px] lg:text-[52px] uppercase tracking-tight text-black leading-[0.92] select-none"
           >
             <span className="block whitespace-nowrap">PEDAS GURIH, CRISPY</span>
             <span className="block whitespace-nowrap">MIE ELON MUSK MENU</span>
           </h1>
         </div>
 
-        {/* LAYER 2 (DEPAN): FOTO PIRING MIE GACOAN - NAIK MENUTUPI BARIS KEDUA TEKS MENU */}
-        <div className="relative w-full max-w-sm min-[400px]:max-w-md sm:max-w-2xl md:max-w-2xl lg:max-w-[720px] aspect-square -mt-[62px] min-[375px]:-mt-[70px] min-[410px]:-mt-[80px] sm:-mt-[150px] md:-mt-[180px] lg:-mt-[215px] z-20 flex items-center justify-center">
+        {/* LAYER 2 (DEPAN): FOTO PIRING MIE GACOAN - BERDIRI PROPORSIONAL TANPA MENUTUPI TEKS BRAND */}
+        <div className="relative w-full max-w-sm min-[400px]:max-w-md sm:max-w-[390px] md:max-w-[420px] lg:max-w-[450px] aspect-square -mt-[28px] min-[375px]:-mt-[36px] min-[410px]:-mt-[42px] sm:-mt-[50px] md:-mt-[58px] lg:-mt-[64px] z-20 flex items-center justify-center">
           
           {/* Bayangan Halus Realistis di Bawah Piring */}
           <div
@@ -520,7 +520,7 @@ export function HeroSection() {
           </div>
 
           {/* STEMPEL MEDALI HITAM-EMAS DI SAMPING KANAN PIRING (PERSIS SEPERTI REFERENSI) */}
-          <div className="absolute top-[22%] min-[400px]:top-[24%] sm:top-[27%] md:top-[30%] right-1.5 min-[400px]:right-2 sm:right-6 md:right-8 z-30 w-16 h-16 min-[400px]:w-[68px] min-[400px]:h-[68px] sm:w-[84px] sm:h-[84px] md:w-24 md:h-24 rounded-full bg-black text-[#FFC903] border-[2.5px] sm:border-[3.5px] border-[#FFC903] shadow-pop flex flex-col items-center justify-center p-1 sm:p-1.5 text-center rotate-12 hover:rotate-0 transition-transform cursor-pointer">
+          <div className="absolute top-[22%] min-[400px]:top-[24%] sm:top-[26%] md:top-[28%] right-1.5 min-[400px]:right-2 sm:right-4 md:right-5 z-30 w-16 h-16 min-[400px]:w-[68px] min-[400px]:h-[68px] sm:w-[74px] sm:h-[74px] md:w-[80px] md:h-[80px] rounded-full bg-black text-[#FFC903] border-[2.5px] sm:border-[3.5px] border-[#FFC903] shadow-pop flex flex-col items-center justify-center p-1 sm:p-1.5 text-center rotate-12 hover:rotate-0 transition-transform cursor-pointer">
             <div className="flex items-center gap-0.5 text-amber-300">
               <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-amber-300" />
               <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-amber-300" />

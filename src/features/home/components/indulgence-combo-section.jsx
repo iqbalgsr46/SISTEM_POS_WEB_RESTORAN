@@ -7,7 +7,7 @@ export function IndulgenceComboSection() {
   return (
     <section
       id="indulgence"
-      className="relative w-full pt-3 sm:pt-6 md:pt-8 pb-0 overflow-visible"
+      className="relative w-full pt-6 sm:pt-10 md:pt-14 pb-0 overflow-visible"
     >
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
         {/* Floating Doodle Makanan di Kanan Atas Sesuai Gambar 1 */}
@@ -43,20 +43,20 @@ export function IndulgenceComboSection() {
         <div className="relative text-center select-none z-0">
           <h3
             style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-            className="font-black text-2xl min-[360px]:text-3xl sm:text-5xl md:text-6xl lg:text-7xl uppercase text-black tracking-tight leading-none mb-1 sm:mb-2 md:mb-3"
+            className="font-black text-2xl min-[360px]:text-3xl sm:text-xl md:text-2xl lg:text-3xl uppercase text-black tracking-tight leading-none mb-1 sm:mb-2"
           >
             YOUR FAVORITE
           </h3>
           <h2
             style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-            className="font-black text-[46px] min-[360px]:text-[56px] min-[400px]:text-[66px] sm:text-[98px] md:text-[124px] lg:text-[148px] uppercase text-black tracking-tight leading-[0.84]"
+            className="font-black text-[46px] min-[360px]:text-[56px] min-[400px]:text-[66px] sm:text-[50px] md:text-[60px] lg:text-[70px] uppercase text-black tracking-tight leading-[0.88]"
           >
             INDULGENCE
           </h2>
         </div>
 
         {/* 2. Foto Makanan Gacoan Favorite (ffoto-gacoan-favorite) Berada DI DEPAN Teks & Menutupi Bagian Bawah Huruf */}
-        <div className="relative z-10 w-full max-w-[340px] min-[360px]:max-w-[380px] min-[400px]:max-w-[440px] sm:max-w-[580px] md:max-w-[680px] lg:max-w-[760px] mx-auto -mt-2 min-[360px]:-mt-3 min-[400px]:-mt-4 sm:-mt-8 md:-mt-12 lg:-mt-16 pointer-events-none select-none flex justify-center">
+        <div className="relative z-10 w-full max-w-[340px] min-[360px]:max-w-[380px] min-[400px]:max-w-[440px] sm:max-w-[420px] md:max-w-[460px] lg:max-w-[500px] mx-auto -mt-2 min-[360px]:-mt-3 min-[400px]:-mt-4 sm:-mt-4 md:-mt-6 lg:-mt-7 pointer-events-none select-none flex justify-center">
           <Image
             src="/images/ffoto-gacoan-favorite-clean.png"
             alt="Mie Gacoan Kombo Favorit - Mie Pedas, Dimsum Udang Keju & Es Segar"

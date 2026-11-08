@@ -8,7 +8,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
   return (
     <section
       id="highlight"
-      className="relative w-full pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 md:pb-10 overflow-visible"
+      className="relative w-full pt-4 sm:pt-6 md:pt-8 pb-10 sm:pb-14 md:pb-18 lg:pb-20 overflow-visible"
     >
       <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8">
         {/* Header Statement Besar Sesuai Referensi CRISPR (media_1790311555742.png & media_1790479134334.png) */}
@@ -18,7 +18,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
           <div className="relative w-full flex items-center justify-center isolate pt-2 sm:pt-4 md:pt-6 pb-2 sm:pb-3">
             {/* ILUSTRASI DOODLE MERAH MIE GACOAN MELEDAK DI BELAKANG TEKS (CLONING KONSEP BURGER DENGAN TEMA MIE GACOAN) */}
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[46%] w-[160px] min-[360px]:w-[185px] min-[400px]:w-[215px] sm:w-[260px] md:w-[300px] lg:w-[330px] pointer-events-none z-0 flex items-center justify-center select-none"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[46%] w-[160px] min-[360px]:w-[185px] min-[400px]:w-[215px] sm:w-[200px] md:w-[220px] lg:w-[240px] pointer-events-none z-0 flex items-center justify-center select-none"
               aria-hidden="true"
             >
               <Image
@@ -26,7 +26,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
                 alt="Doodle Mie Gacoan Diangkat Sumpit"
                 width={616}
                 height={980}
-                className="w-full h-auto object-contain opacity-90 select-none"
+                className="w-full h-auto object-contain opacity-35 select-none"
                 priority
               />
             </div>
@@ -34,7 +34,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
             {/* JUDUL UTAMA 3 BARIS: FONT FREDOKA BOLD, TEKS HITAM SOLID & MIRING PERSIS REFERENSI (media_1790312504163.png) */}
             <h2
               style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-              className="font-bold text-[26px] min-[360px]:text-[29px] min-[380px]:text-[31px] min-[410px]:text-[33.5px] sm:text-[52px] md:text-[64px] lg:text-[76px] uppercase text-black leading-[0.88] tracking-tight select-none relative z-10 transform -rotate-[3.5deg] sm:-rotate-[4.5deg] max-w-full"
+              className="font-bold text-[26px] min-[360px]:text-[29px] min-[380px]:text-[31px] min-[410px]:text-[33.5px] sm:text-[34px] md:text-[40px] lg:text-[46px] uppercase text-black leading-[0.92] tracking-tight select-none relative z-10 transform -rotate-[3deg] sm:-rotate-[3.5deg] max-w-full"
             >
               <span className="block whitespace-nowrap">SIZZLING PEDAS TO</span>
               <span className="block whitespace-nowrap">MIE ELON MUSK CIKARANG</span>
@@ -46,7 +46,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
           <div className="mt-4 sm:mt-6 md:mt-7 flex flex-col items-center relative z-10">
             <h3
               style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-              className="font-bold text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight text-black leading-tight text-center"
+              className="font-bold text-lg sm:text-xl md:text-2xl uppercase tracking-tight text-black leading-tight text-center"
             >
               BOLD FLAVORS, FRESH <br />
               CREATIONS
@@ -58,7 +58,7 @@ export function FeaturedShowcaseSection({ onOpenOrder }) {
         </div>
 
         {/* 3 Featured Product Cards Persis Referensi CRISPR (media_1790413582346.png & media_1790313049356.png) */}
-        <div className="relative max-w-[820px] mx-auto px-2 min-[380px]:px-3 sm:px-6">
+        <div className="relative max-w-[720px] mx-auto px-2 min-[380px]:px-3 sm:px-6">
           {/* Floating Doodle Gelas Minuman Es di Sisi Kiri Sesuai Referensi CRISPR */}
           <div
             className="absolute -left-4 min-[360px]:-left-5 min-[400px]:-left-6 sm:-left-10 md:-left-14 lg:-left-16 -top-18 min-[360px]:-top-20 min-[400px]:-top-22 sm:-top-28 md:-top-32 lg:-top-36 w-12 min-[360px]:w-14 min-[400px]:w-16 sm:w-22 md:w-26 lg:w-30 pointer-events-none z-10 select-none block text-neutral-900/80"

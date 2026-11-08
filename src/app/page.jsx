@@ -37,7 +37,7 @@ export default function HomePage() {
       <div className="relative w-full flex flex-col">
 
         {/* 3.1 Running Marquee Ticker 1 (BITE INTO HAPPINESS) Miring & Bergambar Mie Gacoan */}
-        <div className="relative z-20 -mt-14 min-[400px]:-mt-18 sm:-mt-24 md:-mt-32 lg:-mt-36 mb-2 sm:mb-4">
+        <div className="relative z-20 -mt-6 min-[400px]:-mt-8 sm:-mt-10 md:-mt-12 lg:-mt-14 mb-2 sm:mb-4">
           <MarqueeBanner
             items={biteIntoHappinessItems}
             speed="normal"
@@ -57,7 +57,7 @@ export default function HomePage() {
         </div>
 
         {/* 3.4 Running Marquee Ticker 2 (Reverse Direction) Miring Berlawanan */}
-        <div className="relative z-20 -mt-6 sm:-mt-12 md:-mt-16 mb-4 sm:mb-8">
+        <div className="relative z-20 -mt-6 sm:-mt-8 md:-mt-10 mb-4 sm:mb-6">
           <MarqueeBanner
             items={marqueeItems}
             reverse={true}

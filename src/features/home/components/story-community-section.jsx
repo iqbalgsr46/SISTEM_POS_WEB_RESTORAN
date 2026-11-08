@@ -7,7 +7,7 @@ export function StoryCommunitySection() {
   return (
     <section
       id="stories"
-      className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-14 sm:pb-20 overflow-visible"
+      className="relative w-full pt-8 sm:pt-10 md:pt-12 pb-10 sm:pb-12 md:pb-14 overflow-visible"
     >
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
         {/* Doodle Kentang Goreng (French Fries) Sesuai Referensi CRISPR */}
@@ -67,7 +67,7 @@ export function StoryCommunitySection() {
         <div className="text-center select-none mb-8 sm:mb-12 md:mb-14">
           <h2
             style={{ fontFamily: "var(--font-fredoka), 'Fredoka', cursive, sans-serif" }}
-            className="font-black text-2xl min-[360px]:text-3xl sm:text-5xl md:text-6xl uppercase text-black tracking-tight leading-[0.95]"
+            className="font-black text-2xl min-[360px]:text-3xl sm:text-3xl md:text-4xl lg:text-[42px] uppercase text-black tracking-tight leading-[0.98]"
           >
             EVERY NOODLE TELLS
             <br />
@@ -76,7 +76,7 @@ export function StoryCommunitySection() {
         </div>
 
         {/* 3 Foto Komunitas Sejajar Sesuai Referensi: Kiri Miring Kiri, Tengah Lurus & Lebih Besar, Kanan Miring Kanan */}
-        <div className="relative w-full max-w-[340px] min-[360px]:max-w-[360px] sm:max-w-[580px] md:max-w-[720px] lg:max-w-[820px] mx-auto select-none">
+        <div className="relative w-full max-w-[340px] min-[360px]:max-w-[360px] sm:max-w-[500px] md:max-w-[580px] lg:max-w-[640px] mx-auto select-none">
           <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-5 lg:gap-6 items-center">
             {/* Foto 1: Kiri (Miring ke Kiri -3.5deg, Posisi Sedikit Turun) */}
             <div className="transform -rotate-[3.5deg] sm:-rotate-[4.2deg] translate-y-2 sm:translate-y-3 md:translate-y-4 hover:rotate-0 hover:scale-105 transition-all duration-300">
