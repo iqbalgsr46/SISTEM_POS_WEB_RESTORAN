@@ -23,44 +23,14 @@
     --ordering-width: min(720px, calc(100vw - 64px));
   }
 
+  /* Keep the phone header order and sizing: greeting/icons, status, then mode.
+     The catalog's existing flex column already gives each row its full width. */
   .canvas [data-ordering="catalog"] {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
     padding: 22px 24px 0;
   }
 
   .canvas [data-ordering="catalog"] > * {
-    grid-column: 1 / -1;
     min-width: 0;
-  }
-
-  .canvas [data-ordering="menu-header"] {
-    grid-column: 1;
-    grid-row: 1;
-    padding: 0 20px 12px 0;
-  }
-
-  .canvas [data-ordering="menu-header"] h1 {
-    font-size: 22px;
-    line-height: 1.2;
-  }
-
-  .canvas [data-ordering="menu-header"] > div:first-child > span {
-    font-size: 12px;
-  }
-
-  .canvas [data-ordering="menu-header"] p {
-    font-size: 11px;
-    color: #6b7280;
-  }
-
-  .canvas [data-ordering="mode"] {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-    min-width: 200px;
-    margin-top: 0;
   }
 
   .canvas [data-ordering="hero"] {

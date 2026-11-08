@@ -31,9 +31,14 @@ async function snapshot(page) {
       return { x: Math.round(r.x * 100) / 100, y: Math.round(r.y * 100) / 100, width: Math.round(r.width * 100) / 100, height: Math.round(r.height * 100) / 100 };
     };
     const cards = [...document.querySelectorAll('[data-ordering="product-card"]')];
+    const nextRow = get('menu-header').nextElementSibling;
+    const status = nextRow?.textContent.includes('Pesanan Sedang Dimasak') ? nextRow : null;
     return {
       main: box(document.querySelector('main')),
       header: box(get('menu-header')),
+      status: status ? box(status) : null,
+      mode: box(get('mode')),
+      headerButtons: [...get('menu-header').querySelectorAll('button')].map(box),
       hero: box(get('hero')),
       cardBoxes: cards.map(box),
       items: cards.map(card => card.innerText),
@@ -48,6 +53,20 @@ async function snapshot(page) {
       brokenImages: [...document.images].filter(image => image.getBoundingClientRect().width && image.complete && !image.naturalWidth).map(image => image.alt),
     };
   });
+}
+
+function assertHeaderLayout(layout, label) {
+  const bottom = box => box.y + box.height;
+  const right = box => box.x + box.width;
+  const previous = layout.status || layout.header;
+  assert.ok(layout.mode.y >= bottom(previous), `${label}: order mode must be below the greeting/status, like phone`);
+  if (layout.status) {
+    assert.ok(layout.status.y >= bottom(layout.header), `${label}: status must be below the greeting`);
+    assert.ok(Math.abs(layout.status.width - layout.header.width) <= 1, `${label}: status width must align with header`);
+  }
+  assert.ok(Math.abs(layout.mode.x - layout.header.x) <= 1 && Math.abs(layout.mode.width - layout.header.width) <= 1, `${label}: mode badge must occupy its own full-width row`);
+  assert.ok(Math.abs(right(layout.headerButtons.at(-1)) - right(layout.header)) <= 1, `${label}: cart button must be at the right edge of header`);
+  assert.ok(layout.hero.y >= bottom(layout.mode), `${label}: promo must follow the order mode`);
 }
 
 async function assertActionBar(page, route, view) {
@@ -98,6 +117,7 @@ async function assertActionBar(page, route, view) {
       }, expectedNames);
       await settle(page);
       const phone = await snapshot(page);
+      assertHeaderLayout(phone, `${route} phone`);
       const baselinePath = path.join(output, `${route}-phone-baseline.json`);
       await page.screenshot({ path: path.join(output, `${route}-phone-${baselineMode ? 'before' : 'after'}.png`), fullPage: true });
       if (baselineMode) {
@@ -111,12 +131,16 @@ async function assertActionBar(page, route, view) {
         for (const key of ['main', 'header', 'hero', 'cardBoxes', 'items', 'categories', 'offer']) {
           assert.deepEqual(phone[key], before[key], `${route}: phone ${key} changed`);
         }
+        console.log(`PASS ${route}: saved mobile geometry and content unchanged`);
+      } else {
+        console.warn(`SKIP ${route}: saved phone baseline absent; only current mobile/laptop parity will be checked`);
       }
       assert.ok(phone.items.length > 0);
       for (const width of [768, 1024, 1366, 1440, 1920]) {
         await page.setViewportSize({ width, height: 768 });
         await settle(page);
         const actual = await snapshot(page);
+        assertHeaderLayout(actual, `${route} ${width}`);
         assert.deepEqual(actual.items, phone.items, `${route} ${width}: menu differs from phone`);
         assert.equal(actual.categories, phone.categories);
         assert.equal(actual.offer, phone.offer);
@@ -132,7 +156,7 @@ async function assertActionBar(page, route, view) {
           assert.ok(actual.cardBoxes.every(card => card.height <= 235), `${route} ${width}: cards too tall`);
         }
         await page.screenshot({ path: path.join(output, `${route}-${width}.png`), fullPage: true });
-        const result = { route, width, canvas: actual.main.width, banner: actual.hero.height, cardHeight: actual.cardBoxes[0].height, columns: actual.columns, parity: true };
+        const result = { route, width, canvas: actual.main.width, banner: actual.hero.height, cardHeight: actual.cardBoxes[0].height, columns: actual.columns, parity: true, headerPhoneLayout: true };
         results.push(result);
         console.log(`PASS ${JSON.stringify(result)}`);
       }
