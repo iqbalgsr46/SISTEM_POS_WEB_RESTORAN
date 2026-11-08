@@ -2,7 +2,7 @@
 "use client";
 
 import NotificationDrawer from "@/components/notification-drawer";
-import DesktopOrderingView from "@/components/desktop-ordering-view";
+import orderingStyles from "@/components/ordering-responsive.module.css";
 import { useOrderNotifications } from "@/lib/use-order-notifications";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -1218,14 +1218,11 @@ function DineInContent() {
 
   return (
     <>
-      {/* =========================================================================
-          1. TAMPILAN UKURAN LAYAR HP (MOBILE VIEWPORT: < lg)
-          (100% UTUH, TIDAK MERUBAH TATA LETAK HP SAMA SEKALI SESUAI PERMINTAAN)
-         ========================================================================= */}
-      <div className="lg:hidden min-h-screen bg-[#E8E8E8] flex justify-center selection:bg-[#FFD400] selection:text-gray-950">
-        {/* PHONE CANVAS CONTAINER */}
+      {/* One ordering interface; only its layout changes at laptop widths. */}
+      <div className={`${orderingStyles.shell} min-h-screen bg-[#E8E8E8] flex justify-center selection:bg-[#FFD400] selection:text-gray-950`}>
         <main
-        className={`w-full max-w-[430px] min-h-screen bg-[#F5F5F5] relative flex flex-col pb-28 overflow-x-hidden shadow-[0_0_40px_rgba(0,0,0,0.08)] transition-opacity duration-150 ease-out ${
+        data-ordering-view={view}
+        className={`${orderingStyles.canvas} w-full max-w-[430px] min-h-screen bg-[#F5F5F5] relative flex flex-col pb-28 overflow-x-hidden shadow-[0_0_40px_rgba(0,0,0,0.08)] transition-opacity duration-150 ease-out ${
           viewTransitionState === "exiting"
             ? "opacity-0"
             : "opacity-100"
@@ -1242,10 +1239,10 @@ function DineInContent() {
             TAMPILAN 1: MENU KATALOG (view === 'menu')
            ========================================================================= */}
         {view === "menu" && (
-          <div className="flex flex-col px-4 pt-4 animate-in fade-in duration-200">
+          <div data-ordering="catalog" className="flex flex-col px-4 pt-4 animate-in fade-in duration-200">
             
             {/* 1. TOP HEADER */}
-            <header className="flex items-center justify-between pb-3.5 pt-0.5">
+            <header data-ordering="menu-header" className="flex items-center justify-between pb-3.5 pt-0.5">
               {/* Greeting & Headline */}
               <div className="flex-1 min-w-0 pr-2 flex flex-col justify-center">
                 <span
@@ -1325,7 +1322,7 @@ function DineInContent() {
             )}
 
             {/* 2. ORDER MODE BADGE (Single Line Clean Capsule - Centered) */}
-            <div className="mt-1 bg-gray-200/50 p-1 rounded-2xl flex items-center select-none shadow-2xs">
+            <div data-ordering="mode" className="mt-1 bg-gray-200/50 p-1 rounded-2xl flex items-center select-none shadow-2xs">
               <div className="w-full bg-white text-gray-950 py-2 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs">
                 <span className="relative w-4 h-4 flex items-center justify-center shrink-0">
                   <Image src="/images/icon-dinein-bowl.png" alt="Dine-In" width={16} height={16} className="w-full h-full object-contain" />
@@ -1339,6 +1336,7 @@ function DineInContent() {
             {/* 4. HERO PROMO BANNER CAROUSEL (Interactive Two-Way Touch/Mouse Drag & Infinite Forward Loop) */}
             <div
               ref={bannerContainerRef}
+              data-ordering="hero"
               className={`mt-3 rounded-[24px] overflow-hidden shadow-xl border border-white/5 relative select-none bg-[#120502] touch-pan-y ${
                 isDragging ? "cursor-grabbing" : "cursor-grab"
               }`}
@@ -1384,6 +1382,7 @@ function DineInContent() {
                 {extendedBanners.map((banner, index) => (
                   <div
                     key={`${banner.id}-${index}`}
+                    data-ordering="hero-slide"
                     className="w-full shrink-0 relative bg-gradient-to-b from-[#180A04] via-[#120502] to-[#0A0201] text-white min-h-[222px] sm:min-h-[236px] flex items-center overflow-hidden pl-5 sm:pl-6 pr-0 pt-4 pb-6"
                   >
                     {/* Warm Ambient Spotlight Effect - Contained behind food so it never touches edges */}
@@ -1402,7 +1401,7 @@ function DineInContent() {
 
                     <div className="w-full h-full flex items-center justify-between relative z-10">
                       {/* Left Text Column */}
-                      <div className="w-[40%] sm:w-[38%] pr-1 flex flex-col justify-center py-1 relative z-20">
+                      <div data-ordering="hero-copy" className="w-[40%] sm:w-[38%] pr-1 flex flex-col justify-center py-1 relative z-20">
                         <span
                           className={`${banner.badgeBg} ${banner.badgeText} font-bold text-[9px] sm:text-[9.5px] tracking-wider uppercase px-2 py-0.5 rounded-[4px] self-start inline-block mb-1.5 shadow-xs leading-tight`}
                           style={{
@@ -1470,7 +1469,7 @@ function DineInContent() {
                       </div>
 
                       {/* Right Food Image / Placeholder */}
-                      <div className="absolute -right-3 sm:-right-1 bottom-0 top-0 w-[65%] sm:w-[67%] flex items-center justify-end pointer-events-none z-10">
+                      <div data-ordering="hero-image" className="absolute -right-3 sm:-right-1 bottom-0 top-0 w-[65%] sm:w-[67%] flex items-center justify-end pointer-events-none z-10">
                         <div
                           className={`relative ${
                             banner.image.endsWith(".svg")
@@ -1513,7 +1512,7 @@ function DineInContent() {
 
             {/* 5. CIRCULAR CATEGORY ICONS ROW (Cloning persis screenshot bulatan kategori) */}
             <div className="mt-5">
-              <div className="flex items-center justify-between overflow-x-auto no-scrollbar gap-2.5 px-0.5 py-1">
+              <div data-ordering="categories" className="flex items-center justify-between overflow-x-auto no-scrollbar gap-2.5 px-0.5 py-1">
                 {categoryChips.map((chip) => {
                   const isActive = activeCircleCategory === chip.id;
                   return (
@@ -1559,7 +1558,7 @@ function DineInContent() {
             </div>
 
             {/* 6. DYNAMIC CATEGORY SECTION */}
-            <div className="mt-5 px-0.5 flex items-center justify-between">
+            <div data-ordering="menu-heading" className="mt-5 px-0.5 flex items-center justify-between">
               <div>
                 <h2 className="text-[17px] font-bold text-gray-950 tracking-[-0.02em]">
                   {activeCircleCategory === "all"
@@ -1583,17 +1582,18 @@ function DineInContent() {
             </div>
 
             {/* 7. PRODUCT CARDS GRID (Cloning persis kartu putih 3-kolom screenshot) */}
-            <div className="mt-2.5 grid grid-cols-3 gap-2 sm:gap-2.5">
+            <div data-ordering="products" className="mt-2.5 grid grid-cols-3 gap-2 sm:gap-2.5">
               {(activeCircleCategory === "all" ? filteredItems.slice(0, 18) : filteredItems).map((item) => {
                 return (
                   <div
                     key={item.id}
+                    data-ordering="product-card"
                     onClick={() => handleOpenCustomize(item)}
                     className="bg-white rounded-[20px] border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] p-2.5 sm:p-3 flex flex-col justify-between relative hover:border-gray-200 hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] transition-shadow duration-150 cursor-pointer group min-h-[178px]"
                   >
 
                     {/* Centered Food Image */}
-                    <div className="relative w-full h-[86px] sm:h-[92px] my-1 flex items-center justify-center pointer-events-none select-none">
+                    <div data-ordering="product-image" className="relative w-full h-[86px] sm:h-[92px] my-1 flex items-center justify-center pointer-events-none select-none">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -1656,7 +1656,7 @@ function DineInContent() {
             </div>
 
             {/* 8. BOTTOM PROMOTIONAL CARD (Cloning persis kartu Exclusive Offer 30% OFF) */}
-            <div className="mt-5 rounded-[22px] sm:rounded-[24px] bg-gradient-to-r from-[#FDE8AE] via-[#FCE096] to-[#FBD87F] p-4 sm:p-4.5 border border-[#F2CA6B]/70 shadow-sm relative overflow-hidden flex items-center justify-between">
+            <div data-ordering="offer" className="mt-5 rounded-[22px] sm:rounded-[24px] bg-gradient-to-r from-[#FDE8AE] via-[#FCE096] to-[#FBD87F] p-4 sm:p-4.5 border border-[#F2CA6B]/70 shadow-sm relative overflow-hidden flex items-center justify-between">
               {/* Left Column: Text & CTA */}
               <div className="w-[48%] min-w-0 pr-1 z-10 flex flex-col items-start">
                 <span className="text-[9.5px] font-bold text-[#92400E] tracking-[0.08em] uppercase block leading-none">
@@ -1713,6 +1713,7 @@ function DineInContent() {
 
             {/* 9. FLOATING BOTTOM CART BAR (Saat Ada Item di Keranjang) */}
             <div
+              data-ordering="floating-cart"
               className={`fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[396px] z-40 transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) ${
                 totalCartItems > 0
                   ? "translate-y-0 opacity-100 pointer-events-auto"
@@ -1752,9 +1753,9 @@ function DineInContent() {
             (RAPI, PROPOSIONAL, PADDING SEIMBANG, TIDAK ADA FONT KEBESARAN)
            ========================================================================= */}
         {view === "customize" && customizingItem && (
-          <div className="flex-1 flex flex-col bg-white animate-in fade-in duration-150">
+          <div data-ordering="customize" className="flex-1 flex flex-col bg-white animate-in fade-in duration-150">
             {/* Header Gambar Makanan Lebar Penuh */}
-            <div className="relative w-full aspect-[16/9] bg-[#140C07] overflow-hidden select-none">
+            <div data-ordering="customize-image" className="relative w-full aspect-[16/9] bg-[#140C07] overflow-hidden select-none">
               <Image
                 src={
                   customizingItem.heroImage ||
@@ -1778,7 +1779,7 @@ function DineInContent() {
             </div>
 
             {/* Informasi Menu & Harga */}
-            <div className="px-4 pt-3.5 pb-3 border-b border-gray-150 bg-white">
+            <div data-ordering="customize-info" className="px-4 pt-3.5 pb-3 border-b border-gray-150 bg-white">
               <h1 className="font-semibold text-[16px] text-gray-950 tracking-tight leading-snug">
                 {customizingItem.name
                   .toLowerCase()
@@ -1799,7 +1800,7 @@ function DineInContent() {
             </div>
 
             {/* Section Pilihan Varian */}
-            <div className="flex-1 px-4 divide-y divide-gray-100 pb-36 bg-white">
+            <div data-ordering="customize-options" className="flex-1 px-4 divide-y divide-gray-100 pb-36 bg-white">
               {customizingItem.isCombo ? (
                 <>
                   {/* 1. MIE SELECTION */}
@@ -1974,7 +1975,7 @@ function DineInContent() {
             </div>
 
             {/* Bottom Action Bar */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-[430px] w-full bg-white/95 backdrop-blur-md border-t border-gray-150 px-4 pt-2.5 pb-4 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] z-30">
+            <div data-ordering="bottom-actions" className="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-[430px] w-full bg-white/95 backdrop-blur-md border-t border-gray-150 px-4 pt-2.5 pb-4 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] z-30">
               <div className="flex items-center justify-between pb-2.5">
                 <span className="font-semibold text-xs text-gray-700">Jumlah Pesanan</span>
                 <div className="inline-flex items-center border border-gray-200 rounded-md overflow-hidden bg-white shadow-2xs">
@@ -2016,7 +2017,7 @@ function DineInContent() {
             TAMPILAN 3: LAYAR KERANJANG PESANAN LENGKAP (view === 'cart') - Clean Shopee Style
            ========================================================================= */}
         {view === "cart" && (
-          <div className="flex-1 flex flex-col bg-[#F5F5F5] min-h-screen pb-28 animate-in fade-in duration-150">
+          <div data-ordering="cart" className="flex-1 flex flex-col bg-[#F5F5F5] min-h-screen pb-28 animate-in fade-in duration-150">
             {/* Header Keranjang Shopee Clean Style */}
             <div className="w-full bg-white px-4 py-3 flex items-center justify-between border-b border-gray-150 sticky top-0 z-30">
               <div className="flex items-center gap-3">
@@ -2034,7 +2035,7 @@ function DineInContent() {
             </div>
 
             {/* Cart Items List */}
-            <div className="p-3 flex flex-col gap-3">
+            <div data-ordering="cart-items" className="p-3 flex flex-col gap-3">
               {cart.length === 0 ? (
                 <div className="bg-white rounded-xl p-8 text-center border border-gray-150/60 shadow-2xs my-2 flex flex-col items-center">
                   <div className="w-16 h-16 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mb-3">
@@ -2162,7 +2163,7 @@ function DineInContent() {
 
             {/* Bottom Bar: Checkout Bar Shopee Style dengan Checkbox Semua */}
             {cart.length > 0 && (
-              <div className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-150 px-4 py-3 flex items-center justify-between z-40">
+              <div data-ordering="bottom-actions" className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-150 px-4 py-3 flex items-center justify-between z-40">
                 <button
                   type="button"
                   onClick={toggleSelectAllCart}
@@ -2212,7 +2213,7 @@ function DineInContent() {
         )}
 
         {view === "checkout" && (
-          <div className="flex-1 flex flex-col bg-[#F5F5F5] pb-32 animate-in fade-in duration-150">
+          <div data-ordering="checkout" className="flex-1 flex flex-col bg-[#F5F5F5] pb-32 animate-in fade-in duration-150">
             {/* Header Checkout */}
             <div className="w-full bg-white px-4 py-3 flex items-center justify-between border-b border-gray-100 sticky top-0 z-30">
               <button
@@ -2229,7 +2230,7 @@ function DineInContent() {
             </div>
 
             {/* Mode Capsule Info */}
-            <div className="mx-4 mt-3.5 bg-white border border-gray-200 rounded-lg px-4 py-3 flex items-center justify-between shadow-2xs">
+            <div data-ordering="checkout-mode" className="mx-4 mt-3.5 bg-white border border-gray-200 rounded-lg px-4 py-3 flex items-center justify-between shadow-2xs">
               <div>
                 <span className="text-gray-500 text-[11px] font-medium block">Jenis Pesanan</span>
                 <span className="text-gray-950 font-semibold text-xs">
@@ -2241,7 +2242,7 @@ function DineInContent() {
             </div>
 
             {/* Ordered Items List */}
-            <div className="mt-4 px-4 flex flex-col gap-2.5">
+            <div data-ordering="checkout-items" className="mt-4 px-4 flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-[13.5px] text-gray-900 tracking-tight">
                   Item Pesanan ({totalCartItems})
@@ -2363,7 +2364,7 @@ function DineInContent() {
             </div>
 
             {/* Metode Pembayaran */}
-            <div className="mx-4 mt-3 bg-white rounded-2xl border border-gray-100 p-3.5 shadow-2xs">
+            <div data-ordering="checkout-payment" className="mx-4 mt-3 bg-white rounded-2xl border border-gray-100 p-3.5 shadow-2xs">
               <h3 className="font-semibold text-xs text-gray-900 uppercase tracking-tight mb-2">
                 Pilih Metode Pembayaran
               </h3>
@@ -2394,7 +2395,7 @@ function DineInContent() {
             </div>
 
             {/* Rincian Pembayaran */}
-            <div className="mx-4 mt-3 bg-white rounded-xl border border-gray-200/80 p-4 shadow-2xs">
+            <div data-ordering="checkout-totals" className="mx-4 mt-3 bg-white rounded-xl border border-gray-200/80 p-4 shadow-2xs">
               <h3 className="font-semibold text-xs text-gray-900 uppercase tracking-tight mb-2.5">
                 Rincian Tagihan
               </h3>
@@ -2415,7 +2416,7 @@ function DineInContent() {
             </div>
 
             {/* Bottom Bar Checkout */}
-            <div className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-100 rounded-t-2xl shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-5 py-3.5 flex items-center justify-between z-40">
+            <div data-ordering="bottom-actions" className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-100 rounded-t-2xl shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-5 py-3.5 flex items-center justify-between z-40">
               <div>
                 <span className="text-[11px] text-gray-400 font-medium block leading-tight">
                   Total Tagihan
@@ -2445,7 +2446,7 @@ function DineInContent() {
             TAMPILAN 5: LAYAR LACAK STATUS DAPUR MOBILE (view === 'tracking')
            ========================================================================= */}
         {view === "tracking" && (
-          <div className="flex-1 flex flex-col bg-[#F5F5F5] pb-24 animate-in fade-in duration-150">
+          <div data-ordering="tracking" className="flex-1 flex flex-col bg-[#F5F5F5] pb-24 animate-in fade-in duration-150">
             {/* Header Tracking */}
             <div className="w-full bg-white px-4 py-3.5 flex items-center justify-between border-b border-gray-150 sticky top-0 z-30">
               <button
@@ -2618,7 +2619,7 @@ function DineInContent() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-150 px-4 py-3 flex items-center gap-2 z-40">
+            <div data-ordering="bottom-actions" className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-150 px-4 py-3 flex items-center gap-2 z-40">
               <button
                 onClick={() => navigateView("menu")}
                 className="flex-1 py-3 rounded-xl border border-gray-200 bg-white text-gray-800 font-medium text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
@@ -2853,62 +2854,14 @@ function DineInContent() {
       </main>
     </div>
 
-    {/* =========================================================================
-        2. TAMPILAN UKURAN LAYAR LAPTOP / DESKTOP (DESKTOP VIEWPORT: >= lg)
-        (KONSEP E-COMMERCE MODERN ALA SHOPEE / TOKOPEDIA SUSUNAN RAPIH)
-       ========================================================================= */}
-    <div className="hidden lg:block min-h-screen bg-[#F6F8FB]">
-      <DesktopOrderingView
-        orderMode="dine_in"
-        tableNumber={tableNumber}
-        setTableNumber={setTableNumber}
-        categories={categories}
-        cart={cart}
-        setCart={setCart}
-        totalCartItems={totalCartItems}
-        subtotal={subtotal}
-        pb1Tax={pb1Tax}
-        totalPayment={totalPayment}
-        selectedCartItemIds={selectedCartItemIds}
-        toggleSelectCartItem={toggleSelectCartItem}
-        handleDeleteCartItem={handleDeleteCartItem}
-        handleOpenCustomize={handleOpenCustomize}
-        handleQuickAdd={handleQuickAdd}
-        handleUpdateCartQty={handleUpdateCartQty}
-        greetingInfo={greetingInfo}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        activeCircleCategory={activeCircleCategory}
-        setActiveCircleCategory={setActiveCircleCategory}
-        selectedSpicyFilter={selectedSpicyFilter}
-        setSelectedSpicyFilter={setSelectedSpicyFilter}
-        heroBanners={heroBanners}
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-        setIsDrawerOpen={setIsDrawerOpen}
-        unreadCount={unreadCount}
-        trackedOrder={trackedOrder}
-        kitchenStage={kitchenStage}
-        navigateView={navigateView}
-        view={view}
-        extraNotes={extraNotes}
-        setExtraNotes={setExtraNotes}
-        paymentMethod={paymentMethod}
-        setPaymentMethod={setPaymentMethod}
-        isSubmittingOrder={isSubmittingOrder}
-        handleProceedPayment={handleProceedPayment}
-        submittedOrder={submittedOrder}
-        markAllAsRead={markAllAsRead}
-        setIsTableModalOpen={setIsTableModalOpen}
-      />
-    </div>
+
 
     {/* Tombol Scroll to Top Melayang (Murni Fixed ke Viewport, Bebas Tabrakan, Tidak Terkunci di Bawah) */}
     {view === "menu" && (
       <div
         className={`fixed ${
           totalCartItems > 0 ? "bottom-22" : "bottom-6"
-        } left-0 right-0 max-w-[430px] mx-auto px-4 flex justify-end pointer-events-none z-30 transition-all duration-300`}
+        } left-0 right-0 ${orderingStyles.scrollTop} max-w-[430px] mx-auto px-4 flex justify-end pointer-events-none z-30 transition-all duration-300`}
       >
         <button
           type="button"
