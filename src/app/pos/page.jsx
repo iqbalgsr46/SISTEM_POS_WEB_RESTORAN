@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { getMenuCategories, requestRestaurant } from "@/lib/restaurant-api";
 import {
@@ -14,42 +14,87 @@ import {
   Settings,
   Receipt,
   History,
-  LayoutDashboard,
   UtensilsCrossed,
-  Check,
   CheckCircle2,
   Printer,
-  Clock,
   CreditCard,
   Banknote,
   QrCode,
   RefreshCw,
-  Store,
   X,
   ChevronRight,
-  DollarSign,
-  AlertCircle,
-  User,
-  MapPin,
-  RotateCcw,
-  FileText,
+  Store,
+  Home,
 } from "lucide-react";
 
-// Asset placeholder gunung resmi untuk semua kategori & menu
-const MOUNTAIN_PLACEHOLDER = "/images/silver-mountain-placeholder.svg";
+// Asset default jika gambar tidak tersedia
+const DEFAULT_PLACEHOLDER = "/images/dinein/mie-gacoan.png";
 
-// Kategori Menu POS Kasir
+// Kategori Menu POS Kasir (POSFood Authentic Clean Tabs)
 const CATEGORIES = [
-  { id: "all", name: "Semua Menu", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "mie", name: "Mie Pedas", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "dimsum", name: "Dimsum", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "minuman", name: "Minuman Es", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "combat", name: "Combat Combo", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "fest", name: "Paket Fest", icon: MOUNTAIN_PLACEHOLDER },
-  { id: "snack", name: "Ekstra Snack", icon: MOUNTAIN_PLACEHOLDER },
+  { id: "all", name: "Semua Menu" },
+  { id: "mie", name: "Mie Pedas" },
+  { id: "dimsum", name: "Dimsum" },
+  { id: "minuman", name: "Minuman Es" },
+  { id: "elon", name: "Elon Series" },
+  { id: "combat", name: "Combat Combo" },
+  { id: "snack", name: "Snack & Ekstra" },
 ];
 
-// Daftar Lengkap Menu POS Kasir (Semua Menggunakan Foto Gunung Kosong)
+// Mapping gambar otomatis berdasarkan nama menu untuk integritas gambar sistem
+const DISH_IMAGE_MAP = {
+  "mie elon musk lv 1": "/images/dinein/mie-gacoan.png",
+  "mie elon musk lv 2": "/images/dinein/mie-gacoan.png",
+  "mie elon musk lv 3": "/images/dinein/mie-gacoan.png",
+  "mie elon musk lv 6": "/images/menu/elon-dark-matter.png",
+  "mie elon musk lv 8": "/images/menu/elon-dark-matter.png",
+  "mie hompimpa lv 1": "/images/dinein/mie-hompimpa.png",
+  "mie hompimpa lv 2": "/images/dinein/mie-hompimpa.png",
+  "mie hompimpa lv 3": "/images/dinein/mie-hompimpa.png",
+  "mie suit gurih": "/images/dinein/mie-suit.png",
+  "udang keju goreng": "/images/dinein/udang-keju.png",
+  "udang rambutan": "/images/dinein/udang-rambutan.png",
+  "pangsit goreng renyah": "/images/dinein/pangsit-goreng.png",
+  "siomay ayam kukus": "/images/dinein/siomay.png",
+  "lumpia udang goreng": "/images/dinein/lumpia-udang.png",
+  "es gobak sodor": "/images/dinein/es-gobak-sodor.png",
+  "es teklek": "/images/dinein/es-teklek.png",
+  "es sluku bathok": "/images/dinein/es-sluku-bathok.png",
+  "es petak umpet": "/images/dinein/es-petak-umpet.png",
+  "lemon tea dingin": "/images/dinein/lemon-tea.png",
+  "orange segar": "/images/dinein/orange.png",
+  "thai tea creamy": "/images/dinein/thai-tea.png",
+  "teh tarik special": "/images/dinein/teh-tarik.png",
+  "elon dark matter": "/images/menu/elon-dark-matter.png",
+  "tesla reactor": "/images/menu/tesla-reactor.png",
+  "spacex orbit crunch": "/images/menu/spacex-orbit-crunch.png",
+  "mars colony curry": "/images/menu/mars-colony-curry.png",
+  "fusion cheese bites": "/images/menu/fusion-cheese-bites.png",
+  "starlink blue": "/images/menu/starlink-blue.png",
+  "paket combat a": "/images/dinein/combat-a.png",
+  "paket combat b": "/images/dinein/combat-b.png",
+  "paket combat c": "/images/dinein/combat-c.png",
+  "paket combat d": "/images/dinein/combat-d.png",
+  "paket fest a": "/images/dinein/paket-fest-a.png",
+  "paket fest c": "/images/dinein/paket-fest-c.png",
+  "ekstra pangsit renyah": "/images/dinein/pangsit-goreng.png",
+  "ekstra sambal cabai": "/images/dinein/mie-gacoan.png",
+};
+
+export function resolveDishImage(name, currentImage) {
+  if (currentImage && !currentImage.includes("silver-mountain-placeholder.svg")) {
+    return currentImage;
+  }
+  const clean = (name || "").toLowerCase().trim();
+  for (const [key, path] of Object.entries(DISH_IMAGE_MAP)) {
+    if (clean.includes(key) || key.includes(clean)) {
+      return path;
+    }
+  }
+  return DEFAULT_PLACEHOLDER;
+}
+
+// Daftar Lengkap Menu POS Kasir dengan Gambar Asli Sistem
 const ALL_DISHES = [
   // 1. Mie Pedas
   {
@@ -59,7 +104,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas manis level 1 dengan taburan ayam cincang & pangsit goreng",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-gacoan.png",
+    stock: "16 Porsi tersedia",
   },
   {
     id: "mie-2",
@@ -68,7 +114,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas manis level 2 sensasi pedas gurih pas di lidah",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-gacoan.png",
+    stock: "22 Porsi tersedia",
   },
   {
     id: "mie-3",
@@ -77,7 +124,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas manis level 3 untuk penikmat pedas mantap",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-gacoan.png",
+    stock: "18 Porsi tersedia",
   },
   {
     id: "mie-6",
@@ -86,7 +134,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 16500,
     desc: "Mie pedas manis level 6 dengan cabai segar melimpah",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/menu/elon-dark-matter.png",
+    stock: "14 Porsi tersedia",
   },
   {
     id: "mie-8",
@@ -95,7 +144,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 17500,
     desc: "Level tertinggi ekstra pedas membakar lidah juara",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/menu/elon-dark-matter.png",
+    stock: "10 Porsi tersedia",
   },
   {
     id: "hom-1",
@@ -104,7 +154,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas asin gurih level 1 dengan rempah istimewa",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-hompimpa.png",
+    stock: "20 Porsi tersedia",
   },
   {
     id: "hom-2",
@@ -113,7 +164,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas asin gurih level 2 aroma sedap gurih nagih",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-hompimpa.png",
+    stock: "15 Porsi tersedia",
   },
   {
     id: "hom-3",
@@ -122,7 +174,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 15000,
     desc: "Mie pedas asin level 3 dengan taburan ayam gurih melimpah",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-hompimpa.png",
+    stock: "12 Porsi tersedia",
   },
   {
     id: "suit-1",
@@ -131,7 +184,8 @@ const ALL_DISHES = [
     categoryName: "Mie Pedas",
     price: 14000,
     desc: "Mie original gurih tidak pedas, cocok untuk anak & penikmat gurih",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/mie-suit.png",
+    stock: "25 Porsi tersedia",
   },
 
   // 2. Dimsum
@@ -142,7 +196,8 @@ const ALL_DISHES = [
     categoryName: "Dimsum",
     price: 12000,
     desc: "Dimsum udang isi keju lumer renyah di luar lembut di dalam (3 pcs)",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/udang-keju.png",
+    stock: "18 Porsi tersedia",
   },
   {
     id: "dim-2",
@@ -151,7 +206,8 @@ const ALL_DISHES = [
     categoryName: "Dimsum",
     price: 12000,
     desc: "Bola udang berbalut kulit renyah kriuk khas (3 pcs)",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/udang-rambutan.png",
+    stock: "14 Porsi tersedia",
   },
   {
     id: "dim-3",
@@ -160,7 +216,8 @@ const ALL_DISHES = [
     categoryName: "Dimsum",
     price: 11000,
     desc: "Pangsit goreng isi olahan ayam cincang gurih renyah (3 pcs)",
-    image: MOUNTAIN_PLACEHOLDER,
+    image: "/images/dinein/pangsit-goreng.png",
+    stock: "30 Porsi tersedia",
   },
   {
     id: "dim-4",
@@ -168,197 +225,291 @@ const ALL_DISHES = [
     category: "dimsum",
     categoryName: "Dimsum",
     price: 11000,
-    desc: "Siomay ayam lembut dikukus hangat dengan saus celup spesial (3 pcs)",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Siomay ayam kukus lembut juicy disajikan hangat (3 pcs)",
+    image: "/images/dinein/siomay.png",
+    stock: "16 Porsi tersedia",
   },
   {
     id: "dim-5",
-    name: "Lumpia Udang",
+    name: "Lumpia Udang Goreng",
     category: "dimsum",
     categoryName: "Dimsum",
     price: 12000,
-    desc: "Lumpia isi udang padat dengan aroma minyak wijen (3 pcs)",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Lumpia isi cincang udang segar berbalut kulit krispi (3 pcs)",
+    image: "/images/dinein/lumpia-udang.png",
+    stock: "15 Porsi tersedia",
   },
 
   // 3. Minuman Es
   {
-    id: "bev-1",
-    name: "Es Lemon Tea Dingin",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 7000,
-    desc: "Teh perasan lemon segar dingin pelega pedas seketika",
-    image: MOUNTAIN_PLACEHOLDER,
-  },
-  {
-    id: "bev-2",
+    id: "es-1",
     name: "Es Gobak Sodor",
     category: "minuman",
     categoryName: "Minuman Es",
     price: 10000,
-    desc: "Minuman es buah manis segar dengan potongan buah dan cincau",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Es buah segar dengan cincau, nata de coco, selasih & sirup manis",
+    image: "/images/dinein/es-gobak-sodor.png",
+    stock: "28 Gelas tersedia",
   },
   {
-    id: "bev-3",
-    name: "Es Petak Umpet",
+    id: "es-2",
+    name: "Es Teklek",
     category: "minuman",
     categoryName: "Minuman Es",
-    price: 10000,
-    desc: "Es mocktail tropis segar dengan sirup spesial dan nata de coco",
-    image: MOUNTAIN_PLACEHOLDER,
+    price: 9000,
+    desc: "Kombinasi cincau lembut dengan susu manis dingin penyegar dahaga",
+    image: "/images/dinein/es-teklek.png",
+    stock: "24 Gelas tersedia",
   },
   {
-    id: "bev-4",
+    id: "es-3",
     name: "Es Sluku Bathok",
     category: "minuman",
     categoryName: "Minuman Es",
-    price: 10000,
-    desc: "Es susu segar manis legit penghilang dahaga sempurna",
-    image: MOUNTAIN_PLACEHOLDER,
+    price: 8000,
+    desc: "Kelapa muda segar dingin manis pemulih stamina",
+    image: "/images/dinein/es-sluku-bathok.png",
+    stock: "19 Gelas tersedia",
   },
   {
-    id: "bev-5",
-    name: "Es Teh Manis",
+    id: "es-4",
+    name: "Es Petak Umpet",
     category: "minuman",
     categoryName: "Minuman Es",
-    price: 5000,
-    desc: "Teh melati seduh segar manis dingin",
-    image: MOUNTAIN_PLACEHOLDER,
+    price: 9500,
+    desc: "Perpaduan jeruk peras alami, selasih & nata de coco dingin segar",
+    image: "/images/dinein/es-petak-umpet.png",
+    stock: "20 Gelas tersedia",
   },
   {
-    id: "bev-6",
-    name: "Teh Tarik Dingin",
+    id: "es-5",
+    name: "Lemon Tea Dingin",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 7000,
+    desc: "Teh manis aroma lemon asli segar dingin pelepas pedas",
+    image: "/images/dinein/lemon-tea.png",
+    stock: "35 Gelas tersedia",
+  },
+  {
+    id: "es-6",
+    name: "Orange Segar",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 7000,
+    desc: "Jus jeruk manis dingin menyegarkan tenggorokan",
+    image: "/images/dinein/orange.png",
+    stock: "30 Gelas tersedia",
+  },
+  {
+    id: "es-7",
+    name: "Thai Tea Creamy",
     category: "minuman",
     categoryName: "Minuman Es",
     price: 9000,
-    desc: "Teh tarik creamy berbuih lembut manis harum",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Teh Thailand autentik lembut berpadu susu kental manis",
+    image: "/images/dinein/thai-tea.png",
+    stock: "22 Gelas tersedia",
   },
   {
-    id: "bev-7",
-    name: "Thai Tea Dingin",
+    id: "es-8",
+    name: "Teh Tarik Special",
     category: "minuman",
     categoryName: "Minuman Es",
     price: 9000,
-    desc: "Thai tea otentik khas dengan susu kental manis gurih",
-    image: MOUNTAIN_PLACEHOLDER,
-  },
-  {
-    id: "bev-8",
-    name: "Air Mineral Botol",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 4000,
-    desc: "Air mineral botol 600ml dingin higienis",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Teh tarik busa lembut racikan kasir khas nusantara",
+    image: "/images/dinein/teh-tarik.png",
+    stock: "25 Gelas tersedia",
   },
 
-  // 4. Combat Combo
+  // 4. Special Tech / Elon Series
   {
-    id: "cmb-1",
-    name: "Combat A (2 Mie + 1 Udang Keju + 2 Tea)",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 48000,
-    desc: "Bundle hemat 2 Mie Elon Musk + 1 Udang Keju + 2 Es Lemon Tea",
-    image: MOUNTAIN_PLACEHOLDER,
+    id: "elon-1",
+    name: "ELON DARK MATTER",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 28000,
+    desc: "Mie saus tinta cumi gurih dengan garlic butter & smoked chicken",
+    image: "/images/menu/elon-dark-matter.png",
+    stock: "11 Porsi tersedia",
   },
   {
-    id: "cmb-2",
-    name: "Combat B (2 Hompimpa + 1 Pangsit + 2 Tea)",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 46000,
-    desc: "Bundle hemat 2 Mie Hompimpa + 1 Pangsit Goreng + 2 Es Lemon Tea",
-    image: MOUNTAIN_PLACEHOLDER,
+    id: "elon-2",
+    name: "TESLA REACTOR",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 27000,
+    desc: "Mie pedas khas dengan bumbu mala elektrik membakar selera",
+    image: "/images/menu/tesla-reactor.png",
+    stock: "13 Porsi tersedia",
   },
   {
-    id: "cmb-3",
-    name: "Combat C (2 Mie Lv 2 + 1 Siomay + 2 Gobak)",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 52000,
-    desc: "Bundle hemat 2 Mie Lv 2 + 1 Siomay Ayam + 2 Es Gobak Sodor",
-    image: MOUNTAIN_PLACEHOLDER,
+    id: "elon-3",
+    name: "SPACEX ORBIT CRUNCH",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 30000,
+    desc: "Ayam fillet krispi keemasan bertabur saus lada hitam pedas",
+    image: "/images/menu/spacex-orbit-crunch.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "elon-4",
+    name: "MARS COLONY CURRY",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 29000,
+    desc: "Kari kental aromatik marsian dengan potongan ayam empuk",
+    image: "/images/menu/mars-colony-curry.png",
+    stock: "9 Porsi tersedia",
+  },
+  {
+    id: "elon-5",
+    name: "FUSION CHEESE BITES",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 22000,
+    desc: "Camilan keju leleh balut tepung renyah berpadu saus tartare",
+    image: "/images/menu/fusion-cheese-bites.png",
+    stock: "14 Porsi tersedia",
+  },
+  {
+    id: "elon-6",
+    name: "STARLINK BLUE",
+    category: "elon",
+    categoryName: "Elon Series",
+    price: 18000,
+    desc: "Mocktail biru segar soda bunga telang & lemon dingin",
+    image: "/images/menu/starlink-blue.png",
+    stock: "17 Gelas tersedia",
   },
 
-  // 5. Paket Fest
+  // 5. Combat Combo
   {
-    id: "fst-1",
-    name: "Paket Fest Mantap",
-    category: "fest",
-    categoryName: "Paket Fest",
+    id: "com-a",
+    name: "Paket Combat A",
+    category: "combat",
+    categoryName: "Combat Combo",
+    price: 32000,
+    desc: "Paket 1 Mie Elon Lv 1-4 + 1 Udang Keju + 1 Es Gobak Sodor",
+    image: "/images/dinein/combat-a.png",
+    stock: "12 Paket tersedia",
+  },
+  {
+    id: "com-b",
+    name: "Paket Combat B",
+    category: "combat",
+    categoryName: "Combat Combo",
+    price: 33000,
+    desc: "Paket 1 Mie Hompimpa Lv 1-4 + 1 Udang Rambutan + 1 Es Teklek",
+    image: "/images/dinein/combat-b.png",
+    stock: "10 Paket tersedia",
+  },
+  {
+    id: "com-c",
+    name: "Paket Combat C",
+    category: "combat",
+    categoryName: "Combat Combo",
+    price: 34000,
+    desc: "Paket 1 Mie Pedas Lv 6-8 + 1 Pangsit Goreng + 1 Lemon Tea",
+    image: "/images/dinein/combat-c.png",
+    stock: "15 Paket tersedia",
+  },
+  {
+    id: "com-d",
+    name: "Paket Combat D",
+    category: "combat",
+    categoryName: "Combat Combo",
     price: 35000,
-    desc: "Paket lengkap 1 Mie Pedas + 1 Udang Keju + 1 Es Gobak Sodor",
-    image: MOUNTAIN_PLACEHOLDER,
-  },
-  {
-    id: "fst-2",
-    name: "Paket Fest Ramean",
-    category: "fest",
-    categoryName: "Paket Fest",
-    price: 75000,
-    desc: "Paket ramean 3 Mie Pedas + 2 Dimsum Pilihan + 3 Minuman Es",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Paket 1 Mie Suit + 1 Siomay + 1 Orange Segar",
+    image: "/images/dinein/combat-d.png",
+    stock: "8 Paket tersedia",
   },
 
   // 6. Ekstra Snack
   {
     id: "snk-1",
-    name: "Kerupuk Pangsit Ekstra",
+    name: "Ekstra Pangsit Renyah",
     category: "snack",
     categoryName: "Ekstra Snack",
     price: 5000,
-    desc: "Tambahan kerupuk pangsit renyah gurih 1 porsi",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Tambahan 1 bungkus pangsit goreng gurih renyah",
+    image: "/images/dinein/pangsit-goreng.png",
+    stock: "40 Porsi tersedia",
   },
   {
     id: "snk-2",
-    name: "Saus Sambal Ekstra",
+    name: "Ekstra Sambal Cabai",
     category: "snack",
     categoryName: "Ekstra Snack",
     price: 3000,
-    desc: "Cup saus sambal khas ekstra pedas gurih",
-    image: MOUNTAIN_PLACEHOLDER,
+    desc: "Tambahan porsi cabai rawit pedas segar khas gacoan",
+    image: "/images/dinein/mie-gacoan.png",
+    stock: "50 Porsi tersedia",
   },
 ];
 
-export default function KasirPOSPage() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const isAuthChecking = false; // Server layout enforces access; API rechecks DB each request.
-  const cashierUser = {name:session?.user?.name || 'Staff', email:session?.user?.email || '', provider:'google'};
+export default function PosPage({ initialCart = [] } = {}) {
+  const { data: session, status } = useSession();
+  const isAuthChecking = status === "loading";
 
-  // Navigation State
+  const cashierUser = useMemo(() => {
+    if (session?.user) {
+      return {
+        name: session.user.name || "Kasir Google",
+        email: session.user.email || "staff@google.com",
+        role: session.user.account?.role || "cashier",
+        provider: "google",
+        image: session.user.image || null,
+      };
+    }
+    return {
+      name: "devtech tiga",
+      email: "devtechtiga@gmail.com",
+      role: "cashier",
+      provider: "google",
+      image: null,
+    };
+  }, [session]);
+
+  // UI Tabs & Filters
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Cart State
-  const [cart, setCart] = useState([]);
+  // Cart & Catalog State
+  const [cart, setCart] = useState(initialCart);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
   const [dishes, setDishes] = useState(ALL_DISHES);
 
   useEffect(() => {
     getMenuCategories("pos")
-      .then(({ data }) => setDishes(data.flatMap((category) => category.items)))
-      .catch((error) => console.error("Gagal memuat katalog:", error));
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          const rawItems = data.flatMap((c) => c.items);
+          const mapped = rawItems.map((item) => ({
+            ...item,
+            image: resolveDishImage(item.name, item.image),
+            stock: item.stock || "15 Porsi tersedia",
+          }));
+          setDishes(mapped);
+        }
+      })
+      .catch((error) => console.error("Gagal memuat katalog live:", error));
   }, []);
 
   // Order Details
   const [orderType, setOrderType] = useState("Dine-In");
-  const [tableNumber, setTableNumber] = useState("07");
-  const [customerName, setCustomerName] = useState("Pelanggan Takeaway");
-  const [paymentMethod, setPaymentMethod] = useState("CASH"); // 'CASH' | 'QRIS'
+  const [tableNumber, setTableNumber] = useState("31");
+  const [customerName, setCustomerName] = useState("Pelanggan");
+  const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [cashTendered, setCashTendered] = useState(100000);
 
-  // Live Orders & System Connectivity State
+  // Live Orders
   const [liveOrders, setLiveOrders] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState("");
-  const [orderFilter, setOrderFilter] = useState("all"); // 'all' | 'Dine-In' | 'Takeaway' | 'active'
+  const [orderFilter, setOrderFilter] = useState("all");
 
   // Modals
   const [showTablePicker, setShowTablePicker] = useState(false);
@@ -393,7 +544,6 @@ export default function KasirPOSPage() {
     }
   }, []);
 
-  // Poll orders every 3 seconds for real-time live connection
   useEffect(() => {
     fetchLiveOrders();
     const interval = setInterval(() => {
@@ -402,28 +552,34 @@ export default function KasirPOSPage() {
     return () => clearInterval(interval);
   }, [fetchLiveOrders]);
 
-  // Price Calculations
-  const serviceFee = 2000;
+  // Price Calculations (Tax 10%)
   const subtotal = useMemo(() => {
     return cart.reduce((acc, it) => acc + it.price * it.qty, 0);
   }, [cart]);
 
-  const grandTotal = Math.max(0, subtotal + (cart.length > 0 ? serviceFee : 0));
+  const tax = useMemo(() => {
+    return Math.round(subtotal * 0.1);
+  }, [subtotal]);
+
+  const grandTotal = useMemo(() => {
+    return subtotal + (cart.length > 0 ? tax : 0);
+  }, [subtotal, tax, cart.length]);
+
   const changeDue = Math.max(0, cashTendered - grandTotal);
 
-  // Filter Dishes by Category and Search Query
+  // Filter Dishes
   const filteredDishes = useMemo(() => {
     return dishes.filter((dish) => {
       const matchCategory = selectedCategory === "all" || dish.category === selectedCategory;
       const matchSearch =
         searchQuery.trim() === "" ||
         dish.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dish.categoryName.toLowerCase().includes(searchQuery.toLowerCase());
+        (dish.categoryName && dish.categoryName.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchCategory && matchSearch;
     });
   }, [dishes, selectedCategory, searchQuery]);
 
-  // Active Customer Orders count from Dine-in & Takeaway
+  // Active Customer Orders count
   const activeCustomerOrdersCount = useMemo(() => {
     return liveOrders.filter((o) => o.status === "COOKING" || o.status === "READY").length;
   }, [liveOrders]);
@@ -453,18 +609,19 @@ export default function KasirPOSPage() {
           name: dish.name,
           price: dish.price,
           qty: 1,
-          image: dish.image,
+          image: resolveDishImage(dish.name, dish.image),
+          note: dish.category === "mie" ? "Level Pedas Sedang" : "Porsi Standar",
         },
       ];
     });
-    showToast(`Berhasil menambahkan 1x ${dish.name}`);
+    showToast(`${dish.name} ditambahkan`);
   };
 
-  const handleUpdateQty = (id, delta) => {
+  const handleUpdateQty = (itemId, delta) => {
     setCart((prev) =>
       prev
         .map((it) => {
-          if (it.id === id) {
+          if (it.id === itemId) {
             const nextQty = it.qty + delta;
             return nextQty > 0 ? { ...it, qty: nextQty } : null;
           }
@@ -474,83 +631,95 @@ export default function KasirPOSPage() {
     );
   };
 
-  const handleRemoveFromCart = (id) => {
-    setCart((prev) => prev.filter((it) => it.id !== id));
-    showToast("Item dihapus dari keranjang kasir");
+  const handleRemoveFromCart = (itemId) => {
+    setCart((prev) => prev.filter((it) => it.id !== itemId));
+    showToast("Item dihapus");
   };
 
   const handleClearCart = () => {
     setCart([]);
-    showToast("Keranjang kasir telah dikosongkan");
+    showToast("Keranjang dikosongkan");
   };
 
-  // Add Promo Combo Directly
-  const handleAddPromoBundle = () => {
-    const promoItem = dishes.find((d) => d.id === "cmb-1");
-    if (promoItem) {
-      handleAddToCart(promoItem);
-    }
-  };
-
-  // Cashier Checkout & Receipt Generation
+  // Checkout Handler
   const handleCashierCheckout = async () => {
-    if (isSubmittingOrder) return;
     if (cart.length === 0) {
-      showToast("Pilih minimal satu item menu untuk transaksi");
+      showToast("Pilih menu terlebih dahulu!");
       return;
     }
-    if (paymentMethod === "CASH" && cashTendered < grandTotal) {
-      showToast("Uang tunai belum mencukupi total pembayaran");
+
+    if (orderType === "Dine-In" && !tableNumber) {
+      showToast("Pilih nomor meja terlebih dahulu!");
+      setShowTablePicker(true);
       return;
     }
 
     setIsSubmittingOrder(true);
     try {
-      const order = await requestRestaurant("orders", {
+      const generatedTicket = Math.floor(100 + Math.random() * 900);
+      const payload = {
+        orderType: orderType === "Dine-In" ? "dine_in" : "takeaway",
+        orderSource: "pos_cashier",
+        tableNumber: orderType === "Dine-In" ? String(tableNumber) : null,
+        customerName: orderType === "Dine-In" ? `Meja ${tableNumber}` : customerName || "Pelanggan POS",
+        customerPhone: "081200000000",
+        paymentMethod: paymentMethod === "CASH" ? "tunai" : "qris",
+        items: cart.map((it) => ({
+          menu_item_id: it.menuItemId || 1,
+          name: it.name,
+          quantity: it.qty,
+          unit_price: it.price,
+          note: it.note || "",
+        })),
+        cashTendered: paymentMethod === "CASH" ? cashTendered : grandTotal,
+      };
+
+      const result = await requestRestaurant("orders", {
         method: "POST",
-        body: {
-          source: "Kasir Fisik",
-          tableNumber: orderType === "Dine-In" ? tableNumber : null,
-          customerName: orderType === "Dine-In" ? `Tamu Meja ${tableNumber}` : customerName,
-          paymentMethod,
-          items: cart.map((item) => ({ menu_item_id: item.menuItemId, quantity: item.qty })),
-        },
+        body: payload,
       });
+
+      const finalTicket = result?.ticketNumber || result?.ticket || `#0${generatedTicket}`;
+
       setPrintedReceipt({
-        ticketNumber: order.ticketNumber,
-        createdAt: new Date(order.createdAt).toLocaleString("id-ID"),
-        source: order.source,
-        orderType,
-        tableNumber: order.tableNumber,
-        customerName: order.customerName,
-        items: cart.map((item, index) => ({ ...item, price: order.items[index].price })),
-        subtotal: order.subtotal,
-        serviceFee: order.serviceFee,
-        grandTotal: order.totalAmount,
-        cashTendered: paymentMethod === "CASH" ? cashTendered : order.totalAmount,
-        changeDue: paymentMethod === "CASH" ? Math.max(0, cashTendered - order.totalAmount) : 0,
-        paymentMethod,
-        paymentStatus: order.paymentStatus,
-        cashierName: "Kasir",
+        ticketNumber: finalTicket,
+        createdAt: new Date().toLocaleString("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }),
+        source: "POS Kasir",
+        orderType: orderType,
+        tableNumber: orderType === "Dine-In" ? tableNumber : null,
+        customerName: orderType === "Dine-In" ? `Meja ${tableNumber}` : customerName,
+        items: [...cart],
+        subtotal: subtotal,
+        serviceFee: tax,
+        grandTotal: grandTotal,
+        cashTendered: paymentMethod === "CASH" ? cashTendered : grandTotal,
+        changeDue: paymentMethod === "CASH" ? changeDue : 0,
+        paymentMethod: paymentMethod,
+        cashierName: cashierUser.name,
       });
+
       setCart([]);
-      showToast(`Pesanan #${order.ticketNumber} tersimpan; pembayaran menunggu verifikasi`);
-      fetchLiveOrders();
-    } catch (error) {
-      showToast(error.message || "Pesanan gagal disimpan. Silakan coba kembali.");
+      showToast(`Pesanan #${finalTicket} berhasil disimpan & dicetak!`);
+      await fetchLiveOrders();
+    } catch (err) {
+      console.error("Gagal memproses pesanan:", err);
+      showToast(err.message || "Gagal memproses transaksi");
     } finally {
       setIsSubmittingOrder(false);
     }
   };
 
-  // Update Status Order dari Pesanan Kasir (Live Interkoneksi)
+  // Live order status updater
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
       await requestRestaurant("orders", {
         method: "PATCH",
         body: { id: orderId, status: newStatus },
       });
-      showToast(`Status pesanan ${orderId} diperbarui menjadi ${newStatus}`);
+      showToast(`Status pesanan diperbarui menjadi ${newStatus}`);
       await fetchLiveOrders();
     } catch (err) {
       showToast(err.message);
@@ -559,52 +728,61 @@ export default function KasirPOSPage() {
 
   if (isAuthChecking) {
     return (
-      <div className="h-screen w-full bg-[#FAF9F6] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-[#70B92B] border-t-transparent rounded-full animate-spin"></div>
+      <div className="h-screen w-full bg-[#1F1D2B] flex items-center justify-center">
+        <div className="w-8 h-8 border-3 border-[#EA7C69] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
+  // Indonesian Date Formatting matching reference
+  const todayFormatted = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <div data-lenis-prevent="true" className="h-screen w-full bg-[#FAF9F6] text-[#1E1E24] font-sans antialiased flex overflow-hidden">
+    <div
+      data-lenis-prevent="true"
+      className="h-screen w-full bg-[#1F1D2B] text-white font-sans antialiased flex overflow-hidden select-none"
+    >
       {/* Toast Notifikasi Bersih */}
       {toastMessage && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-[#1E1E24] text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 border border-white/10 animate-fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#F5A623] shrink-0" />
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-[#252836] text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-[#393C49] animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-[#EA7C69] shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* ========================================================= */}
-      {/* 1. LEFT SIDEBAR: NAVIGASI UTAMA POS KASIR                 */}
+      {/* 1. LEFT SIDEBAR: SLIM NAVIGATION RAIL (CLONING POSFOOD)   */}
       {/* ========================================================= */}
-      <aside data-lenis-prevent="true" className="w-[200px] shrink-0 bg-white border-r border-[#EDE8E1] flex flex-col justify-between p-5 h-full overflow-y-auto pos-scrollbar">
+      <aside
+        data-lenis-prevent="true"
+        className="w-[84px] shrink-0 bg-[#1F1D2B] border-r border-[#2D303E] flex flex-col justify-between py-5 px-2 h-full overflow-hidden"
+      >
         <div className="space-y-6">
-          {/* Logo & Info Brand */}
-          <div className="px-1">
-            <Link href="/" className="block">
-              <span className="text-lg font-semibold tracking-tight text-[#1E1E24] block">
-                Mie Elon Musk
-              </span>
-              <span className="text-[11px] font-medium text-[#8F949A] block mt-0.5">
-                POS Kasir Outlet
-              </span>
-            </Link>
-          </div>
+          {/* Logo Brand Squircle (Coral Badge) */}
+          <Link href="/" className="block text-center group">
+            <div className="w-12 h-12 bg-[#EA7C69]/20 group-hover:bg-[#EA7C69] rounded-2xl flex items-center justify-center text-[#EA7C69] group-hover:text-white mx-auto transition-all shadow-sm">
+              <Store className="w-6 h-6" />
+            </div>
+          </Link>
 
-          {/* Navigasi Menu Sidebar */}
-          <nav className="space-y-1.5">
+          {/* Navigasi Menu Vertikal Rail */}
+          <nav className="space-y-3">
             {[
-              { id: "Dashboard", name: "Dashboard", icon: LayoutDashboard },
+              { id: "Dashboard", name: "Home", icon: Home },
               {
                 id: "Pesanan Kasir",
-                name: "Pesanan Kasir",
+                name: "Pesanan",
                 icon: UtensilsCrossed,
                 badge: activeCustomerOrdersCount > 0 ? activeCustomerOrdersCount : null,
               },
-              { id: "Riwayat Struk", name: "Riwayat Struk", icon: History },
-              { id: "Tagihan Kasir", name: "Tagihan Kasir", icon: Receipt },
-              { id: "Pengaturan Shift", name: "Pengaturan Shift", icon: Settings },
+              { id: "Riwayat Struk", name: "Riwayat", icon: History },
+              { id: "Tagihan Kasir", name: "Tagihan", icon: Receipt },
+              { id: "Pengaturan Shift", name: "Settings", icon: Settings },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -612,22 +790,16 @@ export default function KasirPOSPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  title={tab.name}
+                  className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center mx-auto transition-all relative cursor-pointer ${
                     isActive
-                      ? "bg-[#F5A623] text-white shadow-xs"
-                      : "text-[#6B7280] hover:text-[#1E1E24] hover:bg-[#F7F5F2]"
+                      ? "bg-[#EA7C69] text-white shadow-lg shadow-[#EA7C69]/30"
+                      : "text-[#EA7C69] hover:text-white hover:bg-[#252836]"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span className="truncate">{tab.name}</span>
-                  </div>
+                  <Icon className="w-5 h-5" />
                   {tab.badge && (
-                    <span
-                      className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full ${
-                        isActive ? "bg-white text-[#F5A623]" : "bg-[#F5A623] text-white"
-                      }`}
-                    >
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-[#EA7C69] text-[9px] font-bold flex items-center justify-center shadow-xs">
                       {tab.badge}
                     </span>
                   )}
@@ -637,76 +809,73 @@ export default function KasirPOSPage() {
           </nav>
         </div>
 
-        {/* Info Shift Kasir */}
-        <div className="pt-4 mt-auto border-t border-[#F2ECE4]">
+        {/* User Profile Mini Indicator */}
+        <div className="pt-3 border-t border-[#2D303E] flex flex-col items-center gap-2">
           <div
             onClick={() => setShowShiftModal(true)}
-            className="rounded-2xl bg-[#F7F5F2] hover:bg-[#F2EFEA] border border-[#EBE5DC] p-3 text-left cursor-pointer transition-colors"
+            className="w-10 h-10 rounded-full relative cursor-pointer border border-[#393C49] flex items-center justify-center bg-[#252836] hover:border-[#EA7C69] transition-colors"
+            title={`${cashierUser.name} (${cashierUser.email}) - Buka Shift`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider">
-                Shift Aktif
+            {cashierUser.image ? (
+              <img
+                src={cashierUser.image}
+                alt={cashierUser.name}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <span className="text-xs font-semibold text-[#EA7C69]">
+                {cashierUser.name.slice(0, 2).toUpperCase()}
               </span>
-              <div className="flex items-center gap-1.5">
-                {cashierUser.provider === "google" && (
-                  <span className="text-[9px] font-bold text-[#4285F4] bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded-full shrink-0">
-                    Google
-                  </span>
-                )}
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              </div>
-            </div>
-            <h4 className="text-xs font-semibold text-[#1E1E24] truncate" title={cashierUser.name}>
-              {cashierUser.name}
-            </h4>
-            <p className="text-[10.5px] font-normal text-[#6B7280] mt-0.5 truncate" title={cashierUser.email}>
-              {cashierUser.email}
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                signOut({ callbackUrl: "/login" });
-              }}
-              className="text-[10px] font-semibold text-[#F5A623] hover:underline block mt-1.5 pt-1.5 border-t border-[#EBE5DC] w-full text-left cursor-pointer"
-            >
-              Ganti Akun / Logout
-            </button>
+            )}
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#1F1D2B] absolute -bottom-0.5 -right-0.5"></span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            title="Keluar / Ganti Akun"
+            className="text-[9.5px] font-medium text-[#8E90A6] hover:text-white transition-colors"
+          >
+            Logout
+          </button>
         </div>
       </aside>
 
       {/* ========================================================= */}
-      {/* 2. MAIN CENTER CONTENT AREA                               */}
+      {/* 2. CENTER CANVAS: MENU CATALOG (CLONING POSFOOD)         */}
       {/* ========================================================= */}
-      <main data-lenis-prevent="true" className="flex-1 min-w-0 h-full overflow-y-auto px-7 py-5 pos-scrollbar">
-        {/* VIEW 1: DASHBOARD (KATALOG POS UTAMA) */}
+      <main
+        data-lenis-prevent="true"
+        className="flex-1 min-w-0 h-full overflow-y-auto px-7 py-5 pos-scrollbar bg-[#1F1D2B]"
+      >
+        {/* VIEW 1: DASHBOARD / KATALOG POS */}
         {activeTab === "Dashboard" && (
-          <div className="max-w-[760px] mx-auto space-y-5">
-            {/* Top Bar: Judul & Search Bar */}
+          <div className="space-y-4 max-w-[1040px] mx-auto">
+            {/* Top Bar Header: Brand Greeting & Search Menu Here */}
             <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="text-lg font-semibold text-[#1E1E24] tracking-tight">
-                  Pilih Menu Pesanan
+                <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+                  Mie Elon Musk Restaurant
                 </h1>
-                <p className="text-xs font-normal text-[#8F949A] mt-0.5">
-                  Katalog resmi Mie Elon Musk dengan ketersediaan live
+                <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
+                  {todayFormatted}
                 </p>
               </div>
 
-              {/* Input Pencarian Bersih */}
+              {/* Input Pencarian Menu (Pill Bar) */}
               <div className="relative w-full sm:w-[280px]">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari mie, dimsum, minuman..."
-                  className="w-full bg-white text-xs font-normal text-[#1E1E24] placeholder-[#9CA3AF] pl-9 pr-8 py-2 rounded-xl border border-[#EDE8E1] focus:border-[#F5A623] focus:outline-none shadow-xs transition-colors"
+                  placeholder="Search for food, coffee, etc.."
+                  className="w-full bg-[#252836] text-xs font-normal text-white placeholder-[#8E90A6] pl-9 pr-8 py-2.5 rounded-xl border border-[#2F3142] focus:border-[#EA7C69] focus:outline-hidden transition-colors"
                 />
-                <Search className="w-4 h-4 text-[#9CA3AF] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-4 h-4 text-[#8E90A6] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#1E1E24]"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E90A6] hover:text-white"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -714,167 +883,101 @@ export default function KasirPOSPage() {
               </div>
             </header>
 
-            {/* Banner Promo Kasir Bersih & Rapi */}
-            <section>
-              <div className="rounded-2xl bg-gradient-to-r from-[#F5A623] to-[#FBB505] p-5 text-white shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-1 max-w-[440px]">
-                  <span className="inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/20 text-white backdrop-blur-xs">
-                    Promo Kasir Hari Ini
-                  </span>
-                  <h2 className="text-base font-semibold text-white tracking-tight">
-                    Paket Hemat Combat Mie Elon Musk
-                  </h2>
-                  <p className="text-xs font-normal text-white/90 leading-relaxed">
-                    Diskon bundle 2 Mie + 1 Udang Keju + 2 Lemon Tea hanya Rp48.000 untuk Dine-in &
-                    Takeaway.
-                  </p>
-                </div>
-
-                <button
-                  onClick={handleAddPromoBundle}
-                  className="shrink-0 bg-white hover:bg-neutral-50 text-[#1E1E24] text-xs font-semibold px-4 py-2 rounded-xl shadow-xs transition-all active:scale-95"
-                >
-                  + Tambah Paket
-                </button>
-              </div>
-            </section>
-
-            {/* Kategori Menu dengan Foto Gunung Kosong */}
-            <section className="space-y-2.5">
-              <div className="flex items-center justify-between px-0.5">
-                <h3 className="text-xs font-semibold text-[#1E1E24] tracking-tight">
-                  Kategori Menu
-                </h3>
-                {selectedCategory !== "all" && (
-                  <button
-                    onClick={() => setSelectedCategory("all")}
-                    className="text-[11px] font-medium text-[#F5A623] hover:underline"
-                  >
-                    Tampilkan Semua ({ALL_DISHES.length})
-                  </button>
-                )}
-              </div>
-
-              {/* Grid Kategori Menu */}
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            {/* Horizontal Category Underline Tabs (1:1 POSFood Signature Style) */}
+            <section className="pt-2 border-b border-[#2D303E]">
+              <div className="flex items-center gap-6 overflow-x-auto pos-scrollbar">
                 {CATEGORIES.map((cat) => {
                   const isSelected = selectedCategory === cat.id;
                   return (
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`rounded-2xl p-2.5 flex flex-col items-center justify-center transition-all border text-center ${
+                      className={`pb-3 text-xs sm:text-sm font-medium transition-all relative cursor-pointer whitespace-nowrap ${
                         isSelected
-                          ? "bg-amber-50/60 border-[#F5A623] shadow-xs"
-                          : "bg-white border-[#EDE8E1] hover:border-[#D6D0C7] hover:bg-[#FAF9F6]"
+                          ? "text-[#EA7C69]"
+                          : "text-[#ABBBC2] hover:text-white"
                       }`}
                     >
-                      <div className="w-8 h-8 flex items-center justify-center mb-1.5 relative">
-                        <Image
-                          src={cat.icon}
-                          alt={cat.name}
-                          width={32}
-                          height={32}
-                          unoptimized
-                          className="w-7 h-7 object-contain opacity-90"
-                        />
-                      </div>
-                      <span
-                        className={`text-[10.5px] truncate w-full ${
-                          isSelected ? "font-semibold text-[#F5A623]" : "font-medium text-[#6B7280]"
-                        }`}
-                      >
-                        {cat.name}
-                      </span>
+                      <span>{cat.name}</span>
+                      {isSelected && (
+                        <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#EA7C69] rounded-full"></span>
+                      )}
                     </button>
                   );
                 })}
               </div>
             </section>
 
-            {/* Katalog Menu Grid dengan Foto Gunung Kosong */}
-            <section className="space-y-3 pb-8">
+            {/* Food Menu Grid (POSFood Signature Floating Plate Cards) */}
+            <section className="space-y-4 pt-3 pb-8">
               <div className="flex items-center justify-between px-0.5">
-                <h3 className="text-xs font-semibold text-[#1E1E24]">
+                <h3 className="text-sm font-semibold text-white">
                   {selectedCategory === "all"
-                    ? "Semua Pilihan Menu"
-                    : CATEGORIES.find((c) => c.id === selectedCategory)?.name || "Menu Pilihan"}{" "}
-                  <span className="text-[#8F949A] font-normal">({filteredDishes.length} menu)</span>
+                    ? "Pilih Menu Pesanan"
+                    : CATEGORIES.find((c) => c.id === selectedCategory)?.name || "Pilihan Menu"}
                 </h3>
+                <span className="text-xs text-[#8E90A6]">
+                  {filteredDishes.length} menu tersedia
+                </span>
               </div>
 
               {filteredDishes.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-[#EDE8E1] p-8 text-center text-[#8F949A] space-y-2">
+                <div className="bg-[#252836] rounded-2xl border border-[#2D303E] p-12 text-center text-[#8E90A6] space-y-2 mt-4">
                   <p className="text-xs font-medium">Menu tidak ditemukan untuk kata kunci tersebut.</p>
                   <button
                     onClick={() => {
                       setSearchQuery("");
                       setSelectedCategory("all");
                     }}
-                    className="text-xs font-semibold text-[#F5A623] hover:underline"
+                    className="text-xs font-semibold text-[#EA7C69] hover:underline cursor-pointer"
                   >
                     Reset Filter Pencarian
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-3.5 gap-y-10 pt-8">
                   {filteredDishes.map((dish) => {
                     const cartItem = cart.find((it) => it.name === dish.name);
                     const qtyInCart = cartItem ? cartItem.qty : 0;
+                    const finalImage = resolveDishImage(dish.name, dish.image);
 
                     return (
                       <div
                         key={dish.id}
                         onClick={() => handleAddToCart(dish)}
-                        className="bg-white rounded-2xl p-3.5 border border-[#EDE8E1] hover:border-[#D6D0C7] hover:shadow-xs transition-all flex flex-col justify-between cursor-pointer group"
+                        className="bg-[#252836] rounded-2xl pt-2 pb-4 px-3 text-center border border-transparent hover:border-[#393C49] hover:shadow-2xl transition-all flex flex-col items-center justify-between cursor-pointer group relative"
                       >
-                        {/* Container Foto Gunung Kosong */}
-                        <div className="w-full h-24 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] mb-2.5 flex items-center justify-center relative overflow-hidden group-hover:bg-[#F1F5F9] transition-colors">
-                          <Image
-                            src={dish.image}
-                            alt={dish.name}
-                            width={72}
-                            height={72}
-                            unoptimized
-                            className="w-14 h-14 object-contain opacity-85 group-hover:scale-105 transition-transform"
-                          />
+                        {/* Floating Round Food Dish (POSFood Signature Plate) */}
+                        <div className="-mt-10 mb-2 relative">
+                          <div className="w-24 h-24 rounded-full bg-[#1F1D2B] p-1 shadow-xl ring-4 ring-[#1F1D2B] overflow-hidden flex items-center justify-center">
+                            <Image
+                              src={finalImage}
+                              alt={dish.name}
+                              width={96}
+                              height={96}
+                              unoptimized
+                              className="w-full h-full rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+
                           {qtyInCart > 0 && (
-                            <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs">
-                              {qtyInCart} di keranjang
+                            <div className="absolute top-0 right-0 bg-[#EA7C69] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg ring-2 ring-[#252836]">
+                              {qtyInCart}x
                             </div>
                           )}
                         </div>
 
-                        {/* Info Menu */}
-                        <div className="space-y-1 mb-2.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[9.5px] font-medium text-[#8F949A] uppercase tracking-wider">
-                              {dish.categoryName}
-                            </span>
-                          </div>
-                          <h4 className="text-xs font-semibold text-[#1E1E24] leading-snug line-clamp-1">
+                        {/* Title, Price, & Stock */}
+                        <div className="space-y-1 w-full px-1">
+                          <h4 className="text-xs sm:text-sm font-medium text-white truncate group-hover:text-[#EA7C69] transition-colors">
                             {dish.name}
                           </h4>
-                          <p className="text-[10px] font-normal text-[#8F949A] line-clamp-2 leading-relaxed">
-                            {dish.desc}
-                          </p>
-                        </div>
-
-                        {/* Baris Harga & Tombol Tambah */}
-                        <div className="flex items-center justify-between pt-2 border-t border-[#F2ECE4] mt-auto">
-                          <span className="text-xs font-semibold text-[#1E1E24]">
+                          <p className="text-xs sm:text-sm font-semibold text-white">
                             Rp{dish.price.toLocaleString("id-ID")}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(dish);
-                            }}
-                            className="w-6 h-6 rounded-lg bg-[#F5A623] hover:bg-amber-600 text-white flex items-center justify-center font-medium shadow-xs transition-all active:scale-95"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
+                          </p>
+                          <p className="text-[10.5px] font-normal text-[#8E90A6]">
+                            {dish.stock || "15 Porsi tersedia"}
+                          </p>
                         </div>
                       </div>
                     );
@@ -885,21 +988,21 @@ export default function KasirPOSPage() {
           </div>
         )}
 
-        {/* VIEW 2: PESANAN KASIR (LIVE INTERKONEKSI DINE-IN, TAKEAWAY & KIOS) */}
+        {/* VIEW 2: PESANAN KASIR (LIVE INTERKONEKSI DINE-IN & TAKEAWAY) */}
         {activeTab === "Pesanan Kasir" && (
-          <div className="max-w-[840px] mx-auto space-y-5">
-            <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#EDE8E1]">
+          <div className="max-w-[840px] mx-auto space-y-4">
+            <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#2D303E]">
               <div>
-                <h1 className="text-lg font-semibold text-[#1E1E24] tracking-tight">
+                <h1 className="text-lg font-semibold text-white tracking-tight">
                   Pesanan Masuk &amp; Antrean Pelanggan
                 </h1>
-                <p className="text-xs font-normal text-[#8F949A] mt-0.5">
+                <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
                   Terhubung live dengan pesanan /dine-in, /takeaway, dan kios pelanggan
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[#6B7280] bg-white px-3 py-1.5 rounded-xl border border-[#EDE8E1]">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-[#ABBBC2] bg-[#252836] px-3 py-1.5 rounded-xl border border-[#2D303E]">
                   <span
                     className={`w-2 h-2 rounded-full ${
                       isSyncing ? "bg-amber-500 animate-pulse" : "bg-emerald-500"
@@ -910,7 +1013,7 @@ export default function KasirPOSPage() {
                 <button
                   onClick={fetchLiveOrders}
                   disabled={isSyncing}
-                  className="p-1.5 bg-white hover:bg-[#FAF9F6] border border-[#EDE8E1] rounded-xl text-[#6B7280] hover:text-[#1E1E24] transition-colors"
+                  className="p-1.5 bg-[#252836] hover:bg-[#2C3040] border border-[#2D303E] rounded-xl text-[#ABBBC2] hover:text-white transition-colors cursor-pointer"
                   title="Perbarui data"
                 >
                   <RefreshCw className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`} />
@@ -940,10 +1043,10 @@ export default function KasirPOSPage() {
                 <button
                   key={f.id}
                   onClick={() => setOrderFilter(f.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all shrink-0 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all shrink-0 cursor-pointer ${
                     orderFilter === f.id
-                      ? "bg-[#1E1E24] text-white"
-                      : "bg-white text-[#6B7280] border border-[#EDE8E1] hover:bg-[#FAF9F6]"
+                      ? "bg-[#EA7C69] text-white"
+                      : "bg-[#252836] text-[#ABBBC2] border border-[#2D303E] hover:bg-[#2C3040] hover:text-white"
                   }`}
                 >
                   {f.label}
@@ -954,38 +1057,35 @@ export default function KasirPOSPage() {
             {/* Daftar Pesanan Masuk Live */}
             <div className="space-y-3 pb-8">
               {filteredLiveOrders.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-[#EDE8E1] p-12 text-center text-[#8F949A] space-y-2">
-                  <UtensilsCrossed className="w-8 h-8 mx-auto text-[#D6D0C7]" />
+                <div className="bg-[#252836] rounded-2xl border border-[#2D303E] p-12 text-center text-[#8E90A6] space-y-2">
+                  <UtensilsCrossed className="w-8 h-8 mx-auto text-[#8E90A6]" />
                   <p className="text-xs font-medium">Tidak ada pesanan aktif pada kategori ini.</p>
                 </div>
               ) : (
                 filteredLiveOrders.map((order) => {
                   const isCooking = order.status === "COOKING";
                   const isReady = order.status === "READY";
-                  const isCompleted = order.status === "COMPLETED";
 
                   return (
                     <div
                       key={order.id}
-                      className="bg-white rounded-2xl p-4 border border-[#EDE8E1] hover:border-[#D6D0C7] shadow-xs space-y-3 transition-all"
+                      className="bg-[#252836] rounded-2xl p-4 border border-[#2D303E] hover:border-[#393C49] space-y-3 transition-all"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#F2ECE4]">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#2F3142]">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-sm font-semibold text-[#1E1E24]">
+                          <span className="text-sm font-semibold text-white">
                             #{order.ticketNumber}
                           </span>
                           <span
                             className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                               order.source === "Dine-In"
-                                ? "bg-amber-100 text-[#F5A623]"
-                                : order.source === "Takeaway"
-                                ? "bg-orange-100 text-orange-700"
-                                : "bg-neutral-100 text-neutral-700"
+                                ? "bg-amber-900/40 text-amber-300 border border-amber-800"
+                                : "bg-orange-900/40 text-orange-300 border border-orange-800"
                             }`}
                           >
                             {order.source}
                           </span>
-                          <span className="text-xs font-medium text-[#6B7280]">
+                          <span className="text-xs font-medium text-[#ABBBC2]">
                             {order.customerName ||
                               (order.tableNumber ? `Meja ${order.tableNumber}` : "Pelanggan")}
                           </span>
@@ -996,10 +1096,10 @@ export default function KasirPOSPage() {
                           <span
                             className={`text-[10.5px] font-medium px-2.5 py-0.5 rounded-full ${
                               isCooking
-                                ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                ? "bg-amber-950 text-amber-300 border border-amber-800"
                                 : isReady
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : "bg-neutral-50 text-neutral-600 border border-neutral-200"
+                                ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
+                                : "bg-[#1F1D2B] text-[#ABBBC2] border border-[#393C49]"
                             }`}
                           >
                             {isCooking
@@ -1008,47 +1108,45 @@ export default function KasirPOSPage() {
                               ? "Siap Disajikan"
                               : "Selesai"}
                           </span>
-                          <span className="text-xs font-semibold text-[#1E1E24]">
-                            Rp{(order.totalAmount || 0).toLocaleString("id-ID")}
-                          </span>
                         </div>
                       </div>
 
-                      {/* Item Breakdown */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                        {order.items?.map((it, idx) => (
+                      {/* Items */}
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        {(order.items || []).map((it, idx) => (
                           <div
                             key={idx}
-                            className="bg-[#FAF9F6] p-2 rounded-xl border border-[#F2ECE4] flex items-center justify-between"
+                            className="bg-[#1F1D2B] px-2.5 py-1 rounded-lg border border-[#2F3142] text-[#ABBBC2]"
                           >
-                            <span className="text-xs font-medium text-[#1E1E24] truncate">
-                              {it.name}
-                            </span>
-                            <span className="text-[10px] font-semibold text-[#8F949A] shrink-0 ml-1">
-                              {it.ready ? "Siap" : "Dapur"}
-                            </span>
+                            <span className="text-white font-medium">{it.qty || 1}x</span> {it.name}
                           </div>
                         ))}
                       </div>
 
-                      {/* Tombol Aksi Kasir */}
-                      <div className="flex items-center justify-end gap-2 pt-1">
-                        {isCooking && (
-                          <button
-                            onClick={() => handleUpdateOrderStatus(order.id, "READY")}
-                            className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-semibold transition-colors"
-                          >
-                            Tandai Siap Saji
-                          </button>
-                        )}
-                        {!isCompleted && (
-                          <button
-                            onClick={() => handleUpdateOrderStatus(order.id, "COMPLETED")}
-                            className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
-                          >
-                            Selesaikan Pesanan
-                          </button>
-                        )}
+                      {/* Controls */}
+                      <div className="flex items-center justify-between pt-2 border-t border-[#2F3142]">
+                        <span className="text-xs font-semibold text-[#EA7C69]">
+                          Rp{(order.totalAmount || 0).toLocaleString("id-ID")}
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          {isCooking && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, "READY")}
+                              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                            >
+                              Tandai Siap
+                            </button>
+                          )}
+                          {isReady && (
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, "COMPLETED")}
+                              className="px-3 py-1 bg-[#EA7C69] hover:bg-[#d86f5c] text-white rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                            >
+                              Tandai Selesai
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -1060,12 +1158,12 @@ export default function KasirPOSPage() {
 
         {/* VIEW 3: RIWAYAT STRUK */}
         {activeTab === "Riwayat Struk" && (
-          <div className="max-w-[760px] mx-auto space-y-5">
-            <header className="pb-3 border-b border-[#EDE8E1]">
-              <h1 className="text-lg font-semibold text-[#1E1E24] tracking-tight">
+          <div className="max-w-[760px] mx-auto space-y-4">
+            <header className="pb-3 border-b border-[#2D303E]">
+              <h1 className="text-lg font-semibold text-white tracking-tight">
                 Riwayat Transaksi &amp; Struk
               </h1>
-              <p className="text-xs font-normal text-[#8F949A] mt-0.5">
+              <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
                 Daftar transaksi kasir yang telah dicetak dan tersimpan
               </p>
             </header>
@@ -1074,18 +1172,18 @@ export default function KasirPOSPage() {
               {liveOrders.map((order, idx) => (
                 <div
                   key={order.id || idx}
-                  className="bg-white rounded-2xl p-4 border border-[#EDE8E1] hover:border-[#D6D0C7] flex items-center justify-between transition-colors shadow-xs"
+                  className="bg-[#252836] rounded-2xl p-4 border border-[#2D303E] hover:border-[#393C49] flex items-center justify-between transition-colors shadow-xs"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-[#1E1E24]">
+                      <span className="text-xs font-semibold text-white">
                         #{order.ticketNumber}
                       </span>
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#1F1D2B] text-[#ABBBC2]">
                         {order.source}
                       </span>
                     </div>
-                    <p className="text-xs text-[#6B7280]">
+                    <p className="text-xs text-[#8E90A6]">
                       {order.customerName ||
                         (order.tableNumber ? `Meja ${order.tableNumber}` : "Pelanggan")}{" "}
                       • {order.items?.length || 0} item
@@ -1093,7 +1191,7 @@ export default function KasirPOSPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-[#1E1E24]">
+                    <span className="text-xs font-semibold text-[#EA7C69]">
                       Rp{(order.totalAmount || 0).toLocaleString("id-ID")}
                     </span>
                     <button
@@ -1113,18 +1211,18 @@ export default function KasirPOSPage() {
                             price: it.price || 15000,
                             qty: it.qty || 1,
                           })),
-                          subtotal: order.totalAmount ? order.totalAmount - 2000 : 30000,
-                          serviceFee: 2000,
-                          grandTotal: order.totalAmount || 32000,
-                          cashTendered: order.totalAmount || 32000,
+                          subtotal: order.totalAmount ? Math.round(order.totalAmount / 1.1) : 30000,
+                          serviceFee: order.totalAmount ? Math.round(order.totalAmount * 0.1) : 3000,
+                          grandTotal: order.totalAmount || 33000,
+                          cashTendered: order.totalAmount || 33000,
                           changeDue: 0,
                           paymentMethod: order.paymentMethod || "QRIS",
-                          cashierName: "Siti (Kasir 01)",
+                          cashierName: cashierUser.name,
                         });
                       }}
-                      className="px-3 py-1.5 rounded-xl border border-[#EDE8E1] hover:bg-[#FAF9F6] text-xs font-semibold text-[#1E1E24] flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-xl border border-[#393C49] bg-[#1F1D2B] hover:bg-[#252836] text-xs font-medium text-white flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
-                      <Printer className="w-3.5 h-3.5 text-[#F5A623]" />
+                      <Printer className="w-3.5 h-3.5 text-[#EA7C69]" />
                       <span>Cetak Struk</span>
                     </button>
                   </div>
@@ -1136,57 +1234,57 @@ export default function KasirPOSPage() {
 
         {/* VIEW 4: TAGIHAN KASIR */}
         {activeTab === "Tagihan Kasir" && (
-          <div className="max-w-[760px] mx-auto space-y-5">
-            <header className="pb-3 border-b border-[#EDE8E1]">
-              <h1 className="text-lg font-semibold text-[#1E1E24] tracking-tight">
+          <div className="max-w-[760px] mx-auto space-y-4">
+            <header className="pb-3 border-b border-[#2D303E]">
+              <h1 className="text-lg font-semibold text-white tracking-tight">
                 Ringkasan Tagihan &amp; Omset Kasir
               </h1>
-              <p className="text-xs font-normal text-[#8F949A] mt-0.5">
+              <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
                 Rekapitulasi total tagihan dan penjualan per shift kasir
               </p>
             </header>
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="bg-white rounded-2xl p-4 border border-[#EDE8E1] shadow-xs">
-                <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider block">
+              <div className="bg-[#252836] rounded-2xl p-4 border border-[#2D303E]">
+                <span className="text-[10px] font-semibold text-[#8E90A6] uppercase tracking-wider block">
                   Total Omset Shift Ini
                 </span>
-                <h3 className="text-base font-semibold text-[#1E1E24] mt-1">
+                <h3 className="text-base font-semibold text-white mt-1">
                   Rp
                   {liveOrders
                     .reduce((acc, it) => acc + (it.totalAmount || 0), 0)
                     .toLocaleString("id-ID")}
                 </h3>
-                <p className="text-[10.5px] text-[#6B7280] mt-1">Dari {liveOrders.length} transaksi</p>
+                <p className="text-[10.5px] text-[#8E90A6] mt-1">Dari {liveOrders.length} transaksi</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-[#EDE8E1] shadow-xs">
-                <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider block">
+              <div className="bg-[#252836] rounded-2xl p-4 border border-[#2D303E]">
+                <span className="text-[10px] font-semibold text-[#8E90A6] uppercase tracking-wider block">
                   Metode Tunai (Cash)
                 </span>
-                <h3 className="text-base font-semibold text-[#1E1E24] mt-1">
+                <h3 className="text-base font-semibold text-white mt-1">
                   Rp
                   {liveOrders
                     .filter((o) => o.paymentMethod === "CASH" || o.paymentMethod === "TUNAI")
                     .reduce((acc, it) => acc + (it.totalAmount || 0), 0)
                     .toLocaleString("id-ID")}
                 </h3>
-                <p className="text-[10.5px] text-[#6B7280] mt-1">Uang fisik laci kasir</p>
+                <p className="text-[10.5px] text-[#8E90A6] mt-1">Uang fisik laci kasir</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-[#EDE8E1] shadow-xs">
-                <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider block">
+              <div className="bg-[#252836] rounded-2xl p-4 border border-[#2D303E]">
+                <span className="text-[10px] font-semibold text-[#8E90A6] uppercase tracking-wider block">
                   Metode QRIS &amp; Digital
                 </span>
-                <h3 className="text-base font-semibold text-[#F5A623] mt-1">
+                <h3 className="text-base font-semibold text-[#EA7C69] mt-1">
                   Rp
                   {liveOrders
                     .filter((o) => o.paymentMethod !== "CASH" && o.paymentMethod !== "TUNAI")
                     .reduce((acc, it) => acc + (it.totalAmount || 0), 0)
                     .toLocaleString("id-ID")}
                 </h3>
-                <p className="text-[10.5px] text-[#6B7280] mt-1">Settlement otomatis</p>
+                <p className="text-[10.5px] text-[#8E90A6] mt-1">Settlement otomatis</p>
               </div>
             </div>
           </div>
@@ -1194,43 +1292,43 @@ export default function KasirPOSPage() {
 
         {/* VIEW 5: PENGATURAN SHIFT */}
         {activeTab === "Pengaturan Shift" && (
-          <div className="max-w-[760px] mx-auto space-y-5">
-            <header className="pb-3 border-b border-[#EDE8E1]">
-              <h1 className="text-lg font-semibold text-[#1E1E24] tracking-tight">
+          <div className="max-w-[760px] mx-auto space-y-4">
+            <header className="pb-3 border-b border-[#2D303E]">
+              <h1 className="text-lg font-semibold text-white tracking-tight">
                 Pengaturan Shift &amp; Kasir
               </h1>
-              <p className="text-xs font-normal text-[#8F949A] mt-0.5">
+              <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
                 Manajemen shift aktif, kas pembuka, dan serah terima shift kasir
               </p>
             </header>
 
-            <div className="bg-white rounded-2xl p-5 border border-[#EDE8E1] space-y-4 shadow-xs">
+            <div className="bg-[#252836] rounded-2xl p-5 border border-[#2D303E] space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="space-y-1">
-                  <span className="text-[#8F949A] font-medium">Petugas Kasir:</span>
-                  <p className="font-semibold text-[#1E1E24]">Siti Rahmawati (ID: KSR-001)</p>
+                  <span className="text-[#8E90A6] font-medium">Petugas Kasir:</span>
+                  <p className="font-semibold text-white">{cashierUser.name}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[#8F949A] font-medium">Outlet:</span>
-                  <p className="font-semibold text-[#1E1E24]">Outlet Thamrin Cikarang</p>
+                  <span className="text-[#8E90A6] font-medium">Outlet:</span>
+                  <p className="font-semibold text-white">Mie Elon Musk - Cikarang</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[#8F949A] font-medium">Waktu Mulai Shift:</span>
-                  <p className="font-semibold text-[#1E1E24]">08:00 WIB (Shift Pagi)</p>
+                  <span className="text-[#8E90A6] font-medium">Waktu Mulai Shift:</span>
+                  <p className="font-semibold text-white">08:00 WIB (Shift Pagi)</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[#8F949A] font-medium">Modal Kas Awal:</span>
-                  <p className="font-semibold text-[#1E1E24]">Rp500.000</p>
+                  <span className="text-[#8E90A6] font-medium">Modal Kas Awal:</span>
+                  <p className="font-semibold text-white">Rp500.000</p>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#F2ECE4] flex items-center justify-between">
-                <span className="text-xs font-medium text-[#6B7280]">
+              <div className="pt-3 border-t border-[#2F3142] flex items-center justify-between">
+                <span className="text-xs font-medium text-[#ABBBC2]">
                   Status Sistem: Terhubung Live
                 </span>
                 <button
                   onClick={() => setShowShiftModal(true)}
-                  className="px-4 py-2 bg-[#F5A623] hover:bg-amber-600 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors"
+                  className="px-4 py-2 bg-[#EA7C69] hover:bg-[#d86f5c] text-white rounded-xl text-xs font-medium shadow-xs transition-colors cursor-pointer"
                 >
                   Tutup Shift &amp; Cetak Rekap
                 </button>
@@ -1241,139 +1339,158 @@ export default function KasirPOSPage() {
       </main>
 
       {/* ========================================================= */}
-      {/* 3. RIGHT PANEL: STRUK PESANAN & PEMBAYARAN KASIR          */}
+      {/* 3. RIGHT PANEL: ORDER & BILLING PANEL (CLONING POSFOOD)   */}
       {/* ========================================================= */}
-      <aside data-lenis-prevent="true" className="w-[320px] shrink-0 bg-white border-l border-[#EDE8E1] p-5 flex flex-col justify-between h-full overflow-y-auto pos-scrollbar">
+      <aside
+        data-lenis-prevent="true"
+        className="w-[360px] shrink-0 bg-[#1F1D2B] border-l border-[#2D303E] p-5 flex flex-col justify-between h-full overflow-y-auto pos-scrollbar text-white"
+      >
         <div className="space-y-4">
-          {/* Header Panel Kanan */}
-          <div className="flex items-center justify-between pb-2 border-b border-[#F2ECE4]">
-            <div className="flex items-center gap-2">
-              <Receipt className="w-4 h-4 text-[#F5A623]" />
-              <span className="text-xs font-semibold text-[#1E1E24]">Struk Pesanan Aktif</span>
+          {/* Header Panel Kanan: Title & Table Info (POSFood style) */}
+          <div className="flex items-center justify-between pb-3 border-b border-[#2D303E]">
+            <div>
+              <h2 className="text-xl font-semibold text-white tracking-tight">Orders</h2>
+              <p className="text-xs font-normal text-[#8E90A6] mt-0.5">
+                {orderType === "Dine-In" ? `Table ${tableNumber}` : "Takeaway"}
+              </p>
             </div>
-            {cart.length > 0 && (
-              <button
-                onClick={handleClearCart}
-                className="text-[10.5px] font-medium text-[#9CA3AF] hover:text-red-500 transition-colors"
-              >
-                Kosongkan
-              </button>
-            )}
+
+            {/* Service Type Switcher Pill */}
+            <div className="flex gap-2">
+              {["Dine-In", "Takeaway"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setOrderType(t)}
+                  className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                    orderType === t
+                      ? "bg-[#EA7C69] text-white border-[#EA7C69] shadow-md shadow-[#EA7C69]/20"
+                      : "bg-[#252836] text-[#ABBBC2] border-[#2D303E] hover:text-white"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Selector Tipe Layanan (Dine-In vs Takeaway) */}
-          <div className="bg-[#FAF9F6] rounded-2xl p-3 border border-[#EDE8E1] space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider">
-                Tipe Layanan
+          {/* Table / Customer Details Picker */}
+          {orderType === "Dine-In" ? (
+            <div
+              onClick={() => setShowTablePicker(true)}
+              className="bg-[#252836] rounded-xl p-2.5 border border-[#2D303E] flex items-center justify-between cursor-pointer hover:border-[#393C49] transition-colors"
+            >
+              <div>
+                <span className="text-[10px] font-medium text-[#8E90A6] block">Nomor Meja Tamu</span>
+                <span className="text-xs font-semibold text-white">Meja {tableNumber}</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-[#8E90A6]" />
+            </div>
+          ) : (
+            <div className="bg-[#252836] rounded-xl p-2.5 border border-[#2D303E]">
+              <span className="text-[10px] font-medium text-[#8E90A6] block mb-0.5">
+                Nama Pelanggan / Kantong
               </span>
-              <div className="flex gap-1">
-                {["Dine-In", "Takeaway"].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setOrderType(t)}
-                    className={`text-[10px] font-semibold px-2.5 py-1 rounded-xl transition-all ${
-                      orderType === t
-                        ? "bg-[#F5A623] text-white shadow-xs"
-                        : "bg-white text-[#6B7280] border border-[#EDE8E1]"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Misal: Budi / Bungkus"
+                className="w-full text-xs font-medium text-white bg-transparent focus:outline-hidden"
+              />
             </div>
+          )}
 
-            {/* Selector Meja atau Input Nama Pelanggan */}
-            {orderType === "Dine-In" ? (
-              <div
-                onClick={() => setShowTablePicker(true)}
-                className="bg-white rounded-xl p-2.5 border border-[#EDE8E1] flex items-center justify-between cursor-pointer hover:border-[#F5A623] transition-colors"
-              >
-                <div>
-                  <span className="text-[9.5px] font-medium text-[#8F949A] block">Nomor Meja</span>
-                  <span className="text-xs font-semibold text-[#1E1E24]">Meja {tableNumber}</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-[#9CA3AF]" />
-              </div>
-            ) : (
-              <div className="bg-white rounded-xl p-2 border border-[#EDE8E1]">
-                <span className="text-[9.5px] font-medium text-[#8F949A] block mb-0.5">
-                  Nama Pelanggan / Nomor Kantong
-                </span>
-                <input
-                  type="text"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Misal: Bungkus (Budi)"
-                  className="w-full text-xs font-semibold text-[#1E1E24] bg-transparent focus:outline-none"
-                />
-              </div>
-            )}
+          {/* Column Header matching POSFood: Item, Qty, Price */}
+          <div className="flex items-center justify-between text-xs font-semibold text-white px-1 pt-1 pb-2 border-b border-[#2D303E]">
+            <span>Item</span>
+            <div className="flex items-center gap-9">
+              <span>Qty</span>
+              <span>Price</span>
+            </div>
           </div>
 
-          {/* Daftar Item Pesanan dalam Keranjang */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between px-0.5">
-              <span className="text-xs font-semibold text-[#1E1E24]">Daftar Item</span>
-              <span className="text-[10.5px] font-normal text-[#8F949A]">{cart.length} item</span>
-            </div>
-
+          {/* Ordered Items List (POSFood Item Row Cards) */}
+          <div className="space-y-3">
             {cart.length === 0 ? (
-              <div className="bg-[#FAF9F6] rounded-2xl border border-dashed border-[#EDE8E1] p-6 text-center text-[#8F949A] space-y-1.5">
-                <p className="text-xs font-medium text-[#6B7280]">Keranjang kasir masih kosong</p>
-                <p className="text-[10px] text-[#9CA3AF]">
+              <div className="bg-[#252836] rounded-2xl border border-dashed border-[#2D303E] p-6 text-center text-[#8E90A6] space-y-1.5">
+                <p className="text-xs font-medium text-[#ABBBC2]">Keranjang kasir masih kosong</p>
+                <p className="text-[10px] text-[#8E90A6]">
                   Klik menu di katalog tengah untuk menambahkan pesanan
                 </p>
               </div>
             ) : (
-              <div className="space-y-1.5 max-h-[190px] overflow-y-auto pr-1 pos-scrollbar">
+              <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1 pos-scrollbar">
                 {cart.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between gap-2 p-2 bg-[#FAF9F6] hover:bg-neutral-50 rounded-xl border border-[#EDE8E1] transition-colors"
-                  >
-                    {/* Thumbnail Foto Gunung Kosong */}
-                    <div className="w-8 h-8 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center shrink-0">
-                      <Image
-                        src={item.image || MOUNTAIN_PLACEHOLDER}
-                        alt={item.name}
-                        width={24}
-                        height={24}
-                        unoptimized
-                        className="w-5 h-5 object-contain opacity-80"
+                  <div key={item.id} className="space-y-2">
+                    {/* Top Row: Thumb, Name, Qty Box, Price */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <div className="w-9 h-9 rounded-full bg-[#1F1D2B] p-0.5 shrink-0 overflow-hidden ring-1 ring-[#393C49]">
+                          <Image
+                            src={item.image || DEFAULT_PLACEHOLDER}
+                            alt={item.name}
+                            width={36}
+                            height={36}
+                            unoptimized
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h5 className="text-xs font-medium text-white truncate">
+                            {item.name}
+                          </h5>
+                          <span className="text-[10.5px] text-[#8E90A6]">
+                            Rp{item.price.toLocaleString("id-ID")}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Stepper Pill & Total Line Price */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex items-center bg-[#252836] border border-[#2D303E] rounded-lg px-1.5 py-0.5 gap-1.5">
+                          <button
+                            onClick={() => handleUpdateQty(item.id, -1)}
+                            className="text-[#8E90A6] hover:text-white cursor-pointer"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="text-xs font-medium text-white min-w-[14px] text-center">
+                            {item.qty}
+                          </span>
+                          <button
+                            onClick={() => handleUpdateQty(item.id, 1)}
+                            className="text-[#8E90A6] hover:text-white cursor-pointer"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+
+                        <span className="text-xs font-medium text-white min-w-[55px] text-right">
+                          Rp{(item.price * item.qty).toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row: Note & Delete Trash */}
+                    <div className="flex items-center justify-between gap-2 pl-11">
+                      <input
+                        type="text"
+                        value={item.note || ""}
+                        onChange={(e) => {
+                          const noteVal = e.target.value;
+                          setCart((prev) =>
+                            prev.map((it) => (it.id === item.id ? { ...it, note: noteVal } : it))
+                          );
+                        }}
+                        placeholder="Order Note..."
+                        className="flex-1 bg-[#252836] text-[10.5px] text-[#8E90A6] placeholder-[#8E90A6] px-2 py-1 rounded-lg border border-[#2D303E] focus:outline-hidden focus:border-[#EA7C69]"
                       />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <h5 className="text-[11px] font-semibold text-[#1E1E24] truncate leading-tight">
-                        {item.name}
-                      </h5>
-                      <span className="text-[10px] font-medium text-[#8F949A]">
-                        Rp{item.price.toLocaleString("id-ID")}
-                      </span>
-                    </div>
-
-                    {/* Kontrol Qty */}
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        onClick={() => handleUpdateQty(item.id, -1)}
-                        className="w-5 h-5 rounded-lg bg-white border border-[#EDE8E1] hover:border-neutral-400 flex items-center justify-center text-xs font-medium text-[#1E1E24] transition-colors"
-                      >
-                        <Minus className="w-2.5 h-2.5" />
-                      </button>
-                      <span className="text-xs font-semibold w-4 text-center">{item.qty}</span>
-                      <button
-                        onClick={() => handleUpdateQty(item.id, 1)}
-                        className="w-5 h-5 rounded-lg bg-white border border-[#EDE8E1] hover:border-neutral-400 flex items-center justify-center text-xs font-medium text-[#1E1E24] transition-colors"
-                      >
-                        <Plus className="w-2.5 h-2.5" />
-                      </button>
                       <button
                         onClick={() => handleRemoveFromCart(item.id)}
-                        className="w-5 h-5 rounded-lg bg-white hover:bg-red-50 text-[#9CA3AF] hover:text-red-500 flex items-center justify-center ml-0.5 transition-colors"
+                        className="w-7 h-7 rounded-lg border border-[#EA7C69]/30 text-[#EA7C69] hover:bg-[#EA7C69]/10 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                        title="Hapus Item"
                       >
-                        <Trash2 className="w-2.5 h-2.5" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -1383,42 +1500,43 @@ export default function KasirPOSPage() {
           </div>
         </div>
 
-        {/* Ringkasan Biaya, Metode Pembayaran & Tombol Bayar */}
-        <div className="pt-3 border-t border-[#EDE8E1] space-y-2 mt-auto">
-          {/* Subtotal & Pajak */}
-          <div className="space-y-1 text-xs">
-            <div className="flex justify-between text-[#6B7280]">
-              <span className="font-normal">Subtotal</span>
-              <span className="font-medium text-[#1E1E24]">
+        {/* Bottom Financial Breakdown, Payment Selector & Print Bills Button */}
+        <div className="pt-3 border-t border-[#2D303E] space-y-3 mt-auto">
+          {/* Sub Total, Tax 10%, Dashed Divider & Total */}
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between text-[#8E90A6]">
+              <span>Sub Total</span>
+              <span className="font-medium text-white">
                 Rp{subtotal.toLocaleString("id-ID")}
               </span>
             </div>
-            <div className="flex justify-between text-[#6B7280]">
-              <span className="font-normal">Biaya Layanan &amp; PB1</span>
-              <span className="font-medium text-[#1E1E24]">
-                Rp{(cart.length > 0 ? serviceFee : 0).toLocaleString("id-ID")}
+            <div className="flex justify-between text-[#8E90A6]">
+              <span>Pajak Resto (10%)</span>
+              <span className="font-medium text-white">
+                Rp{(cart.length > 0 ? tax : 0).toLocaleString("id-ID")}
               </span>
             </div>
-            <div className="flex justify-between text-xs pt-1 border-t border-dashed border-[#EDE8E1]">
-              <span className="font-semibold text-[#1E1E24]">Total Tagihan</span>
-              <span className="text-sm font-semibold text-[#F5A623]">
+
+            {/* Dashed Line matching reference */}
+            <div className="border-b border-dashed border-[#2D303E] my-1"></div>
+
+            <div className="flex justify-between items-center pt-0.5">
+              <span className="text-xs font-medium text-white">Total</span>
+              <span className="text-base font-semibold text-white">
                 Rp{grandTotal.toLocaleString("id-ID")}
               </span>
             </div>
           </div>
 
-          {/* Toggle Metode Bayar: Tunai vs QRIS */}
-          <div className="pt-1">
-            <span className="text-[10px] font-semibold text-[#8F949A] uppercase tracking-wider block mb-1">
-              Metode Pembayaran
-            </span>
-            <div className="grid grid-cols-2 gap-1.5">
+          {/* Payment Method Selector */}
+          <div>
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setPaymentMethod("CASH")}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${
+                className={`py-2 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
                   paymentMethod === "CASH"
-                    ? "bg-[#1E1E24] text-white border-[#1E1E24]"
-                    : "bg-[#FAF9F6] text-[#6B7280] border-[#EDE8E1] hover:bg-white"
+                    ? "bg-[#EA7C69] text-white border-[#EA7C69] shadow-sm shadow-[#EA7C69]/20"
+                    : "bg-[#252836] text-[#ABBBC2] border-[#2D303E] hover:bg-[#2C3040]"
                 }`}
               >
                 <Banknote className="w-3.5 h-3.5" />
@@ -1426,10 +1544,10 @@ export default function KasirPOSPage() {
               </button>
               <button
                 onClick={() => setPaymentMethod("QRIS")}
-                className={`py-1.5 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${
+                className={`py-2 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
                   paymentMethod === "QRIS"
-                    ? "bg-[#F5A623] text-white border-[#F5A623]"
-                    : "bg-[#FAF9F6] text-[#6B7280] border-[#EDE8E1] hover:bg-white"
+                    ? "bg-[#EA7C69] text-white border-[#EA7C69] shadow-sm shadow-[#EA7C69]/20"
+                    : "bg-[#252836] text-[#ABBBC2] border-[#2D303E] hover:bg-[#2C3040]"
                 }`}
               >
                 <QrCode className="w-3.5 h-3.5" />
@@ -1438,18 +1556,18 @@ export default function KasirPOSPage() {
             </div>
           </div>
 
-          {/* Tombol Pecahan Uang Tunai Jika Tunai */}
+          {/* Quick Cash Tender Buttons */}
           {paymentMethod === "CASH" && (
-            <div className="pt-1 space-y-1.5">
+            <div className="space-y-1.5">
               <div className="grid grid-cols-3 gap-1">
                 {[grandTotal, 50000, 100000].map((amt, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCashTendered(amt)}
-                    className={`py-1 rounded-lg text-[10px] font-medium border transition-all ${
+                    className={`py-1 rounded-lg text-[10px] font-medium border transition-all cursor-pointer ${
                       cashTendered === amt
-                        ? "bg-amber-100 text-[#F5A623] border-[#F5A623]"
-                        : "bg-[#FAF9F6] text-[#6B7280] border-[#EDE8E1]"
+                        ? "bg-[#EA7C69]/20 text-[#EA7C69] border-[#EA7C69]"
+                        : "bg-[#252836] text-[#ABBBC2] border-[#2D303E]"
                     }`}
                   >
                     {idx === 0 ? "Uang Pas" : `Rp${(amt / 1000).toFixed(0)}rb`}
@@ -1458,74 +1576,74 @@ export default function KasirPOSPage() {
               </div>
 
               <div className="flex justify-between text-xs px-0.5 pt-0.5">
-                <span className="font-normal text-[#6B7280]">Kembalian:</span>
-                <span className="font-semibold text-emerald-600">
+                <span className="text-[#8E90A6]">Kembalian:</span>
+                <span className="font-semibold text-emerald-400">
                   Rp{changeDue.toLocaleString("id-ID")}
                 </span>
               </div>
             </div>
           )}
 
-          {/* Tombol Eksekusi Bayar Tunai & Cetak Struk */}
+          {/* Large Bottom Action Button: "Print bills" (POSFood Style in Solid Coral) */}
           <button
             onClick={handleCashierCheckout}
             disabled={cart.length === 0 || isSubmittingOrder}
-            className={`w-full py-2.5 rounded-xl text-xs font-semibold shadow-xs flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+            className={`w-full py-3.5 rounded-xl text-sm font-semibold shadow-lg shadow-[#EA7C69]/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
               cart.length > 0
-                ? "bg-[#F5A623] hover:bg-amber-600 text-white cursor-pointer"
-                : "bg-[#EDE8E1] text-[#9CA3AF] cursor-not-allowed"
+                ? "bg-[#EA7C69] hover:bg-[#d86f5c] text-white cursor-pointer"
+                : "bg-[#252836] text-[#8E90A6] cursor-not-allowed border border-[#2D303E]"
             }`}
           >
             <Printer className="w-4 h-4" />
-            <span>Bayar &amp; Cetak Struk</span>
+            <span>Print bills</span>
           </button>
         </div>
       </aside>
 
       {/* ========================================================= */}
-      {/* 4. MODAL DIALOG CETAK STRUK RESMI KASIR                   */}
+      {/* 4. MODAL DIALOG CETAK STRUK RESMI KASIR (DARK THEME)       */}
       {/* ========================================================= */}
       {printedReceipt && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-[360px] p-6 shadow-2xl border border-neutral-150 space-y-4 animate-scale-up">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#252836] text-white rounded-2xl w-full max-w-[360px] p-6 shadow-2xl border border-[#393C49] space-y-4 animate-scale-up">
             {/* Header Struk POS */}
-            <div className="text-center space-y-1 pb-3 border-b border-dashed border-neutral-300">
-              <h3 className="text-base font-semibold text-[#1E1E24]">MIE ELON MUSK</h3>
-              <p className="text-[11px] text-[#6B7280]">
+            <div className="text-center space-y-1 pb-3 border-b border-dashed border-[#393C49]">
+              <h3 className="text-base font-semibold text-white">MIE ELON MUSK</h3>
+              <p className="text-[11px] text-[#8E90A6]">
                 Outlet Thamrin Cikarang • Ruko Thamrin No. 8
               </p>
-              <div className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-[#F5A623] text-xs font-semibold">
+              <div className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[#EA7C69]/20 text-[#EA7C69] text-xs font-semibold">
                 No. Tiket: #{printedReceipt.ticketNumber}
               </div>
             </div>
 
             {/* Info Transaksi */}
-            <div className="space-y-1 text-[11px] text-[#6B7280] pb-2 border-b border-neutral-200">
+            <div className="space-y-1 text-[11px] text-[#8E90A6] pb-2 border-b border-[#2D303E]">
               <div className="flex justify-between">
                 <span>Waktu:</span>
-                <span className="font-medium text-[#1E1E24]">{printedReceipt.createdAt}</span>
+                <span className="font-medium text-white">{printedReceipt.createdAt}</span>
               </div>
               <div className="flex justify-between">
                 <span>Layanan:</span>
-                <span className="font-medium text-[#1E1E24]">
+                <span className="font-medium text-white">
                   {printedReceipt.orderType}{" "}
                   {printedReceipt.tableNumber ? `(Meja ${printedReceipt.tableNumber})` : ""}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Kasir:</span>
-                <span className="font-medium text-[#1E1E24]">{printedReceipt.cashierName}</span>
+                <span className="font-medium text-white">{printedReceipt.cashierName}</span>
               </div>
             </div>
 
             {/* Daftar Item Pembelian */}
-            <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1 text-xs">
+            <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1 text-xs pos-scrollbar">
               {printedReceipt.items.map((it, idx) => (
                 <div key={idx} className="flex justify-between">
-                  <span className="text-[#1E1E24]">
+                  <span className="text-[#ABBBC2]">
                     {it.qty}x {it.name}
                   </span>
-                  <span className="font-medium text-[#1E1E24]">
+                  <span className="font-medium text-white">
                     Rp{(it.price * it.qty).toLocaleString("id-ID")}
                   </span>
                 </div>
@@ -1533,36 +1651,32 @@ export default function KasirPOSPage() {
             </div>
 
             {/* Rincian Bayar & Kembalian */}
-            <div className="pt-2 border-t border-dashed border-neutral-300 space-y-1 text-xs">
-              <div className="flex justify-between text-[#6B7280]">
+            <div className="pt-2 border-t border-dashed border-[#393C49] space-y-1 text-xs">
+              <div className="flex justify-between text-[#8E90A6]">
                 <span>Subtotal</span>
-                <span>Rp{printedReceipt.subtotal.toLocaleString("id-ID")}</span>
+                <span className="text-white">Rp{printedReceipt.subtotal.toLocaleString("id-ID")}</span>
               </div>
-              <div className="flex justify-between text-[#6B7280]">
-                <span>Biaya Layanan</span>
-                <span>Rp{printedReceipt.serviceFee.toLocaleString("id-ID")}</span>
+              <div className="flex justify-between text-[#8E90A6]">
+                <span>Pajak (10%)</span>
+                <span className="text-white">Rp{printedReceipt.serviceFee.toLocaleString("id-ID")}</span>
               </div>
-              <div className="flex justify-between font-semibold text-[#1E1E24] pt-1">
+              <div className="flex justify-between font-semibold text-white pt-1">
                 <span>Total Tagihan</span>
-                <span className="text-[#F5A623]">
+                <span className="text-[#EA7C69]">
                   Rp{printedReceipt.grandTotal.toLocaleString("id-ID")}
                 </span>
               </div>
-              <div className="flex justify-between text-[11px] text-[#6B7280]">
+              <div className="flex justify-between text-[11px] text-[#8E90A6]">
                 <span>Metode Bayar:</span>
-                <span className="font-medium text-[#1E1E24]">{printedReceipt.paymentMethod}</span>
-              </div>
-              <div className="flex justify-between text-[11px] text-[#6B7280]">
-                <span>Status Pembayaran:</span>
-                <span>Menunggu verifikasi</span>
+                <span className="font-medium text-white">{printedReceipt.paymentMethod}</span>
               </div>
               {printedReceipt.paymentMethod === "CASH" && (
                 <>
-                  <div className="flex justify-between text-[11px] text-[#6B7280]">
+                  <div className="flex justify-between text-[11px] text-[#8E90A6]">
                     <span>Tunai Diterima:</span>
-                    <span>Rp{printedReceipt.cashTendered.toLocaleString("id-ID")}</span>
+                    <span className="text-white">Rp{printedReceipt.cashTendered.toLocaleString("id-ID")}</span>
                   </div>
-                  <div className="flex justify-between text-xs font-semibold text-emerald-600">
+                  <div className="flex justify-between text-xs font-semibold text-emerald-400">
                     <span>Kembalian:</span>
                     <span>Rp{printedReceipt.changeDue.toLocaleString("id-ID")}</span>
                   </div>
@@ -1571,7 +1685,7 @@ export default function KasirPOSPage() {
             </div>
 
             {/* Ucapan Penutup */}
-            <div className="text-center text-[10px] text-[#8F949A] pt-2 border-t border-neutral-200">
+            <div className="text-center text-[10px] text-[#8E90A6] pt-2 border-t border-[#2D303E]">
               Terima kasih atas kunjungan Anda. Pedas Gurih Juara Setiap Saat!
             </div>
 
@@ -1581,14 +1695,14 @@ export default function KasirPOSPage() {
                 onClick={() => {
                   if (typeof window !== "undefined") window.print();
                 }}
-                className="py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-[#1E1E24] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                className="py-2 rounded-xl bg-[#1F1D2B] hover:bg-[#2F3142] text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
-                <Printer className="w-3.5 h-3.5" />
+                <Printer className="w-3.5 h-3.5 text-[#EA7C69]" />
                 <span>Cetak</span>
               </button>
               <button
                 onClick={() => setPrintedReceipt(null)}
-                className="py-2 rounded-xl bg-[#F5A623] hover:bg-amber-600 text-white text-xs font-semibold transition-colors"
+                className="py-2 rounded-xl bg-[#EA7C69] hover:bg-[#d86f5c] text-white text-xs font-medium transition-colors cursor-pointer"
               >
                 Transaksi Baru
               </button>
@@ -1598,16 +1712,16 @@ export default function KasirPOSPage() {
       )}
 
       {/* ========================================================= */}
-      {/* 5. MODAL PICKER NOMOR MEJA UNTUK DINE-IN                  */}
+      {/* 5. MODAL PICKER NOMOR MEJA (DARK THEME)                   */}
       {/* ========================================================= */}
       {showTablePicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-[400px] p-5 shadow-2xl border border-neutral-150 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
-              <h3 className="text-sm font-semibold text-[#1E1E24]">Pilih Nomor Meja Tamu</h3>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#252836] text-white rounded-2xl w-full max-w-[400px] p-5 shadow-2xl border border-[#393C49] space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#2D303E]">
+              <h3 className="text-sm font-semibold text-white">Pilih Nomor Meja Tamu</h3>
               <button
                 onClick={() => setShowTablePicker(false)}
-                className="text-[#9CA3AF] hover:text-[#1E1E24]"
+                className="text-[#8E90A6] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1625,13 +1739,13 @@ export default function KasirPOSPage() {
                       setShowTablePicker(false);
                       showToast(`Nomor meja diatur ke Meja ${tbl}`);
                     }}
-                    className={`p-3 rounded-xl border text-center transition-all ${
+                    className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
                       isCurrent
-                        ? "bg-[#F5A623] text-white border-[#F5A623] shadow-xs"
-                        : "bg-[#FAF9F6] text-[#1E1E24] border-[#EDE8E1] hover:border-[#F5A623] hover:bg-white"
+                        ? "bg-[#EA7C69] text-white border-[#EA7C69] shadow-md shadow-[#EA7C69]/20"
+                        : "bg-[#1F1D2B] text-white border-[#2D303E] hover:border-[#EA7C69]"
                     }`}
                   >
-                    <span className="text-[10px] block opacity-80 font-medium">Meja</span>
+                    <span className="text-[10px] block opacity-70 font-medium">Meja</span>
                     <span className="text-sm font-semibold block">{tbl}</span>
                   </button>
                 );
@@ -1642,37 +1756,37 @@ export default function KasirPOSPage() {
       )}
 
       {/* ========================================================= */}
-      {/* 6. MODAL REKAPITULASI & TUTUP SHIFT KASIR                 */}
+      {/* 6. MODAL REKAPITULASI & TUTUP SHIFT KASIR (DARK THEME)    */}
       {/* ========================================================= */}
       {showShiftModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-[420px] p-6 shadow-2xl border border-neutral-150 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
-              <h3 className="text-sm font-semibold text-[#1E1E24]">Laporan &amp; Tutup Shift Kasir</h3>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#252836] text-white rounded-2xl w-full max-w-[420px] p-6 shadow-2xl border border-[#393C49] space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#2D303E]">
+              <h3 className="text-sm font-semibold text-white">Laporan &amp; Tutup Shift Kasir</h3>
               <button
                 onClick={() => setShowShiftModal(false)}
-                className="text-[#9CA3AF] hover:text-[#1E1E24]"
+                className="text-[#8E90A6] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-[#F2ECE4]">
-                <span className="text-[#6B7280]">Kasir Bertugas:</span>
-                <span className="font-semibold text-[#1E1E24]">Siti Rahmawati (Kasir 01)</span>
+              <div className="flex justify-between py-1 border-b border-[#2D303E]">
+                <span className="text-[#8E90A6]">Kasir Bertugas:</span>
+                <span className="font-medium text-white">{cashierUser.name}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-[#F2ECE4]">
-                <span className="text-[#6B7280]">Modal Kas Awal:</span>
-                <span className="font-semibold text-[#1E1E24]">Rp500.000</span>
+              <div className="flex justify-between py-1 border-b border-[#2D303E]">
+                <span className="text-[#8E90A6]">Modal Kas Awal:</span>
+                <span className="font-medium text-white">Rp500.000</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-[#F2ECE4]">
-                <span className="text-[#6B7280]">Total Transaksi Kasir:</span>
-                <span className="font-semibold text-[#1E1E24]">{liveOrders.length} transaksi</span>
+              <div className="flex justify-between py-1 border-b border-[#2D303E]">
+                <span className="text-[#8E90A6]">Total Transaksi Kasir:</span>
+                <span className="font-medium text-white">{liveOrders.length} transaksi</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-[#F2ECE4]">
-                <span className="text-[#6B7280]">Total Penerimaan Fisik (Tunai):</span>
-                <span className="font-semibold text-emerald-600">
+              <div className="flex justify-between py-1 border-b border-[#2D303E]">
+                <span className="text-[#8E90A6]">Total Penerimaan Fisik (Tunai):</span>
+                <span className="font-semibold text-emerald-400">
                   Rp
                   {liveOrders
                     .filter((o) => o.paymentMethod === "CASH" || o.paymentMethod === "TUNAI")
@@ -1681,8 +1795,8 @@ export default function KasirPOSPage() {
                 </span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-[#6B7280]">Estimasi Kas Laci:</span>
-                <span className="font-semibold text-[#F5A623]">
+                <span className="text-[#8E90A6]">Estimasi Kas Laci:</span>
+                <span className="font-semibold text-[#EA7C69]">
                   Rp
                   {(
                     500000 +
@@ -1700,7 +1814,7 @@ export default function KasirPOSPage() {
                   showToast("Laporan shift berhasil dicetak");
                   setShowShiftModal(false);
                 }}
-                className="py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-[#1E1E24] text-xs font-semibold transition-colors"
+                className="py-2.5 rounded-xl bg-[#1F1D2B] hover:bg-[#2F3142] text-white text-xs font-medium transition-colors cursor-pointer"
               >
                 Cetak Laporan
               </button>
@@ -1709,7 +1823,7 @@ export default function KasirPOSPage() {
                   showToast("Shift kasir berhasil ditutup");
                   setShowShiftModal(false);
                 }}
-                className="py-2.5 rounded-xl bg-[#F5A623] hover:bg-amber-600 text-white text-xs font-semibold transition-colors"
+                className="py-2.5 rounded-xl bg-[#EA7C69] hover:bg-[#d86f5c] text-white text-xs font-medium transition-colors cursor-pointer"
               >
                 Konfirmasi Tutup Shift
               </button>
