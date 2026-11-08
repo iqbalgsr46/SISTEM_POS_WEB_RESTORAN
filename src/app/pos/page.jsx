@@ -30,19 +30,41 @@ import {
 // Asset default jika gambar tidak tersedia
 const DEFAULT_PLACEHOLDER = "/images/dinein/mie-gacoan.png";
 
-// Kategori Menu POS Kasir (POSFood Authentic Clean Tabs)
+// Kategori Menu POS Kasir (POSFood Authentic Clean Underline Tabs)
 const CATEGORIES = [
   { id: "all", name: "Semua Menu" },
   { id: "mie", name: "Mie Pedas" },
-  { id: "dimsum", name: "Dimsum" },
+  { id: "snack", name: "Snack & Cemilan" },
   { id: "minuman", name: "Minuman Es" },
+  { id: "combat", name: "Paket Combat" },
+  { id: "dimsum", name: "Dimsum" },
   { id: "elon", name: "Elon Series" },
-  { id: "combat", name: "Combat Combo" },
-  { id: "snack", name: "Snack & Ekstra" },
 ];
 
 // Mapping gambar otomatis berdasarkan nama menu untuk integritas gambar sistem
 const DISH_IMAGE_MAP = {
+  // Mas Elon Tech Series & Specials
+  "elon dark matter": "/images/menu/elon-dark-matter.png",
+  "tesla reactor": "/images/menu/tesla-reactor.png",
+  "spacex orbit crunch": "/images/menu/spacex-orbit-crunch.png",
+  "full stack": "/images/menu/full-stack.png",
+  "mars colony curry": "/images/menu/mars-colony-curry.png",
+  "rocket pop chicken": "/images/menu/rocket-pop-chicken.png",
+  "orbit crunch": "/images/menu/orbit-crunch.png",
+  "fusion cheese bites": "/images/menu/fusion-cheese-bites.png",
+  "neuralink enoki": "/images/menu/neuralink-enoki.png",
+  "mars potato wedges": "/images/menu/mars-potato-wedges.png",
+  "starlink blue": "/images/menu/starlink-blue.png",
+  "grok choco": "/images/menu/grok-choco.png",
+  "neuralink matcha": "/images/menu/neuralink-matcha.png",
+  "tesla caramel latte": "/images/menu/tesla-caramel-latte.png",
+  "mars strawberry milk": "/images/menu/mars-strawberry-milk.png",
+  "air putih segar": "/images/menu/air-putih.png",
+  "air putih": "/images/menu/air-putih.png",
+  "elon combo special": "/images/mie-elon-musk-combo-nobg.png",
+  "space explorer combo": "/images/mie-elon-musk-combo-nobg.png",
+
+  // Traditional Menu Restoran
   "mie elon musk lv 1": "/images/dinein/mie-gacoan.png",
   "mie elon musk lv 2": "/images/dinein/mie-gacoan.png",
   "mie elon musk lv 3": "/images/dinein/mie-gacoan.png",
@@ -65,18 +87,10 @@ const DISH_IMAGE_MAP = {
   "orange segar": "/images/dinein/orange.png",
   "thai tea creamy": "/images/dinein/thai-tea.png",
   "teh tarik special": "/images/dinein/teh-tarik.png",
-  "elon dark matter": "/images/menu/elon-dark-matter.png",
-  "tesla reactor": "/images/menu/tesla-reactor.png",
-  "spacex orbit crunch": "/images/menu/spacex-orbit-crunch.png",
-  "mars colony curry": "/images/menu/mars-colony-curry.png",
-  "fusion cheese bites": "/images/menu/fusion-cheese-bites.png",
-  "starlink blue": "/images/menu/starlink-blue.png",
   "paket combat a": "/images/dinein/combat-a.png",
   "paket combat b": "/images/dinein/combat-b.png",
   "paket combat c": "/images/dinein/combat-c.png",
   "paket combat d": "/images/dinein/combat-d.png",
-  "paket fest a": "/images/dinein/paket-fest-a.png",
-  "paket fest c": "/images/dinein/paket-fest-c.png",
   "ekstra pangsit renyah": "/images/dinein/pangsit-goreng.png",
   "ekstra sambal cabai": "/images/dinein/mie-gacoan.png",
 };
@@ -96,14 +110,64 @@ export function resolveDishImage(name, currentImage) {
 
 // Daftar Lengkap Menu POS Kasir dengan Gambar Asli Sistem
 const ALL_DISHES = [
-  // 1. Mie Pedas
+  // 1. Mie Pedas & Signature Bowls
+  {
+    id: "mie-elon-dark",
+    name: "ELON DARK MATTER",
+    category: "mie",
+    categoryName: "Mie Pedas",
+    price: 28000,
+    desc: "Mie hitam cumi dengan ayam panggang, jamur & creamy garlic sauce",
+    image: "/images/menu/elon-dark-matter.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "mie-tesla-reactor",
+    name: "TESLA REACTOR",
+    category: "mie",
+    categoryName: "Mie Pedas",
+    price: 27000,
+    desc: "Miso pedas mentega, telur setengah matang & sensasi kuat",
+    image: "/images/menu/tesla-reactor.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "mie-spacex-orbit",
+    name: "SPACEX ORBIT CRUNCH",
+    category: "mie",
+    categoryName: "Mie Pedas",
+    price: 30000,
+    desc: "Mie sarang krispi disiram kuah daging sapi & jamur",
+    image: "/images/menu/spacex-orbit-crunch.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "mie-full-stack",
+    name: "FULL STACK",
+    category: "mie",
+    categoryName: "Mie Pedas",
+    price: 32000,
+    desc: "Mie komplit developer: ayam, bakso, pangsit & telur",
+    image: "/images/menu/full-stack.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "mie-mars-curry",
+    name: "MARS COLONY CURRY",
+    category: "mie",
+    categoryName: "Mie Pedas",
+    price: 26000,
+    desc: "Kuah kari kental Mars keemasan dengan ayam renyah",
+    image: "/images/menu/mars-colony-curry.png",
+    stock: "15 Porsi tersedia",
+  },
   {
     id: "mie-1",
     name: "Mie Elon Musk Lv 1",
     category: "mie",
     categoryName: "Mie Pedas",
     price: 15000,
-    desc: "Mie pedas manis level 1 dengan taburan ayam cincang & pangsit goreng",
+    desc: "Mie pedas manis level 1 dengan taburan ayam cincang & pangsit",
     image: "/images/dinein/mie-gacoan.png",
     stock: "16 Porsi tersedia",
   },
@@ -113,42 +177,12 @@ const ALL_DISHES = [
     category: "mie",
     categoryName: "Mie Pedas",
     price: 15000,
-    desc: "Mie pedas manis level 2 sensasi pedas gurih pas di lidah",
+    desc: "Mie pedas manis level 2 sensasi gurih pas di lidah",
     image: "/images/dinein/mie-gacoan.png",
     stock: "22 Porsi tersedia",
   },
   {
-    id: "mie-3",
-    name: "Mie Elon Musk Lv 3",
-    category: "mie",
-    categoryName: "Mie Pedas",
-    price: 15000,
-    desc: "Mie pedas manis level 3 untuk penikmat pedas mantap",
-    image: "/images/dinein/mie-gacoan.png",
-    stock: "18 Porsi tersedia",
-  },
-  {
-    id: "mie-6",
-    name: "Mie Elon Musk Lv 6",
-    category: "mie",
-    categoryName: "Mie Pedas",
-    price: 16500,
-    desc: "Mie pedas manis level 6 dengan cabai segar melimpah",
-    image: "/images/menu/elon-dark-matter.png",
-    stock: "14 Porsi tersedia",
-  },
-  {
-    id: "mie-8",
-    name: "Mie Elon Musk Lv 8",
-    category: "mie",
-    categoryName: "Mie Pedas",
-    price: 17500,
-    desc: "Level tertinggi ekstra pedas membakar lidah juara",
-    image: "/images/menu/elon-dark-matter.png",
-    stock: "10 Porsi tersedia",
-  },
-  {
-    id: "hom-1",
+    id: "mie-hom-1",
     name: "Mie Hompimpa Lv 1",
     category: "mie",
     categoryName: "Mie Pedas",
@@ -157,301 +191,228 @@ const ALL_DISHES = [
     image: "/images/dinein/mie-hompimpa.png",
     stock: "20 Porsi tersedia",
   },
+
+  // 2. Snack & Cemilan Mas Elon
   {
-    id: "hom-2",
-    name: "Mie Hompimpa Lv 2",
-    category: "mie",
-    categoryName: "Mie Pedas",
-    price: 15000,
-    desc: "Mie pedas asin gurih level 2 aroma sedap gurih nagih",
-    image: "/images/dinein/mie-hompimpa.png",
+    id: "snk-rocket-pop",
+    name: "ROCKET POP CHICKEN",
+    category: "snack",
+    categoryName: "Snack & Cemilan",
+    price: 18000,
+    desc: "Ayam popcorn renyah bumbu khas luar angkasa",
+    image: "/images/menu/rocket-pop-chicken.png",
     stock: "15 Porsi tersedia",
   },
   {
-    id: "hom-3",
-    name: "Mie Hompimpa Lv 3",
-    category: "mie",
-    categoryName: "Mie Pedas",
+    id: "snk-orbit-crunch",
+    name: "ORBIT CRUNCH",
+    category: "snack",
+    categoryName: "Snack & Cemilan",
+    price: 12000,
+    desc: "Keripik renyah gurih pelengkap santapan",
+    image: "/images/menu/orbit-crunch.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "snk-fusion-cheese",
+    name: "FUSION CHEESE BITES",
+    category: "snack",
+    categoryName: "Snack & Cemilan",
+    price: 16000,
+    desc: "Bite-sized keju lumer goreng renyah saus cocol",
+    image: "/images/menu/fusion-cheese-bites.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "snk-neuralink-enoki",
+    name: "NEURALINK ENOKI",
+    category: "snack",
+    categoryName: "Snack & Cemilan",
     price: 15000,
-    desc: "Mie pedas asin level 3 dengan taburan ayam gurih melimpah",
-    image: "/images/dinein/mie-hompimpa.png",
-    stock: "12 Porsi tersedia",
+    desc: "Jamur enoki goreng krispi keemasan bumbu spesial",
+    image: "/images/menu/neuralink-enoki.png",
+    stock: "15 Porsi tersedia",
   },
   {
-    id: "suit-1",
-    name: "Mie Suit Gurih",
-    category: "mie",
-    categoryName: "Mie Pedas",
+    id: "snk-mars-wedges",
+    name: "MARS POTATO WEDGES",
+    category: "snack",
+    categoryName: "Snack & Cemilan",
     price: 14000,
-    desc: "Mie original gurih tidak pedas, cocok untuk anak & penikmat gurih",
-    image: "/images/dinein/mie-suit.png",
-    stock: "25 Porsi tersedia",
+    desc: "Kentang wedges renyah bumbu paprika khas Mars",
+    image: "/images/menu/mars-potato-wedges.png",
+    stock: "15 Porsi tersedia",
   },
-
-  // 2. Dimsum
   {
-    id: "dim-1",
+    id: "dim-udang-keju",
     name: "Udang Keju Goreng",
     category: "dimsum",
     categoryName: "Dimsum",
     price: 12000,
-    desc: "Dimsum udang isi keju lumer renyah di luar lembut di dalam (3 pcs)",
+    desc: "Dimsum udang isi keju lumer renyah di luar (3 pcs)",
     image: "/images/dinein/udang-keju.png",
     stock: "18 Porsi tersedia",
   },
   {
-    id: "dim-2",
+    id: "dim-udang-rambutan",
     name: "Udang Rambutan",
     category: "dimsum",
     categoryName: "Dimsum",
     price: 12000,
-    desc: "Bola udang berbalut kulit renyah kriuk khas (3 pcs)",
+    desc: "Bola udang balut kulit renyah kriuk (3 pcs)",
     image: "/images/dinein/udang-rambutan.png",
     stock: "14 Porsi tersedia",
   },
+
+  // 3. Minuman Mas Elon & Minuman Es
   {
-    id: "dim-3",
-    name: "Pangsit Goreng Renyah",
-    category: "dimsum",
-    categoryName: "Dimsum",
-    price: 11000,
-    desc: "Pangsit goreng isi olahan ayam cincang gurih renyah (3 pcs)",
-    image: "/images/dinein/pangsit-goreng.png",
-    stock: "30 Porsi tersedia",
-  },
-  {
-    id: "dim-4",
-    name: "Siomay Ayam Kukus",
-    category: "dimsum",
-    categoryName: "Dimsum",
-    price: 11000,
-    desc: "Siomay ayam kukus lembut juicy disajikan hangat (3 pcs)",
-    image: "/images/dinein/siomay.png",
-    stock: "16 Porsi tersedia",
-  },
-  {
-    id: "dim-5",
-    name: "Lumpia Udang Goreng",
-    category: "dimsum",
-    categoryName: "Dimsum",
+    id: "es-starlink-blue",
+    name: "STARLINK BLUE",
+    category: "minuman",
+    categoryName: "Minuman Es",
     price: 12000,
-    desc: "Lumpia isi cincang udang segar berbalut kulit krispi (3 pcs)",
-    image: "/images/dinein/lumpia-udang.png",
+    desc: "Mocktail biru segar soda bunga telang & lemon dingin",
+    image: "/images/menu/starlink-blue.png",
     stock: "15 Porsi tersedia",
   },
-
-  // 3. Minuman Es
   {
-    id: "es-1",
+    id: "es-grok-choco",
+    name: "GROK CHOCO",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 15000,
+    desc: "Cokelat pekat dingin dengan busa creamy",
+    image: "/images/menu/grok-choco.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "es-tesla-latte",
+    name: "TESLA CARAMEL LATTE",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 18000,
+    desc: "Kopi susu espresso dingin dengan drizzle saus karamel",
+    image: "/images/menu/tesla-caramel-latte.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "es-neuralink-matcha",
+    name: "NEURALINK MATCHA",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 16000,
+    desc: "Matcha latte Jepang autentik dingin menyegarkan",
+    image: "/images/menu/neuralink-matcha.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "es-mars-strawberry",
+    name: "MARS STRAWBERRY MILK",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 14000,
+    desc: "Susu stroberi manis segar warna merah Mars",
+    image: "/images/menu/mars-strawberry-milk.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "es-air-putih",
+    name: "AIR PUTIH SEGAR",
+    category: "minuman",
+    categoryName: "Minuman Es",
+    price: 6000,
+    desc: "Air mineral botol dingin bersih menyegarkan",
+    image: "/images/menu/air-putih.png",
+    stock: "15 Porsi tersedia",
+  },
+  {
+    id: "es-gobak-sodor",
     name: "Es Gobak Sodor",
     category: "minuman",
     categoryName: "Minuman Es",
     price: 10000,
-    desc: "Es buah segar dengan cincau, nata de coco, selasih & sirup manis",
+    desc: "Es buah cincau, nata de coco & selasih segar",
     image: "/images/dinein/es-gobak-sodor.png",
     stock: "28 Gelas tersedia",
   },
-  {
-    id: "es-2",
-    name: "Es Teklek",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 9000,
-    desc: "Kombinasi cincau lembut dengan susu manis dingin penyegar dahaga",
-    image: "/images/dinein/es-teklek.png",
-    stock: "24 Gelas tersedia",
-  },
-  {
-    id: "es-3",
-    name: "Es Sluku Bathok",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 8000,
-    desc: "Kelapa muda segar dingin manis pemulih stamina",
-    image: "/images/dinein/es-sluku-bathok.png",
-    stock: "19 Gelas tersedia",
-  },
-  {
-    id: "es-4",
-    name: "Es Petak Umpet",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 9500,
-    desc: "Perpaduan jeruk peras alami, selasih & nata de coco dingin segar",
-    image: "/images/dinein/es-petak-umpet.png",
-    stock: "20 Gelas tersedia",
-  },
-  {
-    id: "es-5",
-    name: "Lemon Tea Dingin",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 7000,
-    desc: "Teh manis aroma lemon asli segar dingin pelepas pedas",
-    image: "/images/dinein/lemon-tea.png",
-    stock: "35 Gelas tersedia",
-  },
-  {
-    id: "es-6",
-    name: "Orange Segar",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 7000,
-    desc: "Jus jeruk manis dingin menyegarkan tenggorokan",
-    image: "/images/dinein/orange.png",
-    stock: "30 Gelas tersedia",
-  },
-  {
-    id: "es-7",
-    name: "Thai Tea Creamy",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 9000,
-    desc: "Teh Thailand autentik lembut berpadu susu kental manis",
-    image: "/images/dinein/thai-tea.png",
-    stock: "22 Gelas tersedia",
-  },
-  {
-    id: "es-8",
-    name: "Teh Tarik Special",
-    category: "minuman",
-    categoryName: "Minuman Es",
-    price: 9000,
-    desc: "Teh tarik busa lembut racikan kasir khas nusantara",
-    image: "/images/dinein/teh-tarik.png",
-    stock: "25 Gelas tersedia",
-  },
 
-  // 4. Special Tech / Elon Series
+  // 4. Kombo Mas Elon & Combat
   {
-    id: "elon-1",
-    name: "ELON DARK MATTER",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 28000,
-    desc: "Mie saus tinta cumi gurih dengan garlic butter & smoked chicken",
-    image: "/images/menu/elon-dark-matter.png",
-    stock: "11 Porsi tersedia",
-  },
-  {
-    id: "elon-2",
-    name: "TESLA REACTOR",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 27000,
-    desc: "Mie pedas khas dengan bumbu mala elektrik membakar selera",
-    image: "/images/menu/tesla-reactor.png",
-    stock: "13 Porsi tersedia",
-  },
-  {
-    id: "elon-3",
-    name: "SPACEX ORBIT CRUNCH",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 30000,
-    desc: "Ayam fillet krispi keemasan bertabur saus lada hitam pedas",
-    image: "/images/menu/spacex-orbit-crunch.png",
+    id: "com-elon-special",
+    name: "ELON COMBO SPECIAL",
+    category: "combat",
+    categoryName: "Paket Combat",
+    price: 55000,
+    desc: "Paket komplit: 1 Elon Dark Matter + 1 Enoki + 1 Starlink Blue",
+    image: "/images/mie-elon-musk-combo-nobg.png",
     stock: "15 Porsi tersedia",
   },
   {
-    id: "elon-4",
-    name: "MARS COLONY CURRY",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 29000,
-    desc: "Kari kental aromatik marsian dengan potongan ayam empuk",
-    image: "/images/menu/mars-colony-curry.png",
-    stock: "9 Porsi tersedia",
+    id: "com-space-explorer",
+    name: "SPACE EXPLORER COMBO",
+    category: "combat",
+    categoryName: "Paket Combat",
+    price: 52000,
+    desc: "Paket hemat: 1 Tesla Reactor + 1 Fusion Cheese + 1 Grok Choco",
+    image: "/images/mie-elon-musk-combo-nobg.png",
+    stock: "15 Porsi tersedia",
   },
   {
-    id: "elon-5",
-    name: "FUSION CHEESE BITES",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 22000,
-    desc: "Camilan keju leleh balut tepung renyah berpadu saus tartare",
-    image: "/images/menu/fusion-cheese-bites.png",
-    stock: "14 Porsi tersedia",
-  },
-  {
-    id: "elon-6",
-    name: "STARLINK BLUE",
-    category: "elon",
-    categoryName: "Elon Series",
-    price: 18000,
-    desc: "Mocktail biru segar soda bunga telang & lemon dingin",
-    image: "/images/menu/starlink-blue.png",
-    stock: "17 Gelas tersedia",
-  },
-
-  // 5. Combat Combo
-  {
-    id: "com-a",
+    id: "com-combat-a",
     name: "Paket Combat A",
     category: "combat",
-    categoryName: "Combat Combo",
+    categoryName: "Paket Combat",
     price: 32000,
-    desc: "Paket 1 Mie Elon Lv 1-4 + 1 Udang Keju + 1 Es Gobak Sodor",
+    desc: "1 Mie Elon Lv 1-4 + 1 Udang Keju + 1 Es Gobak Sodor",
     image: "/images/dinein/combat-a.png",
     stock: "12 Paket tersedia",
-  },
-  {
-    id: "com-b",
-    name: "Paket Combat B",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 33000,
-    desc: "Paket 1 Mie Hompimpa Lv 1-4 + 1 Udang Rambutan + 1 Es Teklek",
-    image: "/images/dinein/combat-b.png",
-    stock: "10 Paket tersedia",
-  },
-  {
-    id: "com-c",
-    name: "Paket Combat C",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 34000,
-    desc: "Paket 1 Mie Pedas Lv 6-8 + 1 Pangsit Goreng + 1 Lemon Tea",
-    image: "/images/dinein/combat-c.png",
-    stock: "15 Paket tersedia",
-  },
-  {
-    id: "com-d",
-    name: "Paket Combat D",
-    category: "combat",
-    categoryName: "Combat Combo",
-    price: 35000,
-    desc: "Paket 1 Mie Suit + 1 Siomay + 1 Orange Segar",
-    image: "/images/dinein/combat-d.png",
-    stock: "8 Paket tersedia",
-  },
-
-  // 6. Ekstra Snack
-  {
-    id: "snk-1",
-    name: "Ekstra Pangsit Renyah",
-    category: "snack",
-    categoryName: "Ekstra Snack",
-    price: 5000,
-    desc: "Tambahan 1 bungkus pangsit goreng gurih renyah",
-    image: "/images/dinein/pangsit-goreng.png",
-    stock: "40 Porsi tersedia",
-  },
-  {
-    id: "snk-2",
-    name: "Ekstra Sambal Cabai",
-    category: "snack",
-    categoryName: "Ekstra Snack",
-    price: 3000,
-    desc: "Tambahan porsi cabai rawit pedas segar khas gacoan",
-    image: "/images/dinein/mie-gacoan.png",
-    stock: "50 Porsi tersedia",
   },
 ];
 
 export default function PosPage({ initialCart = [] } = {}) {
   const { data: session, status } = useSession();
   const isAuthChecking = status === "loading";
+  const catalogMainRef = React.useRef(null);
+
+  // Smooth Kinetic Wheel Scroll: Gerakan scroll licin, halus tanpa patah-patah & tanpa scrollbar putih
+  useEffect(() => {
+    const el = catalogMainRef.current;
+    if (!el) return;
+
+    let targetScroll = el.scrollTop;
+    let isAnimating = false;
+    let animId = null;
+
+    const smoothScroll = () => {
+      const current = el.scrollTop;
+      const delta = targetScroll - current;
+      if (Math.abs(delta) > 0.4) {
+        el.scrollTop = current + delta * 0.15; // Smooth deceleration easing
+        animId = requestAnimationFrame(smoothScroll);
+      } else {
+        el.scrollTop = targetScroll;
+        isAnimating = false;
+      }
+    };
+
+    const handleWheel = (e) => {
+      if (e.ctrlKey) return; // Izinkan zoom browser bawaan
+      e.preventDefault();
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      // Damping akumulasi 0.85 agar scroll terasa licin, responsif, dan stabil
+      targetScroll = Math.max(0, Math.min(maxScroll, targetScroll + e.deltaY * 0.85));
+      if (!isAnimating) {
+        isAnimating = true;
+        animId = requestAnimationFrame(smoothScroll);
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      if (animId) cancelAnimationFrame(animId);
+    };
+  }, []);
 
   const cashierUser = useMemo(() => {
     if (session?.user) {
@@ -482,17 +443,20 @@ export default function PosPage({ initialCart = [] } = {}) {
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
   const [dishes, setDishes] = useState(ALL_DISHES);
 
-  useEffect(() => {
+    useEffect(() => {
     getMenuCategories("pos")
       .then(({ data }) => {
         if (data && data.length > 0) {
-          const rawItems = data.flatMap((c) => c.items);
-          const mapped = rawItems.map((item) => ({
-            ...item,
-            image: resolveDishImage(item.name, item.image),
-            stock: item.stock || "15 Porsi tersedia",
-          }));
-          setDishes(mapped);
+          const rawItems = data.flatMap((c) =>
+            (c.items || []).map((it) => ({
+              ...it,
+              category: c.id,
+              categoryName: c.title,
+              image: resolveDishImage(it.name, it.image),
+              stock: it.stock || "15 Porsi tersedia",
+            }))
+          );
+          setDishes(rawItems);
         }
       })
       .catch((error) => console.error("Gagal memuat katalog live:", error));
@@ -845,6 +809,7 @@ export default function PosPage({ initialCart = [] } = {}) {
       {/* 2. CENTER CANVAS: MENU CATALOG (CLONING POSFOOD)         */}
       {/* ========================================================= */}
       <main
+        ref={catalogMainRef}
         data-lenis-prevent="true"
         className="flex-1 min-w-0 h-full overflow-y-auto px-7 py-5 pos-scrollbar bg-[#1F1D2B]"
       >
@@ -945,34 +910,32 @@ export default function PosPage({ initialCart = [] } = {}) {
                       <div
                         key={dish.id}
                         onClick={() => handleAddToCart(dish)}
-                        className="bg-[#252836] rounded-2xl pt-2 pb-4 px-3 text-center border border-transparent hover:border-[#393C49] hover:shadow-2xl transition-all flex flex-col items-center justify-between cursor-pointer group relative"
+                        className="bg-[#252836] rounded-2xl p-3 border border-transparent hover:border-[#393C49] hover:shadow-2xl transition-all flex flex-col justify-between cursor-pointer group relative"
                       >
-                        {/* Floating Round Food Dish (POSFood Signature Plate) */}
-                        <div className="-mt-10 mb-2 relative">
-                          <div className="w-24 h-24 rounded-full bg-[#1F1D2B] p-1 shadow-xl ring-4 ring-[#1F1D2B] overflow-hidden flex items-center justify-center">
-                            <Image
-                              src={finalImage}
-                              alt={dish.name}
-                              width={96}
-                              height={96}
-                              unoptimized
-                              className="w-full h-full rounded-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
+                        {/* Large Uncropped Product Image Container (Full Clarity, No Zoom Clipping) */}
+                        <div className="w-full h-36 rounded-xl bg-[#1F1D2B]/80 p-2.5 mb-2.5 flex items-center justify-center relative overflow-hidden group-hover:bg-[#1F1D2B] transition-colors">
+                          <Image
+                            src={finalImage}
+                            alt={dish.name}
+                            width={160}
+                            height={160}
+                            unoptimized
+                            className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                          />
 
                           {qtyInCart > 0 && (
-                            <div className="absolute top-0 right-0 bg-[#EA7C69] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg ring-2 ring-[#252836]">
+                            <div className="absolute top-2 right-2 bg-[#EA7C69] text-white text-[10.5px] font-bold px-2 py-0.5 rounded-full shadow-lg ring-2 ring-[#252836]">
                               {qtyInCart}x
                             </div>
                           )}
                         </div>
 
-                        {/* Title, Price, & Stock */}
-                        <div className="space-y-1 w-full px-1">
-                          <h4 className="text-xs sm:text-sm font-medium text-white truncate group-hover:text-[#EA7C69] transition-colors">
+                        {/* Title (Full readable 2-line wrapped, no ugly truncation), Price, & Stock */}
+                        <div className="space-y-1 w-full text-center px-0.5">
+                          <h4 className="text-xs sm:text-sm font-medium text-white line-clamp-2 min-h-[34px] flex items-center justify-center group-hover:text-[#EA7C69] transition-colors leading-tight">
                             {dish.name}
                           </h4>
-                          <p className="text-xs sm:text-sm font-semibold text-white">
+                          <p className="text-xs sm:text-sm font-semibold text-[#EA7C69]">
                             Rp{dish.price.toLocaleString("id-ID")}
                           </p>
                           <p className="text-[10.5px] font-normal text-[#8E90A6]">

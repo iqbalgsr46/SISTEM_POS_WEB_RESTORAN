@@ -54,20 +54,20 @@ body {
   color: #FDB813;
 }
 
-/* Custom Clean Scrollbar */
+/* Custom Clean Dark Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C4C4C4;
+  background: #2D303E;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #999999;
+  background: #393C49;
 }
 
 /* Utilitas Teks Display Ekstra Tebal Rounded Persis Sesuai Referensi CRISPR */
@@ -113,26 +113,19 @@ body {
   scrollbar-width: none;
 }
 
-/* POS Clean Subtle Scrollbar */
+/* POS Clean Seamless Scrollbar - No White Track, No Distraction */
 .pos-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #94A3B8 #F1F5F9;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 .pos-scrollbar::-webkit-scrollbar {
-  width: 8px !important;
-  height: 8px !important;
-}
-.pos-scrollbar::-webkit-scrollbar-track {
-  background: #F1F5F9 !important;
-  border-radius: 9999px !important;
-}
-.pos-scrollbar::-webkit-scrollbar-thumb {
-  background: #94A3B8 !important;
-  border-radius: 9999px !important;
-  border: 1.5px solid #F1F5F9 !important;
-}
-.pos-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #64748B !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
 /* Smooth Transition Utilities for Views, Modals & Sheets */
