@@ -27,12 +27,20 @@ export default function LoginPage() {
   }[account?.role] || '/login';
 
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).has('error')) setToastMessage('Login ditolak atau konfigurasi Google belum sesuai. Hubungi admin.');
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('logged_out')) {
+      setToastMessage('Anda telah berhasil keluar dari sistem.');
+      signOut({ redirect: false });
+    }
+    if (params.has('error')) {
+      setToastMessage('Login ditolak atau konfigurasi Google belum sesuai. Hubungi admin.');
+    }
   }, []);
 
-  // Langsung arahkan ke halaman ruang kerja jika akun sudah disetujui
+  // Langsung arahkan ke halaman ruang kerja jika akun sudah disetujui (kecuali baru saja logout)
   useEffect(() => {
-    if (status === 'authenticated' && account?.status === 'approved') {
+    const isLoggedOut = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('logged_out');
+    if (!isLoggedOut && status === 'authenticated' && account?.status === 'approved') {
       router.replace(targetWorkspace);
     }
   }, [status, account?.status, targetWorkspace, router]);
@@ -65,7 +73,7 @@ export default function LoginPage() {
 
       {/* Toast Notifikasi Bersih */}
       {toastMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-60 bg-[#161616] text-white text-xs font-medium px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-white/10 animate-fade-in">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] bg-[#161616] text-white text-xs font-medium px-5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-white/10 animate-fade-in">
           <CheckCircle2 className="w-4 h-4 text-[#70B92B] shrink-0" />
           <span>{toastMessage}</span>
         </div>

@@ -25,6 +25,7 @@ import {
  ChevronRight,
  Store,
  Home,
+  LogOut,
 } from "lucide-react";
 
 // Asset default jika gambar tidak tersedia
@@ -447,6 +448,18 @@ export default function PosPage({ initialCart = [] } = {}) {
   const [showTablePicker, setShowTablePicker] = useState(false);
   const [printedReceipt, setPrintedReceipt] = useState(null);
   const [showShiftModal, setShowShiftModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Logout Kasir Aman & Handled
+  const handleLogout = useCallback(async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut({ redirect: true, callbackUrl: "/login?logged_out=1" });
+    } catch {
+      window.location.href = "/login?logged_out=1";
+    }
+  }, []);
 
   // Notification Toast
   const [toastMessage, setToastMessage] = useState("");
@@ -746,36 +759,41 @@ export default function PosPage({ initialCart = [] } = {}) {
  </nav>
  </div>
 
- {/* User Profile Mini Indicator */}
- <div className="pt-3 border-t border-[#2D303E] flex flex-col items-center gap-2">
- <div
- onClick={() => setShowShiftModal(true)}
- className="w-10 h-10 rounded-full relative cursor-pointer border border-[#393C49] flex items-center justify-center bg-[#252836] hover:border-[#EA7C69] transition-colors"
- title={`${cashierUser.name} (${cashierUser.email}) - Buka Shift`}
- >
- {cashierUser.image ? (
- <img
- src={cashierUser.image}
- alt={cashierUser.name}
- className="w-full h-full rounded-full object-cover"
- />
- ) : (
- <span className="text-xs font-semibold text-[#EA7C69]">
- {cashierUser.name.slice(0, 2).toUpperCase()}
- </span>
- )}
- <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#1F1D2B] absolute -bottom-0.5 -right-0.5"></span>
- </div>
+ {/* User Profile Mini Indicator & Dedicated POS Logout Button */}
+        <div className="pt-3 border-t border-[#2D303E] flex flex-col items-center gap-2.5">
+          {/* Avatar Kasir Aktif */}
+          <div
+            onClick={() => setShowShiftModal(true)}
+            className="w-10 h-10 rounded-full relative cursor-pointer border border-[#393C49] flex items-center justify-center bg-[#252836] hover:border-[#EA7C69] transition-colors"
+            title={`${cashierUser.name} (${cashierUser.email}) - Buka Shift`}
+          >
+            {cashierUser.image ? (
+              <img
+                src={cashierUser.image}
+                alt={cashierUser.name}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <span className="text-xs font-semibold text-[#EA7C69]">
+                {cashierUser.name.slice(0, 2).toUpperCase()}
+              </span>
+            )}
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#1F1D2B] absolute -bottom-0.5 -right-0.5"></span>
+          </div>
 
- <button
- type="button"
- onClick={() => signOut({ callbackUrl: "/login" })}
- title="Keluar / Ganti Akun"
- className="text-[9.5px] font-medium text-[#8E90A6] hover:text-white transition-colors"
- >
- Logout
- </button>
- </div>
+          {/* Tombol Logout Sesuai Standar POSFood */}
+          <button
+            type="button"
+            onClick={() => setShowLogoutModal(true)}
+            title="Keluar / Ganti Akun Kasir"
+            className="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-[#EA7C69] hover:text-white hover:bg-[#FF380C]/20 transition-all cursor-pointer group relative"
+          >
+            <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span className="text-[9px] font-medium text-[#8E90A6] group-hover:text-white transition-colors mt-0.5">
+              Logout
+            </span>
+          </button>
+        </div>
  </aside>
 
  {/* ========================================================= */}
@@ -1751,29 +1769,130 @@ export default function PosPage({ initialCart = [] } = {}) {
  </div>
  </div>
 
- <div className="grid grid-cols-2 gap-2 pt-2">
- <button
- onClick={() => {
- showToast("Laporan shift berhasil dicetak");
- setShowShiftModal(false);
- }}
- className="py-2.5 rounded-xl bg-[#1F1D2B] hover:bg-[#2F3142] text-white text-xs font-medium transition-colors cursor-pointer"
- >
- Cetak Laporan
- </button>
- <button
- onClick={() => {
- showToast("Shift kasir berhasil ditutup");
- setShowShiftModal(false);
- }}
- className="py-2.5 rounded-xl bg-[#EA7C69] hover:bg-[#d86f5c] text-white text-xs font-medium transition-colors cursor-pointer"
- >
- Konfirmasi Tutup Shift
- </button>
- </div>
- </div>
- </div>
- )}
+ <div className="space-y-2 pt-2">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  showToast("Laporan shift berhasil dicetak");
+                  setShowShiftModal(false);
+                }}
+                className="py-2.5 rounded-xl bg-[#1F1D2B] hover:bg-[#2F3142] text-white text-xs font-medium transition-colors cursor-pointer"
+              >
+                Cetak Laporan
+              </button>
+              <button
+                onClick={() => {
+                  showToast("Shift kasir berhasil ditutup");
+                  setShowShiftModal(false);
+                }}
+                className="py-2.5 rounded-xl bg-[#EA7C69] hover:bg-[#d86f5c] text-white text-xs font-medium transition-colors cursor-pointer"
+              >
+                Tutup Shift Saja
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowShiftModal(false);
+                setShowLogoutModal(true);
+              }}
+              className="w-full py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/20 text-xs font-medium transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Tutup Shift &amp; Logout Akun</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* ========================================================= */}
+    {/* 7. MODAL KONFIRMASI LOGOUT KASIR (POSFOOD STANDARD)       */}
+    {/* ========================================================= */}
+    {showLogoutModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+        <div className="bg-[#1F1D2B] border border-[#2D303E] rounded-3xl w-full max-w-sm p-6 text-white shadow-2xl relative">
+          <button
+            type="button"
+            disabled={isLoggingOut}
+            onClick={() => setShowLogoutModal(false)}
+            className="absolute top-4 right-4 p-2 text-[#8E90A6] hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="flex flex-col items-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center mb-4">
+              <LogOut className="w-7 h-7" />
+            </div>
+
+            <h3 className="text-lg font-bold text-white mb-1">
+              Keluar dari Sesi Kasir?
+            </h3>
+            <p className="text-xs text-[#8E90A6] mb-4">
+              Pastikan seluruh pesanan dan pembayaran kasir telah selesai dicatat sebelum keluar.
+            </p>
+
+            {/* Info Sesi Kasir Aktif */}
+            <div className="w-full bg-[#252836] border border-[#2D303E] rounded-2xl p-3 mb-5 flex items-center gap-3 text-left">
+              <div className="w-9 h-9 rounded-full bg-[#1F1D2B] border border-[#393C49] flex items-center justify-center shrink-0 overflow-hidden">
+                {cashierUser.image ? (
+                  <img
+                    src={cashierUser.image}
+                    alt={cashierUser.name}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-bold text-[#EA7C69]">
+                    {cashierUser.name.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-semibold text-white truncate">
+                  {cashierUser.name}
+                </div>
+                <div className="text-[11px] text-[#8E90A6] truncate">
+                  {cashierUser.email}
+                </div>
+              </div>
+              <span className="text-[10px] font-medium bg-[#EA7C69]/10 text-[#EA7C69] px-2 py-0.5 rounded-full border border-[#EA7C69]/20">
+                Kasir
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 w-full">
+              <button
+                type="button"
+                disabled={isLoggingOut}
+                onClick={() => setShowLogoutModal(false)}
+                className="py-2.5 px-4 rounded-xl bg-[#252836] hover:bg-[#2D303E] text-white text-xs font-medium border border-[#393C49] transition-all cursor-pointer disabled:opacity-50"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={isLoggingOut}
+                onClick={handleLogout}
+                className="py-2.5 px-4 rounded-xl bg-[#FF380C] hover:bg-[#E52E06] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {isLoggingOut ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Ya, Logout</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
  </div>
  );
 }
