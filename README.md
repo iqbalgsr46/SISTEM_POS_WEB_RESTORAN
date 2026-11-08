@@ -1,8 +1,19 @@
 # Mie Elon Musk - Restaurant Omnichannel System
 
-Sistem manajemen restoran terpadu berbasis web untuk outlet Mie Elon Musk Cikarang.
-Dibangun menggunakan Next.js (frontend) dan Laravel (backend API), mencakup alur
-pemesanan pelanggan, manajemen dapur, kasir POS, hingga panel administrasi.
+Sistem manajemen restoran terpadu omnichannel berbasis web untuk **Mie Elon Musk Restaurant**.
+Dibangun menggunakan **Next.js 14 App Router** (frontend) dan **Laravel 11 / PHP 8.4** (backend REST API) dengan database **MariaDB 10.4.32** via XAMPP. Mencakup kanal pemesanan mandiri pelanggan (QR Dine-In & Takeaway), Kitchen Display System (KDS) multi-stasiun, Kasir POS (Point of Sale) berdesain POSFood, panel administrasi analitik Axiom, serta otentikasi Google OAuth dengan siklus persetujuan staf dan alur logout aman.
+
+---
+
+## Berkas Dokumentasi & Diagram Resmi
+
+- **Master Flowchart (Markdown & Mermaid):** [`docs/FLOWCHART.md`](docs/FLOWCHART.md)
+- **Master Flowchart (High-Res PNG 300 DPI):** [`docs/flowchart/Flowchart_Sistem_Mie_Elon_Musk.png`](docs/flowchart/Flowchart_Sistem_Mie_Elon_Musk.png)
+- **Master Flowchart (Cetak PDF):** [`docs/flowchart/Flowchart_Sistem_Mie_Elon_Musk.pdf`](docs/flowchart/Flowchart_Sistem_Mie_Elon_Musk.pdf)
+- **Setup Database XAMPP & Layanan Lokal:** [`docs/XAMPP_SETUP.md`](docs/XAMPP_SETUP.md)
+- **Audit Alur Sistem & State Machine:** [`docs/SYSTEM_FLOW.md`](docs/SYSTEM_FLOW.md)
+- **Product Requirement Document (PRD):** [`docs/PRD.md`](docs/PRD.md)
+- **Entity Relationship Diagram (ERD):** [`docs/ERD.md`](docs/ERD.md)
 
 ---
 
@@ -10,193 +21,154 @@ pemesanan pelanggan, manajemen dapur, kasir POS, hingga panel administrasi.
 
 - [Arsitektur Sistem](#arsitektur-sistem)
 - [Tech Stack](#tech-stack)
-- [Halaman dan Fitur](#halaman-dan-fitur)
-- [Alur Pemesanan](#alur-pemesanan)
+- [Halaman dan Fitur Utama](#halaman-dan-fitur-utama)
+- [Alur Bisnis & Transaksi](#alur-bisnis--transaksi)
+- [Autentikasi Staf & Alur Logout Aman](#autentikasi-staf--alur-logout-aman)
 - [API Endpoints](#api-endpoints)
 - [Struktur Direktori](#struktur-direktori)
-- [Instalasi dan Menjalankan](#instalasi-dan-menjalankan)
+- [Instalasi dan Menjalankan Lokal](#instalasi-dan-menjalankan-lokal)
 - [Environment Variables](#environment-variables)
-- [Autentikasi](#autentikasi)
-- [Scripts](#scripts)
+- [Scripts Tersedia](#scripts-tersedia)
+- [Lisensi](#lisensi)
 
 ---
 
 ## Arsitektur Sistem
 
 ```
-Pelanggan (Browser / Kios)
-        |
-        v
-  Next.js Frontend (port 3000)
-        |
-        v
-  Next.js API Routes (/api/*)
-        |
-        v
-  Laravel Backend API (port 8000)
-        |
-        v
-  MySQL Database
+Pelanggan (Smartphone / Kios)        Staf Kasir / Dapur / Admin
+         |                                      |
+         v                                      v
+  Scan QR Dine-In / Takeaway             NextAuth.js (Google OAuth)
+         |                                      |
+         +------------------+-------------------+
+                            |
+                            v
+              Next.js 14 Frontend (Port 3000)
+              - App Router & Tailwind CSS
+              - POSFood Cashier & Axiom Admin
+                            |
+                            v
+              Next.js API Proxy (/api/*)
+              - HMAC-SHA256 Inter-service Signature
+                            |
+                            v
+             Laravel 11 Backend API (Port 8010)
+              - PHP 8.4 RESTful Services
+              - Request Validation & State Guards
+                            |
+                            v
+            MariaDB 10.4.32 via XAMPP (Port 3306)
+              - Database: mie_elon_musk (15 Tabel)
+              - phpMyAdmin Management (Port 8080)
 ```
 
-Frontend Next.js melayani seluruh antarmuka pengguna dan meneruskan request data
-ke backend Laravel melalui API Routes internal. Backend Laravel mengelola database
-MySQL untuk menyimpan data menu, pesanan, stok, dan meja.
+Frontend Next.js melayani antarmuka publik dan operasional staf, meneruskan mutasi data secara terproteksi ke backend Laravel melalui internal proxy berkeamanan tinggi. Backend Laravel mengelola database MariaDB untuk menjamin integritas menu, pesanan, inventori bahan, status meja, serta persetujuan akun staf.
 
 ---
 
 ## Tech Stack
 
-| Layer     | Teknologi                                      |
-|-----------|-------------------------------------------------|
-| Frontend  | Next.js 14, React 18, Tailwind CSS              |
-| Backend   | Laravel 11, PHP 8.2                              |
-| Database  | MySQL 8                                          |
-| Auth      | NextAuth.js (Google OAuth + Credentials)         |
-| Icons     | Google Material Symbols (SVG)                    |
-| Styling   | Tailwind CSS, CSS Modules                        |
+| Layer | Teknologi & Versi | Peran & Detail |
+|---|---|---|
+| **Frontend** | Next.js 14 (React 18), Tailwind CSS | App Router, SSR/CSR, POSFood dark UI, Axiom admin UI |
+| **Backend API** | Laravel 11, PHP 8.4.13/8.4.15 | RESTful API, Service Layer, Form Requests, Resource JSON |
+| **Database** | MariaDB 10.4.32 (via XAMPP) | Port 3306, nama database: `mie_elon_musk` (15 tabel resmi) |
+| **Database UI** | phpMyAdmin (Port 8080) | Standalone PHP service loopback tanpa konflik SSL Apache |
+| **Autentikasi** | NextAuth.js (Google OAuth 2.0) | Multi-role (Admin, Kasir, Dapur), bootstrap superadmin |
+| **Desain Grafis** | Pillow (PIL), ISO 5807, Mermaid | Export PNG 300 DPI dan format PDF siap cetak |
 
 ---
 
-## Halaman dan Fitur
+## Halaman dan Fitur Utama
 
-### Halaman Publik
+### 1. Halaman Publik & Pelanggan
+- `/` - **Landing Page Restoran:** Hero section Elon Musk, menu unggulan, keunggulan restoran, testimoni, FAQ interaktif, dan footer resmi.
+- `/dine-in` - **Pemesanan QR Meja:** Scan QR meja (`/dine-in?meja=01..16`), pilih varian pedas (Level 0–5), topping roket, dan keranjang belanja terintegrasi.
+- `/takeaway` - **Pemesanan Bawa Pulang:** Alur pesanan bungkus tanpa nomor meja, integrasi nama pemesan, dan estimasi penyiapan.
+- `/kios` - **Kios Mandiri:** Mode pemesanan mandiri layar sentuh untuk lobby restoran.
+- `/cart` & `/checkout` - **Tinjau & Pembayaran:** Pilihan metode Tunai di Kasir atau QRIS Dinamis dengan verifikasi transaksi.
 
-| Rute          | Deskripsi                                                              |
-|---------------|------------------------------------------------------------------------|
-| `/`           | Landing page utama restoran dengan hero section, katalog menu, lokasi outlet, dan promo. |
-| `/login`      | Halaman login untuk staf (Google OAuth atau kredensial manual). Mendukung redirect setelah login. |
-
-### Halaman Pemesanan Pelanggan
-
-| Rute          | Deskripsi                                                              |
-|---------------|------------------------------------------------------------------------|
-| `/dine-in`    | Pemesanan dine-in via scan QR meja. Menampilkan menu lengkap dengan filter kategori, kustomisasi level pedas, pilihan varian, dan keranjang belanja terintegrasi. Akses melalui parameter `?meja=07`. |
-| `/takeaway`   | Pemesanan bawa pulang (takeaway). Antarmuka serupa dine-in dengan alur checkout yang disesuaikan untuk pesanan bungkus. |
-| `/kios`       | Mode kios layar sentuh untuk pemesanan mandiri di outlet. Tampilan fullscreen tanpa navigasi browser. |
-| `/cart`       | Halaman keranjang belanja yang menampilkan ringkasan item pesanan, subtotal, dan opsi lanjut ke checkout. |
-| `/checkout`   | Halaman checkout dengan pilihan metode pembayaran (tunai / QRIS), ringkasan pesanan, dan konfirmasi. |
-
-### Halaman Operasional (Membutuhkan Login)
-
-| Rute          | Deskripsi                                                              |
-|---------------|------------------------------------------------------------------------|
-| `/kitchen`    | Kitchen Display System (KDS) untuk dapur. Menampilkan tiket pesanan aktif dengan filter stasiun masak (Wok Mie, Dimsum, Bar Minuman), indikator waktu SLA, dan tombol selesai masak. Dilengkapi sidebar navigasi dan notifikasi suara. |
-| `/pos`        | Point of Sale untuk kasir. Membuat pesanan manual, memilih meja, dan memproses pembayaran. |
-| `/pos/login`  | Halaman login khusus kasir POS. |
-| `/tables`     | Manajemen meja dan simulasi QR. Menampilkan denah meja dengan status (kosong, terisi, dipesan), opsi mengubah status, serta generate QR code per meja. Scan QR atau klik link untuk langsung membuka halaman `/dine-in?meja=XX` sesuai nomor meja. |
-| `/admin`      | Panel administrasi untuk mengelola menu, stok bahan, laporan pesanan, dan konfigurasi outlet. |
-| `/alur`       | Halaman dokumentasi visual alur sistem, menampilkan diagram dan penjelasan flow pemesanan dari pelanggan hingga dapur. |
+### 2. Halaman Operasional Staf (Terproteksi)
+- `/login` - **Portal Masuk Staf:** Otentikasi Google OAuth dengan deteksi otomatis status persetujuan akun staf dan toast status logout.
+- `/pos` - **Point of Sale (Kasir):**
+  - Desain antarmuka gelap modern (*POSFood Theme*).
+  - Sinkronisasi real-time status 16 meja (Available, Occupied, Cleaning).
+  - Transaksi tunai dengan kalkulator uang diterima & kembalian otomatis.
+  - Pembayaran QRIS dinamis kasir.
+  - Pencetakan struk transaksi & pengiriman otomatis tiket ke dapur.
+  - Manajemen shift kasir dan modal konfirmasi **Logout Aman**.
+- `/kitchen` - **Kitchen Display System (KDS):**
+  - Antarmuka stasiun masak: Wok (Mie), Dimsum, dan Bar (Minuman).
+  - SLA timer peringatan waktu memasak.
+  - Checklist item per stasiun dan tombol rilis status `READY`.
+- `/admin` - **Panel Administrasi Axiom:**
+  - Ringkasan pendapatan, transaksi aktif, dan okupansi meja MariaDB.
+  - Tab **Akun Staf**: Persetujuan staf baru (Pending, Approve, Reject, Disable) dan penetapan peran (Admin, Kasir, Dapur).
+  - Manajemen stok bahan dan katalog menu.
+- `/tables` - **Manajemen Meja & QR Generator:** Denah 16 meja interaktif dengan tombol generate QR langsung ke rute `/dine-in?meja=NN`.
 
 ---
 
-## Alur Pemesanan
+## Alur Bisnis & Transaksi
 
-### 1. Dine-In (Makan di Tempat)
-
+### Siklus Status Pesanan (Order State Lifecycle)
 ```
-Buka /tables untuk melihat denah meja
-        |
-        v
-Klik meja untuk generate QR code (simulasi)
-        |
-        v
-Scan QR atau klik link -> /dine-in?meja=07
-        |
-        v
-Pilih menu, atur level pedas, pilih varian
-        |
-        v
-Tambah ke keranjang -> /cart
-        |
-        v
-Checkout -> /checkout
-        |
-        v
-Pilih metode bayar (Tunai / QRIS)
-        |
-        v
-Pesanan masuk ke sistem
-        |
-        v
-Tiket muncul di /kitchen (KDS)
-        |
-        v
-Dapur proses dan tandai selesai
-        |
-        v
-Status pesanan berubah menjadi READY
+[DRAFT] -> Pelanggan / Kasir memilih menu
+   ↓
+[CREATED] -> Order tersimpan di MariaDB (Payment: PENDING)
+   ↓
+[COOKING] -> Tiket otomatis masuk KDS Dapur (per Stasiun Wok/Dimsum/Bar)
+   ↓
+[READY] -> Koki menyelesaikan semua item pesanan
+   ↓
+[COMPLETED] -> Kasir / Pelayan menyerahkan makanan ke pelanggan
+   ↓
+[CLEANING -> AVAILABLE] -> Meja dibersihkan dan siap digunakan kembali
 ```
 
-### 2. Takeaway (Bawa Pulang)
+---
 
-```
-Pelanggan buka /takeaway
-        |
-        v
-Pilih menu dan kustomisasi
-        |
-        v
-Tambah ke keranjang -> checkout
-        |
-        v
-Input nama pelanggan
-        |
-        v
-Pesanan masuk ke antrean dapur
-        |
-        v
-Pelanggan menunggu nomor tiket dipanggil
-```
+## Autentikasi Staf & Alur Logout Aman
 
-### 3. POS (Kasir Manual)
+Sistem menerapkan siklus autentikasi ketat berbasis Google OAuth 2.0:
 
-```
-Kasir login di /pos/login
-        |
-        v
-Buat pesanan baru di /pos
-        |
-        v
-Pilih meja dan tambah item menu
-        |
-        v
-Proses pembayaran
-        |
-        v
-Tiket dikirim ke /kitchen
-```
+1. **Bootstrap Superadmin Otomatis:**
+   - Email `ikbalgsr46@gmail.com` otomatis mendapatkan peran `ADMIN` dengan status `APPROVED`.
+2. **Siklus Persetujuan Staf Baru:**
+   - Calon staf login menggunakan akun Google.
+   - Akun baru otomatis tercatat di tabel `staff_accounts` dengan status `PENDING`.
+   - Calon staf diarahkan ke layar edukatif *"Menunggu Persetujuan Admin"*.
+   - Superadmin membuka tab **Akun Staf** di `/admin` untuk memilih peran (Kasir/Dapur) dan menyetujui akun.
+3. **Alur Logout Kasir Aman (*Safe Logout*):**
+   - Kasir dapat menekan tombol **Logout** di bilah navigasi samping (*rail*) atau opsi **Tutup Shift** di modal kasir.
+   - Sistem menampilkan modal konfirmasi dialog: *"Keluar dari Sesi Kasir?"*.
+   - Saat dikonfirmasi, sistem mengeksekusi `signOut({ callbackUrl: '/login?logged_out=1' })`.
+   - NextAuth menghapus cookie sesi JWT dan mengarahkan pengguna ke `/login?logged_out=1`.
+   - Halaman `/login` mendeteksi parameter `logged_out=1`, menahan auto-redirect loop ruang kerja, menampilkan toast sukses logout, serta menyetel Google OAuth dengan parameter `prompt: 'select_account'` sehingga staf siap masuk dengan akun lain tanpa konflik sesi.
 
 ---
 
 ## API Endpoints
 
-### Next.js API Routes (Internal Proxy)
+### Internal Proxy Routes (Next.js - Port 3000)
 
-| Method | Endpoint               | Deskripsi                       |
-|--------|------------------------|---------------------------------|
-| GET    | `/api/menu`            | Mengambil daftar menu           |
-| GET    | `/api/orders`          | Mengambil daftar pesanan        |
-| POST   | `/api/orders`          | Membuat pesanan baru            |
-| PATCH  | `/api/orders`          | Memperbarui status pesanan      |
-| GET    | `/api/stock`           | Mengambil data stok             |
-| PATCH  | `/api/stock`           | Memperbarui stok                |
-| GET    | `/api/tables`          | Mengambil daftar meja           |
-| PATCH  | `/api/tables`          | Memperbarui status meja         |
-| *      | `/api/auth/[...]`      | NextAuth.js authentication      |
+| Method | Endpoint | Deskripsi |
+|---|---|---|
+| `GET` | `/api/menu` | Ambil katalog menu live dari MariaDB |
+| `GET`, `POST`, `PATCH` | `/api/orders` | Buat pesanan baru & perbarui status siklus pesanan |
+| `GET`, `PATCH` | `/api/tables` | Monitor dan perbarui status 16 meja restoran |
+| `GET`, `PATCH` | `/api/stock` | Cek ketersediaan dan mutasi stok bahan |
+| `*` | `/api/auth/[...]` | Handler NextAuth.js Google OAuth & Session Management |
 
-### Laravel Backend API
+### Backend REST API (Laravel 11 - Port 8010)
 
-| Method | Endpoint               | Controller          | Deskripsi                       |
-|--------|------------------------|----------------------|---------------------------------|
-| GET    | `/api/menu`            | MenuController       | Daftar menu restoran            |
-| GET    | `/api/orders`          | OrderController      | Daftar pesanan (filter status)  |
-| POST   | `/api/orders`          | OrderController      | Simpan pesanan baru             |
-| PATCH  | `/api/orders`          | OrderController      | Update status pesanan           |
-| GET    | `/api/stock`           | StockController      | Daftar stok bahan               |
-| PATCH  | `/api/stock`           | StockController      | Update jumlah stok              |
-| GET    | `/api/tables`          | TableController      | Daftar meja dan statusnya       |
-| PATCH  | `/api/tables`          | TableController      | Update status meja              |
+| Method | Endpoint | Controller | Deskripsi |
+|---|---|---|---|
+| `GET` | `/api/menu` | `MenuController` | Katalog menu restoran terkelompok |
+| `GET`, `POST`, `PATCH` | `/api/orders` | `OrderController` | Pengelolaan transaksi & status pesanan |
+| `GET`, `PATCH` | `/api/tables` | `TableController` | Status meja makan dan okupansi |
+| `GET`, `PATCH` | `/api/stock` | `StockController` | Ketersediaan inventori bahan baku |
 
 ---
 
@@ -204,184 +176,128 @@ Tiket dikirim ke /kitchen
 
 ```
 .
-├── backend/                    # Laravel backend API
+├── backend/                    # Laravel 11 REST API (Port 8010)
 │   ├── app/
-│   │   ├── Http/Controllers/   # MenuController, OrderController, dll.
-│   │   └── Models/             # MenuItem, Order, OrderItem, RestaurantTable, Stock
+│   │   ├── Http/Controllers/   # MenuController, OrderController, TableController, StockController
+│   │   ├── Models/             # MenuItem, Order, OrderItem, RestaurantTable, Stock
+│   │   └── Services/           # OrderService (Kalkulasi harga, guard status, locking)
 │   ├── database/
-│   │   └── migrations/         # Skema tabel database
-│   ├── routes/
-│   │   └── api.php             # Definisi route API
-│   └── .env.example            # Template konfigurasi backend
+│   │   └── migrations/         # 15 skema tabel database MariaDB
+│   └── routes/api.php          # Definisi route backend
 │
-├── public/
-│   ├── icons/                  # Ikon SVG Google Material Symbols
-│   ├── images/                 # Gambar menu, hero, promo, dll.
-│   └── pos/                    # Aset halaman POS
+├── docs/                       # Dokumentasi arsitektur & spesifikasi sistem
+│   ├── flowchart/              # Master Flowchart resmi (PNG 300 DPI & PDF)
+│   ├── FLOWCHART.md            # Dokumentasi alur Mermaid & ISO 5807
+│   ├── XAMPP_SETUP.md          # Panduan database XAMPP & port
+│   ├── SYSTEM_FLOW.md          # Audit alur sistem komprehensif
+│   ├── PRD.md                  # Product Requirement Document
+│   └── ERD.md                  # Entity Relationship Diagram
+│
+├── public/                     # Aset publik, logo restoran, dan gambar menu
 │
 ├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── admin/              # Panel admin
-│   │   ├── alur/               # Dokumentasi alur sistem
-│   │   ├── api/                # API Routes (proxy ke Laravel + NextAuth)
-│   │   ├── cart/               # Keranjang belanja
-│   │   ├── checkout/           # Halaman checkout
-│   │   ├── dine-in/            # Pemesanan dine-in
-│   │   ├── kios/               # Mode kios
-│   │   ├── kitchen/            # Kitchen Display System
-│   │   ├── login/              # Halaman login
-│   │   ├── pos/                # Point of Sale kasir
-│   │   ├── tables/             # Manajemen meja
-│   │   ├── takeaway/           # Pemesanan takeaway
-│   │   ├── globals.css         # Stylesheet global
-│   │   ├── layout.jsx          # Root layout
-│   │   └── page.jsx            # Landing page
-│   │
-│   ├── components/
-│   │   ├── layout/             # Header, footer, marquee banner
-│   │   ├── providers/          # AuthProvider, SmoothScrollProvider
-│   │   └── ui/                 # Badge, Button, OrderModal
-│   │
-│   ├── data/                   # Data statis (menu, restoran, takeaway, dine-in)
-│   ├── features/               # Feature modules (home sections)
-│   └── lib/                    # Utilitas (backend-proxy, notifications, dll.)
+│   ├── app/                    # Next.js 14 App Router
+│   │   ├── (auth)/login/       # Layar login staf Google OAuth & Safe Logout
+│   │   ├── admin/              # Panel admin Axiom (Analitik & Akun Staf)
+│   │   ├── cart/ & checkout/   # Keranjang belanja & pembayaran
+│   │   ├── dine-in/            # Pemesanan QR Meja pelanggan
+│   │   ├── kitchen/            # Kitchen Display System (KDS multi-station)
+│   │   ├── pos/                # Kasir POSFood (Katalog, Meja, Tunai, QRIS, Logout)
+│   │   ├── tables/             # Denah meja & QR Code generator
+│   │   ├── takeaway/           # Pemesanan bawa pulang
+│   │   ├── layout.jsx          # Root layout Next.js
+│   │   └── page.jsx            # Landing page utama Mie Elon Musk
+│   ├── components/             # Reusable UI components & providers
+│   └── lib/                    # Helper autentikasi, proxy, dan utilitas
 │
-├── scripts/                    # Script pengembangan dan testing
-├── .env.example                # Template environment variables
-├── .gitignore
-├── next.config.mjs
-├── tailwind.config.js
-└── package.json
+├── .env.example                # Template environment variable frontend
+└── package.json                # Dependensi proyek & script otomatis
 ```
 
 ---
 
-## Instalasi dan Menjalankan
+## Instalasi dan Menjalankan Lokal
 
 ### Prasyarat
+- **Node.js:** v18.x atau v20.x
+- **PHP:** v8.4.x (dengan ekstensi `pdo_mysql`, `curl`, `mbstring`, `openssl`)
+- **Web Server & Database:** XAMPP dengan MariaDB 10.4.32
 
-- Node.js 18 atau lebih baru
-- PHP 8.2 dengan Composer
-- MySQL 8
-- Git
+### 1. Menjalankan Database XAMPP (Port 3306)
+1. Buka **XAMPP Control Panel**, nyalakan modul **MySQL**.
+2. Database yang digunakan adalah `mie_elon_musk`.
+3. Untuk mengelola database via phpMyAdmin:
+   ```bash
+   C:/xampp/php/php.exe -S 127.0.0.1:8080 -t C:/xampp/phpMyAdmin
+   ```
+   Akses di peramban: `http://127.0.0.1:8080/`
 
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/iqbalgsr46/SISTEM_POS_WEB_RESTORAN.git
-cd SISTEM_POS_WEB_RESTORAN
-```
-
-### 2. Setup Frontend (Next.js)
-
-```bash
-npm install
-cp .env.example .env.local
-```
-
-Edit `.env.local` dan isi nilai yang diperlukan (lihat bagian [Environment Variables](#environment-variables)).
-
-### 3. Setup Backend (Laravel)
-
+### 2. Menjalankan Backend Laravel (Port 8010)
 ```bash
 cd backend
 composer install
-cp .env.example .env
-php artisan key:generate
+"C:/Program Files/php-8.4.13/php.exe" artisan key:generate
+"C:/Program Files/php-8.4.13/php.exe" artisan migrate
+"C:/Program Files/php-8.4.13/php.exe" artisan serve --host=127.0.0.1 --port=8010
 ```
 
-Edit `backend/.env` dan sesuaikan kredensial database.
-
-### 4. Setup Database
-
+### 3. Menjalankan Frontend Next.js (Port 3000)
 ```bash
-# Pastikan MySQL berjalan, lalu jalankan migrasi:
-cd backend
-php artisan migrate --seed
-```
-
-Atau gunakan script bawaan:
-
-```bash
-# Dari root project
-npm run db:start     # Jalankan MySQL lokal (Docker)
-npm run db:migrate   # Jalankan migrasi dan seeder
-```
-
-### 5. Jalankan Aplikasi
-
-```bash
-# Terminal 1 - Backend Laravel
-npm run dev:api
-
-# Terminal 2 - Frontend Next.js
+# Dari root direktori proyek
+npm install
 npm run dev
 ```
-
-Aplikasi tersedia di `http://localhost:3000`.
+Aplikasi restoran dapat diakses di `http://localhost:3000`.
 
 ---
 
 ## Environment Variables
 
-### Frontend (.env.local)
+Salin berkas template lingkungan:
+```bash
+cp .env.example .env.local
+```
 
-| Variable               | Deskripsi                                    | Contoh                                      |
-|------------------------|----------------------------------------------|---------------------------------------------|
-| `LARAVEL_API_URL`      | URL backend Laravel (server-side only)       | `http://127.0.0.1:8000/api`                 |
-| `NEXTAUTH_URL`         | URL aplikasi Next.js                         | `http://localhost:3000`                      |
-| `NEXTAUTH_SECRET`      | Secret key untuk NextAuth.js                 | Hasil dari `openssl rand -hex 32`           |
-| `GOOGLE_CLIENT_ID`     | Client ID Google OAuth                       | Dari Google Cloud Console                   |
-| `GOOGLE_CLIENT_SECRET` | Client Secret Google OAuth                   | Dari Google Cloud Console                   |
-| `NEXT_PUBLIC_APP_NAME` | Nama aplikasi (tampil di browser)            | `Mie Elon Musk Cikarang`                    |
-| `NEXT_PUBLIC_STORE_LOCATION` | Lokasi outlet                          | `Cikarang, Jawa Barat`                      |
+### Konfigurasi Frontend (`.env.local`)
+```env
+LARAVEL_API_URL=http://127.0.0.1:8010/api
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=[REDACTED]
+GOOGLE_CLIENT_ID=[REDACTED]
+GOOGLE_CLIENT_SECRET=[REDACTED]
+NEXT_PUBLIC_APP_NAME="Mie Elon Musk Restaurant"
+NEXT_PUBLIC_STORE_LOCATION="Cikarang, Jawa Barat"
+```
 
-### Backend (backend/.env)
+### Konfigurasi Backend (`backend/.env`)
+```env
+APP_NAME="Mie Elon Musk API"
+APP_ENV=local
+APP_KEY=[REDACTED]
+APP_URL=http://127.0.0.1:8010
 
-| Variable       | Deskripsi                  | Contoh                    |
-|----------------|----------------------------|---------------------------|
-| `APP_KEY`      | Laravel application key    | Hasil `php artisan key:generate` |
-| `DB_HOST`      | Host database MySQL        | `127.0.0.1`               |
-| `DB_PORT`      | Port database MySQL        | `3306`                    |
-| `DB_DATABASE`  | Nama database              | `mie_elon_musk`           |
-| `DB_USERNAME`  | Username database          | `root`                    |
-| `DB_PASSWORD`  | Password database          | Sesuaikan                 |
-
----
-
-## Autentikasi
-
-Sistem menggunakan NextAuth.js dengan dua provider:
-
-1. **Google OAuth** - Login menggunakan akun Google. Memerlukan konfigurasi
-   Google Cloud Console dengan Authorized redirect URI:
-   `http://localhost:3000/api/auth/callback/google`
-
-2. **Credentials** - Login manual dengan username dan password untuk staf
-   kasir dan dapur.
-
-Halaman yang memerlukan login (`/kitchen`, `/pos`, `/admin`, `/tables`)
-akan otomatis mengarahkan pengguna ke `/login` jika belum terautentikasi.
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mie_elon_musk
+DB_USERNAME=root
+DB_PASSWORD=[REDACTED]
+```
 
 ---
 
-## Scripts
+## Scripts Tersedia
 
-| Perintah                 | Deskripsi                                          |
-|--------------------------|----------------------------------------------------|
-| `npm run dev`            | Jalankan Next.js development server                |
-| `npm run build`          | Build production Next.js                           |
-| `npm run start`          | Jalankan production server                         |
-| `npm run lint`           | Jalankan ESLint                                    |
-| `npm run dev:api`        | Jalankan backend Laravel development server        |
-| `npm run db:start`       | Jalankan MySQL lokal via Docker                    |
-| `npm run db:migrate`     | Jalankan migrasi database dan seeder               |
-| `npm run test:pages`     | Tes otomatis semua 13 rute halaman                 |
-| `npm run test:integration` | Tes integrasi dengan backend                     |
-| `npm run clean`          | Bersihkan file sementara proyek                    |
+| Perintah | Deskripsi |
+|---|---|
+| `npm run dev` | Menjalankan server development Next.js (Port 3000) |
+| `npm run build` | Melakukan kompilasi build produksi Next.js |
+| `npm run start` | Menjalankan build produksi Next.js |
+| `npm run lint` | Menjalankan audit linter ESLint (0 warning, 0 error) |
+| `npm run test:pages` | Memverifikasi seluruh endpoint rute halaman sistem |
 
 ---
 
 ## Lisensi
 
-Proyek ini dikembangkan untuk keperluan akademik mata kuliah Pemrograman Web 1.
+Dikembangkan oleh **Tubagus Iqbal Husaeni** (NIM: 312510036, Kelas: I253C) untuk keperluan akademik program studi Teknik Informatika, Universitas Pelita Bangsa. Hak cipta dilindungi undang-undang.
