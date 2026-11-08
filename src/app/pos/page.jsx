@@ -32,16 +32,16 @@ const DEFAULT_PLACEHOLDER = "/images/dinein/mie-gacoan.png";
 
 // Kategori Menu POS Kasir Terintegrasi Real Database MariaDB
 const DEFAULT_CATEGORIES = [
-  { id: "all", name: "Semua Menu" },
-  { id: "mie", name: "Mie Pedas" },
-  { id: "snack", name: "Snack & Cemilan" },
-  { id: "minuman", name: "Minuman Segar" },
-  { id: "combat", name: "Paket Kombo" },
+  { id: "all", name: "SEMUA MENU" },
+  { id: "mie", name: "MIE ELON MUSK" },
+  { id: "snack", name: "CEMILAN ELON MUSK" },
+  { id: "minuman", name: "MINUMAN ELON MUSK" },
+  { id: "combat", name: "KOMBO ELON MUSK" },
 ];
 
 // Mapping gambar otomatis berdasarkan nama menu untuk integritas gambar sistem
 const DISH_IMAGE_MAP = {
- // Mas Elon Tech Series & Specials
+ // Elon Musk Tech Series & Specials
  "elon dark matter": "/images/menu/elon-dark-matter.png",
  "tesla reactor": "/images/menu/tesla-reactor.png",
  "spacex orbit crunch": "/images/menu/spacex-orbit-crunch.png",
@@ -108,12 +108,12 @@ export function resolveDishImage(name, currentImage) {
 
 // Daftar Lengkap Menu POS Kasir Terintegrasi Real Database MariaDB (Channel: pos)
 const ALL_DISHES = [
-  // 1. Menu Mie (MENU MIE POS)
+  // 1. Menu Mie (MIE ELON MUSK POS)
   {
     id: "pos-elon-dark-matter",
     name: "ELON DARK MATTER",
     category: "mie",
-    categoryName: "MENU MIE POS",
+    categoryName: "MIE ELON MUSK POS",
     price: 28000,
     desc: "Mie hitam dari tinta cumi dengan ayam panggang, jamur, dan saus bawang putih creamy.",
     image: "/images/menu/elon-dark-matter.png",
@@ -124,7 +124,7 @@ const ALL_DISHES = [
     id: "pos-tesla-reactor",
     name: "TESLA REACTOR",
     category: "mie",
-    categoryName: "MENU MIE POS",
+    categoryName: "MIE ELON MUSK POS",
     price: 27000,
     desc: "Mie dengan saus miso pedas dan mentega, daging cincang, telur setengah matang, serta daun bawang.",
     image: "/images/menu/tesla-reactor.png",
@@ -135,7 +135,7 @@ const ALL_DISHES = [
     id: "pos-spacex-orbit-crunch",
     name: "SPACEX ORBIT CRUNCH",
     category: "mie",
-    categoryName: "MENU MIE POS",
+    categoryName: "MIE ELON MUSK POS",
     price: 30000,
     desc: "Mie goreng renyah berbentuk sarang, disiram saus kental berisi daging sapi, brokoli, dan jamur.",
     image: "/images/menu/spacex-orbit-crunch.png",
@@ -146,7 +146,7 @@ const ALL_DISHES = [
     id: "pos-full-stack",
     name: "FULL STACK",
     category: "mie",
-    categoryName: "MENU MIE POS",
+    categoryName: "MIE ELON MUSK POS",
     price: 32000,
     desc: "Porsi komplit dengan potongan ayam, pangsit rebus, bakso, jamur, telur rebus, dan sayuran segar.",
     image: "/images/menu/full-stack.png",
@@ -157,7 +157,7 @@ const ALL_DISHES = [
     id: "pos-mars-colony-curry",
     name: "MARS COLONY CURRY",
     category: "mie",
-    categoryName: "MENU MIE POS",
+    categoryName: "MIE ELON MUSK POS",
     price: 26000,
     desc: "Mie dengan kuah kari khas berwana merah-oranye pekat, potongan ayam katsu, jagung manis, dan daun bawang.",
     image: "/images/menu/mars-colony-curry.png",
@@ -165,12 +165,12 @@ const ALL_DISHES = [
     menuItemId: "pos-mars-colony-curry",
   },
 
-  // 2. Cemilan Mas Elon (CEMILAN MAS ELON POS)
+  // 2. Cemilan Elon Musk (CEMILAN ELON MUSK POS)
   {
     id: "pos-fusion-cheese-bites",
     name: "FUSION CHEESE BITES",
     category: "snack",
-    categoryName: "CEMILAN MAS ELON POS",
+    categoryName: "CEMILAN ELON MUSK POS",
     price: 16000,
     desc: "Bola keju meleleh berbalut tepung renyah dengan taburan bumbu pedas manis.",
     image: "/images/menu/fusion-cheese-bites.png",
@@ -181,7 +181,7 @@ const ALL_DISHES = [
     id: "pos-mars-potato-wedges",
     name: "MARS POTATO WEDGES",
     category: "snack",
-    categoryName: "CEMILAN MAS ELON POS",
+    categoryName: "CEMILAN ELON MUSK POS",
     price: 14000,
     desc: "Potongan kentang tebal berbumbu paprika asap dan garam gurih dengan saus cocol.",
     image: "/images/menu/mars-potato-wedges.png",
@@ -192,7 +192,7 @@ const ALL_DISHES = [
     id: "pos-neuralink-enoki",
     name: "NEURALINK ENOKI",
     category: "snack",
-    categoryName: "CEMILAN MAS ELON POS",
+    categoryName: "CEMILAN ELON MUSK POS",
     price: 15000,
     desc: "Jamur enoki goreng tepung tipis sangat krispi dengan cocolan saus mentai.",
     image: "/images/menu/neuralink-enoki.png",
@@ -203,7 +203,7 @@ const ALL_DISHES = [
     id: "pos-orbit-crunch",
     name: "ORBIT CRUNCH",
     category: "snack",
-    categoryName: "CEMILAN MAS ELON POS",
+    categoryName: "CEMILAN ELON MUSK POS",
     price: 12000,
     desc: "Kulit pangsit renyah dengan bumbu keju dan cabai bubuk gurih.",
     image: "/images/menu/orbit-crunch.png",
@@ -214,7 +214,7 @@ const ALL_DISHES = [
     id: "pos-rocket-pop-chicken",
     name: "ROCKET POP CHICKEN",
     category: "snack",
-    categoryName: "CEMILAN MAS ELON POS",
+    categoryName: "CEMILAN ELON MUSK POS",
     price: 18000,
     desc: "Popcorn chicken renyah dengan saus pedas manis ala roket meluncur.",
     image: "/images/menu/rocket-pop-chicken.png",
@@ -222,12 +222,12 @@ const ALL_DISHES = [
     menuItemId: "pos-rocket-pop-chicken",
   },
 
-  // 3. Minuman Mas Elon (MINUMAN MAS ELON POS)
+  // 3. Minuman Elon Musk (MINUMAN ELON MUSK POS)
   {
     id: "pos-air-putih",
     name: "AIR PUTIH SEGAR",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 6000,
     desc: "Air mineral higienis dingin atau normal pelepas dahaga.",
     image: "/images/menu/air-putih.png",
@@ -238,7 +238,7 @@ const ALL_DISHES = [
     id: "pos-grok-choco",
     name: "GROK CHOCO",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 15000,
     desc: "Minuman cokelat pekat premium dengan susu segar dan topping chocolate flakes.",
     image: "/images/menu/grok-choco.png",
@@ -249,7 +249,7 @@ const ALL_DISHES = [
     id: "pos-mars-strawberry-milk",
     name: "MARS STRAWBERRY MILK",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 14000,
     desc: "Susu stroberi segar dengan sirup stroberi asli dan sensasi creamy dingin.",
     image: "/images/menu/mars-strawberry-milk.png",
@@ -260,7 +260,7 @@ const ALL_DISHES = [
     id: "pos-neuralink-matcha",
     name: "NEURALINK MATCHA",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 16000,
     desc: "Matcha latte autentik Jepang dengan susu oat lembut dan foam melimpah.",
     image: "/images/menu/neuralink-matcha.png",
@@ -271,7 +271,7 @@ const ALL_DISHES = [
     id: "pos-starlink-blue",
     name: "STARLINK BLUE",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 12000,
     desc: "Soda biru segar dengan perasan lemon, biji selasih, dan sirup curacao.",
     image: "/images/menu/starlink-blue.png",
@@ -282,7 +282,7 @@ const ALL_DISHES = [
     id: "pos-tesla-caramel-latte",
     name: "TESLA CARAMEL LATTE",
     category: "minuman",
-    categoryName: "MINUMAN MAS ELON POS",
+    categoryName: "MINUMAN ELON MUSK POS",
     price: 18000,
     desc: "Kopi espresso dengan salted caramel gurih dan susu steam dingin.",
     image: "/images/menu/tesla-caramel-latte.png",
@@ -290,12 +290,12 @@ const ALL_DISHES = [
     menuItemId: "pos-tesla-caramel-latte",
   },
 
-  // 4. Kombo Mas Elon (KOMBO MAS ELON POS)
+  // 4. Kombo Elon Musk (KOMBO ELON MUSK POS)
   {
     id: "pos-combat-a",
     name: "ELON COMBO SPECIAL",
     category: "combat",
-    categoryName: "KOMBO MAS ELON POS",
+    categoryName: "KOMBO ELON MUSK POS",
     price: 55000,
     desc: "Paket lengkap: Elon Dark Matter + Rocket Pop Chicken + Starlink Blue.",
     image: "/images/mie-elon-musk-combo-nobg.png",
@@ -306,7 +306,7 @@ const ALL_DISHES = [
     id: "pos-combat-b",
     name: "SPACE EXPLORER COMBO",
     category: "combat",
-    categoryName: "KOMBO MAS ELON POS",
+    categoryName: "KOMBO ELON MUSK POS",
     price: 52000,
     desc: "Paket hemat: Tesla Reactor + Fusion Cheese Bites + Grok Choco.",
     image: "/images/mie-elon-musk-combo-nobg.png",
@@ -397,10 +397,10 @@ export default function PosPage({ initialCart = [] } = {}) {
         if (!mounted) return;
         if (data && data.length > 0) {
           const liveCats = [
-            { id: "all", name: "Semua Menu" },
+            { id: "all", name: "SEMUA MENU" },
             ...data.map((c) => ({
               id: c.id,
-              name: c.title.replace(" POS", "").replace("MENU ", "").replace("MAS ELON ", "").trim(),
+              name: c.title.replace(" POS", "").trim(),
             })),
           ];
           setCategories(liveCats);

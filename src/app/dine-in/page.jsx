@@ -924,7 +924,7 @@ function DineInContent() {
         });
       }
 
-      // Priority sort for signature Mie Mas Elon items to appear first
+      // Priority sort for signature Mie Elon Musk items to appear first
       if (activeCircleCategory === "beverage") {
         const bevPriority = ["starlink-blue", "grok-choco", "neuralink-matcha", "tesla-caramel-latte", "mars-strawberry-milk", "air-putih"];
         result = [...result].sort((a, b) => {
@@ -949,7 +949,7 @@ function DineInContent() {
         });
       }
     } else if (!searchQuery.trim() && selectedSpicyFilter === "all") {
-      // Saat 'all', prioritas menu utama Mie Mas Elon agar variatif & langsung terlihat di layar
+      // Saat 'all', prioritas menu utama Mie Elon Musk agar variatif & langsung terlihat di layar
       const priorityOrder = [
         "elon-dark-matter",
         "starlink-blue",

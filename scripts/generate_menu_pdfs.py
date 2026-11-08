@@ -101,7 +101,7 @@ def create_styled_menu(output_path, title_text, subtitle_text, items, category_b
     story = []
     
     # Header Table: Brand & Badge
-    brand_p = Paragraph('<b>MIE MAS ELON</b>', brand_style)
+    brand_p = Paragraph('<b>MIE ELON MUSK</b>', brand_style)
     sub_p = Paragraph('Sensasi Pedas Futuristik No. 1 di Cikarang • Sejak 2026', subbrand_style)
     badge_p = Paragraph(f'<b>{category_badge}</b>', badge_style)
     
@@ -241,7 +241,7 @@ def create_combined_menu(output_path, minuman_items, cemilan_items):
 
     story = []
     # Header
-    story.append(Paragraph('<b>MIE MAS ELON — KATALOG RESMI</b>', brand_style))
+    story.append(Paragraph('<b>MIE ELON MUSK — KATALOG RESMI</b>', brand_style))
     story.append(Spacer(1, 2))
     story.append(Paragraph('Daftar Lengkap Minuman Segar & Cemilan Krispi • Sejak 2026 • Cikarang', subbrand_style))
     story.append(Spacer(1, 8))

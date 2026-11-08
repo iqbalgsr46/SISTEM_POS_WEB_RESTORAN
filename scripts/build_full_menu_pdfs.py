@@ -145,7 +145,7 @@ def create_single_menu(output_path, title_text, subtitle_text, items, category_b
     )
     
     story = []
-    brand_p = Paragraph('<b>MIE MAS ELON</b>', brand_style)
+    brand_p = Paragraph('<b>MIE ELON MUSK</b>', brand_style)
     sub_p = Paragraph('Sensasi Pedas Futuristik No. 1 di Cikarang • Sejak 2026', subbrand_style)
     badge_p = Paragraph(f'<b>{category_badge}</b>', badge_style)
     
@@ -214,17 +214,17 @@ def create_single_menu(output_path, title_text, subtitle_text, items, category_b
 os.makedirs('D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/docs/menu', exist_ok=True)
 os.makedirs('D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/public/docs/menu', exist_ok=True)
 
-# 1. Menu Mie Mas Elon
+# 1. Menu Mie Elon Musk
 create_single_menu(
     'D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/docs/menu/Menu_Mie_Mie_Mas_Elon.pdf',
-    'Daftar Menu Hidangan Utama Mie Mas Elon',
+    'Daftar Menu Hidangan Utama Mie Elon Musk',
     'Racikan mie kenyal istimewa dengan bumbu futuristik kaya rempah & cita rasa khas',
     mie_items,
     'NOODLES',
     colors.HexColor('#FFBC0D')
 )
 
-# 2. Menu Minuman Mas Elon
+# 2. Menu Minuman Elon Musk
 create_single_menu(
     'D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/docs/menu/Menu_Minuman_Mie_Mas_Elon.pdf',
     'Daftar Menu Minuman Dingin & Segar',
@@ -234,7 +234,7 @@ create_single_menu(
     colors.HexColor('#FFBC0D')
 )
 
-# 3. Menu Cemilan Mas Elon
+# 3. Menu Cemilan Elon Musk
 create_single_menu(
     'D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/docs/menu/Menu_Cemilan_Mie_Mas_Elon.pdf',
     'Daftar Menu Cemilan Krispi & Gurih',

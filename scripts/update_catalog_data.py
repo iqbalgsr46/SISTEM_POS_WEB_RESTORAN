@@ -1,7 +1,7 @@
 import json
 
 dinein_content = """export const dineInInfo = {
-  restaurantName: "Mie Mas Elon Cikarang",
+  restaurantName: "Mie Elon Musk Cikarang",
   openHours: "Buka Setiap Hari, 09.00 - 23.00",
   tableNumber: "Table Number: 7",
 };
@@ -9,7 +9,7 @@ dinein_content = """export const dineInInfo = {
 export const dineInCategories = [
   {
     id: "mie",
-    title: "MENU MIE MAS ELON",
+    title: "MENU MIE ELON MUSK",
     items: [
       {
         id: "elon-dark-matter",
@@ -65,7 +65,7 @@ export const dineInCategories = [
   },
   {
     id: "camilan",
-    title: "CEMILAN MAS ELON",
+    title: "CEMILAN ELON MUSK",
     items: [
       {
         id: "rocket-pop-chicken",
@@ -116,7 +116,7 @@ export const dineInCategories = [
   },
   {
     id: "beverages",
-    title: "MINUMAN MAS ELON",
+    title: "MINUMAN ELON MUSK",
     items: [
       {
         id: "starlink-blue",
@@ -176,7 +176,7 @@ export const dineInCategories = [
   },
   {
     id: "combat",
-    title: "KOMBO SPESIAL MAS ELON",
+    title: "KOMBO SPESIAL ELON MUSK",
     items: [
       {
         id: "combat-a",
@@ -186,7 +186,7 @@ export const dineInCategories = [
         image: "/images/mie-elon-musk-combo-nobg.png",
         heroImage: "/images/mie-elon-musk-combo-nobg.png",
         shortDesc: "Paket Best Seller Komplit",
-        description: "Paket kombo lengkap 1 Mie Mas Elon + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
+        description: "Paket kombo lengkap 1 Mie Elon Musk + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
         isCombo: true,
       },
       {
@@ -206,7 +206,7 @@ export const dineInCategories = [
 """
 
 takeaway_content = """export const takeawayStore = {
-  name: "Mie Mas Elon, Tarum Barat",
+  name: "Mie Elon Musk, Tarum Barat",
   city: "Cikarang",
   rating: 4.9,
   totalReviews: "14rb+",
@@ -237,7 +237,7 @@ takeaway_content = """export const takeawayStore = {
 export const takeawayCategories = [
   {
     id: "mie",
-    title: "MENU MIE MAS ELON",
+    title: "MENU MIE ELON MUSK",
     items: [
       {
         id: "elon-dark-matter",
@@ -308,7 +308,7 @@ export const takeawayCategories = [
   },
   {
     id: "camilan",
-    title: "CEMILAN MAS ELON",
+    title: "CEMILAN ELON MUSK",
     items: [
       {
         id: "rocket-pop-chicken",
@@ -379,7 +379,7 @@ export const takeawayCategories = [
   },
   {
     id: "beverages",
-    title: "MINUMAN MAS ELON",
+    title: "MINUMAN ELON MUSK",
     items: [
       {
         id: "starlink-blue",
@@ -463,7 +463,7 @@ export const takeawayCategories = [
   },
   {
     id: "combat",
-    title: "KOMBO SPESIAL MAS ELON",
+    title: "KOMBO SPESIAL ELON MUSK",
     items: [
       {
         id: "combat-a",
@@ -471,7 +471,7 @@ export const takeawayCategories = [
         rating: 5.0,
         reviews: "3.5rb+",
         prepTime: "15 min",
-        description: "Paket kombo lengkap 1 Mie Mas Elon + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
+        description: "Paket kombo lengkap 1 Mie Elon Musk + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
         price: 55000,
         formattedPrice: "55.000",
         image: "/images/mie-elon-musk-combo-nobg.png",
@@ -509,7 +509,7 @@ with open("D:/Iqbal/PEMROGRAMAN-WEB-1-NEW/src/data/takeaway-data.js", "w", encod
 restaurant_content = """export const restaurantInfo = {
   brandName: "Mie Elon Musk",
   locationName: "Cikarang",
-  fullName: "Mie Mas Elon Cikarang",
+  fullName: "Mie Elon Musk Cikarang",
   tagline: "Sensasi Mie Pedas Futuristik No. 1 di Cikarang!",
   subTagline: "Sensasi mie pedas berpadu cemilan krispi lumer dan minuman segar bertema antariksa.",
   operatingHours: "Setiap Hari | 09.00 - 23.00 WIB",
@@ -552,7 +552,7 @@ export const navLinks = [
 ];
 
 export const biteIntoHappinessItems = [
-  "MIE MAS ELON CIKARANG",
+  "MIE ELON MUSK CIKARANG",
   "FUSION CHEESE BITES",
   "STARLINK BLUE",
   "TESLA REACTOR",
@@ -561,7 +561,7 @@ export const biteIntoHappinessItems = [
 ];
 
 export const marqueeItems = [
-  "MIE MAS ELON CIKARANG",
+  "MIE ELON MUSK CIKARANG",
   "ORBIT CRUNCH",
   "NEURALINK MATCHA",
   "MARS POTATO WEDGES",
@@ -596,8 +596,8 @@ export const highlightCards = [
 export const menuCategories = [
   { id: "all", name: "Semua Menu" },
   { id: "mie", name: "Menu Mie" },
-  { id: "camilan", name: "Cemilan Mas Elon" },
-  { id: "minuman", name: "Minuman Mas Elon" },
+  { id: "camilan", name: "Cemilan Elon Musk" },
+  { id: "minuman", name: "Minuman Elon Musk" },
   { id: "combat", name: "Kombo Spesial" },
 ];
 
@@ -775,7 +775,7 @@ export const fullMenuItems = [
     name: "Elon Combo Special",
     spicyLevel: "Komplit Puas",
     price: 55000,
-    desc: "Paket kombo lengkap 1 Mie Mas Elon + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
+    desc: "Paket kombo lengkap 1 Mie Elon Musk + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
     isPopular: true,
     image: "/images/mie-elon-musk-combo-nobg.png",
   },
@@ -796,7 +796,7 @@ export const storyCards = [
     id: "story-1",
     author: "Dimas & Rekan Programmer",
     tagline: "Spot Nongkrong & Coding Paling Klop di Cikarang",
-    review: "Tiap kelar ngoding atau shift di Jababeka, pasti mampirnya ke Mie Mas Elon Cikarang. Menu Full Stack ditambah Fusion Cheese Bites juara banget!",
+    review: "Tiap kelar ngoding atau shift di Jababeka, pasti mampirnya ke Mie Elon Musk Cikarang. Menu Full Stack ditambah Fusion Cheese Bites juara banget!",
     image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
     rating: 5,
   },
@@ -812,7 +812,7 @@ export const storyCards = [
     id: "story-3",
     author: "Fajar Pratama",
     tagline: "Penyelamat Perut Anak Muda Cikarang",
-    review: "Pilihan menu unik banget, rasa makanan berkualitas dan minumannya berlogo Mas Elon keren. Tempatnya estetik dan pelayanan cepat.",
+    review: "Pilihan menu unik banget, rasa makanan berkualitas dan minumannya berlogo Elon Musk keren. Tempatnya estetik dan pelayanan cepat.",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
     rating: 5,
   },

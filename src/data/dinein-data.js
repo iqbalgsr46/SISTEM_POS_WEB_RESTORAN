@@ -1,5 +1,5 @@
 export const dineInInfo = {
-  restaurantName: "Mie Mas Elon Cikarang",
+  restaurantName: "Mie Elon Musk Cikarang",
   openHours: "Buka Setiap Hari, 09.00 - 23.00",
   tableNumber: "Table Number: 7",
 };
@@ -7,7 +7,7 @@ export const dineInInfo = {
 export const dineInCategories = [
   {
     id: "mie",
-    title: "MENU MIE MAS ELON",
+    title: "MENU MIE ELON MUSK",
     items: [
       {
         id: "elon-dark-matter",
@@ -63,7 +63,7 @@ export const dineInCategories = [
   },
   {
     id: "camilan",
-    title: "CEMILAN MAS ELON",
+    title: "CEMILAN ELON MUSK",
     items: [
       {
         id: "rocket-pop-chicken",
@@ -114,7 +114,7 @@ export const dineInCategories = [
   },
   {
     id: "beverages",
-    title: "MINUMAN MAS ELON",
+    title: "MINUMAN ELON MUSK",
     items: [
       {
         id: "starlink-blue",
@@ -174,7 +174,7 @@ export const dineInCategories = [
   },
   {
     id: "combat",
-    title: "KOMBO SPESIAL MAS ELON",
+    title: "KOMBO SPESIAL ELON MUSK",
     items: [
       {
         id: "combat-a",
@@ -184,7 +184,7 @@ export const dineInCategories = [
         image: "/images/mie-elon-musk-combo-nobg.png",
         heroImage: "/images/mie-elon-musk-combo-nobg.png",
         shortDesc: "Paket Best Seller Komplit",
-        description: "Paket kombo lengkap 1 Mie Mas Elon + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
+        description: "Paket kombo lengkap 1 Mie Elon Musk + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
         isCombo: true,
       },
       {

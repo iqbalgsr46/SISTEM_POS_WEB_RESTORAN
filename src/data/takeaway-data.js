@@ -1,5 +1,5 @@
 export const takeawayStore = {
-  name: "Mie Mas Elon, Tarum Barat",
+  name: "Mie Elon Musk, Tarum Barat",
   city: "Cikarang",
   rating: 4.9,
   totalReviews: "14rb+",
@@ -30,7 +30,7 @@ export const takeawayStore = {
 export const takeawayCategories = [
   {
     id: "mie",
-    title: "MENU MIE MAS ELON",
+    title: "MENU MIE ELON MUSK",
     items: [
       {
         id: "elon-dark-matter",
@@ -101,7 +101,7 @@ export const takeawayCategories = [
   },
   {
     id: "camilan",
-    title: "CEMILAN MAS ELON",
+    title: "CEMILAN ELON MUSK",
     items: [
       {
         id: "rocket-pop-chicken",
@@ -172,7 +172,7 @@ export const takeawayCategories = [
   },
   {
     id: "beverages",
-    title: "MINUMAN MAS ELON",
+    title: "MINUMAN ELON MUSK",
     items: [
       {
         id: "starlink-blue",
@@ -256,7 +256,7 @@ export const takeawayCategories = [
   },
   {
     id: "combat",
-    title: "KOMBO SPESIAL MAS ELON",
+    title: "KOMBO SPESIAL ELON MUSK",
     items: [
       {
         id: "combat-a",
@@ -264,7 +264,7 @@ export const takeawayCategories = [
         rating: 5.0,
         reviews: "3.5rb+",
         prepTime: "15 min",
-        description: "Paket kombo lengkap 1 Mie Mas Elon + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
+        description: "Paket kombo lengkap 1 Mie Elon Musk + 1 Porsi Fusion Cheese Bites + 1 Tesla Caramel Latte Dingin.",
         price: 55000,
         formattedPrice: "55.000",
         image: "/images/mie-elon-musk-combo-nobg.png",
