@@ -2,6 +2,7 @@
 "use client";
 
 import NotificationDrawer from "@/components/notification-drawer";
+import DesktopOrderingView from "@/components/desktop-ordering-view";
 import { useOrderNotifications } from "@/lib/use-order-notifications";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -1215,7 +1216,7 @@ function TakeawayContent() {
           1. TAMPILAN UKURAN LAYAR HP (MOBILE VIEWPORT: < lg)
           (100% UTUH, TIDAK MERUBAH TATA LETAK HP SAMA SEKALI SESUAI PERMINTAAN)
          ========================================================================= */}
-      <div className="min-h-screen bg-[#E8E8E8] flex justify-center selection:bg-[#FFD400] selection:text-gray-950">
+      <div className="lg:hidden min-h-screen bg-[#E8E8E8] flex justify-center selection:bg-[#FFD400] selection:text-gray-950">
         {/* PHONE CANVAS CONTAINER */}
         <main
         className={`w-full max-w-[430px] min-h-screen bg-[#F5F5F5] relative flex flex-col pb-28 overflow-x-hidden shadow-[0_0_40px_rgba(0,0,0,0.08)] transition-opacity duration-150 ease-out ${
@@ -2824,6 +2825,54 @@ function TakeawayContent() {
         }}
       />
       </main>
+    </div>
+
+    {/* =========================================================================
+        2. TAMPILAN UKURAN LAYAR LAPTOP / DESKTOP (DESKTOP VIEWPORT: >= lg)
+        (KONSEP E-COMMERCE MODERN ALA SHOPEE / TOKOPEDIA SUSUNAN RAPIH)
+       ========================================================================= */}
+    <div className="hidden lg:block min-h-screen bg-[#F6F8FB]">
+      <DesktopOrderingView
+        orderMode="takeaway"
+        tableNumber=""
+        categories={categories}
+        cart={cart}
+        setCart={setCart}
+        totalCartItems={totalCartItems}
+        subtotal={subtotal}
+        pb1Tax={pb1Tax}
+        totalPayment={totalPayment}
+        selectedCartItemIds={selectedCartItemIds}
+        toggleSelectCartItem={toggleSelectCartItem}
+        handleDeleteCartItem={handleDeleteCartItem}
+        handleOpenCustomize={handleOpenCustomize}
+        handleQuickAdd={handleQuickAdd}
+        handleUpdateCartQty={handleUpdateCartQty}
+        greetingInfo={greetingInfo}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        activeCircleCategory={activeCircleCategory}
+        setActiveCircleCategory={setActiveCircleCategory}
+        selectedSpicyFilter={selectedSpicyFilter}
+        setSelectedSpicyFilter={setSelectedSpicyFilter}
+        heroBanners={heroBanners}
+        currentSlide={currentSlide}
+        setCurrentSlide={setCurrentSlide}
+        setIsDrawerOpen={setIsDrawerOpen}
+        unreadCount={unreadCount}
+        trackedOrder={trackedOrder}
+        kitchenStage={kitchenStage}
+        navigateView={navigateView}
+        view={view}
+        extraNotes={extraNotes}
+        setExtraNotes={setExtraNotes}
+        paymentMethod={paymentMethod}
+        setPaymentMethod={setPaymentMethod}
+        isSubmittingOrder={isSubmittingOrder}
+        handleProceedPayment={handleProceedPayment}
+        submittedOrder={submittedOrder}
+        markAllAsRead={markAllAsRead}
+      />
     </div>
 
     {/* Tombol Scroll to Top Melayang (Murni Fixed ke Viewport, Bebas Tabrakan, Tidak Terkunci di Bawah) */}
