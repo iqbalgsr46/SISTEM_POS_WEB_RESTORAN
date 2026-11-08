@@ -97,31 +97,34 @@ async function main() {
 
   const PosPage = component.exports.default || component.exports;
 
-  // Realistic sample cart for preview
+  // Real database sample cart for preview
   const sampleCart = [
     {
       id: 'cart-1',
-      name: 'Mie Elon Musk Lv 2',
-      price: 15000,
+      menuItemId: 'pos-elon-dark-matter',
+      name: 'ELON DARK MATTER',
+      price: 28000,
       qty: 2,
-      image: '/images/dinein/mie-gacoan.png',
-      note: 'Level 2 Pedas Manis'
+      image: '/images/menu/elon-dark-matter.png',
+      note: 'Pedas sedang garlic creamy'
     },
     {
       id: 'cart-2',
-      name: 'Udang Keju Goreng',
-      price: 12000,
+      menuItemId: 'pos-mars-potato-wedges',
+      name: 'MARS POTATO WEDGES',
+      price: 14000,
       qty: 1,
-      image: '/images/dinein/udang-keju.png',
-      note: 'Isi Keju Lumer (3 pcs)'
+      image: '/images/menu/mars-potato-wedges.png',
+      note: 'Saus cocol ekstra'
     },
     {
       id: 'cart-3',
-      name: 'Es Gobak Sodor',
-      price: 10000,
+      menuItemId: 'pos-starlink-blue',
+      name: 'STARLINK BLUE',
+      price: 12000,
       qty: 1,
-      image: '/images/dinein/es-gobak-sodor.png',
-      note: 'Es Buah Segar'
+      image: '/images/menu/starlink-blue.png',
+      note: 'Dingin es batu'
     }
   ];
 

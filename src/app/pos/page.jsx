@@ -30,15 +30,13 @@ import {
 // Asset default jika gambar tidak tersedia
 const DEFAULT_PLACEHOLDER = "/images/dinein/mie-gacoan.png";
 
-// Kategori Menu POS Kasir (POSFood Authentic Clean Underline Tabs)
-const CATEGORIES = [
- { id: "all", name: "Semua Menu" },
- { id: "mie", name: "Mie Pedas" },
- { id: "snack", name: "Snack & Cemilan" },
- { id: "minuman", name: "Minuman Es" },
- { id: "combat", name: "Paket Combat" },
- { id: "dimsum", name: "Dimsum" },
- { id: "elon", name: "Elon Series" },
+// Kategori Menu POS Kasir Terintegrasi Real Database MariaDB
+const DEFAULT_CATEGORIES = [
+  { id: "all", name: "Semua Menu" },
+  { id: "mie", name: "Mie Pedas" },
+  { id: "snack", name: "Snack & Cemilan" },
+  { id: "minuman", name: "Minuman Segar" },
+  { id: "combat", name: "Paket Kombo" },
 ];
 
 // Mapping gambar otomatis berdasarkan nama menu untuk integritas gambar sistem
@@ -108,265 +106,213 @@ export function resolveDishImage(name, currentImage) {
  return DEFAULT_PLACEHOLDER;
 }
 
-// Daftar Lengkap Menu POS Kasir dengan Gambar Asli Sistem
+// Daftar Lengkap Menu POS Kasir Terintegrasi Real Database MariaDB (Channel: pos)
 const ALL_DISHES = [
- // 1. Mie Pedas & Signature Bowls
- {
- id: "mie-elon-dark",
- name: "ELON DARK MATTER",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 28000,
- desc: "Mie hitam cumi dengan ayam panggang, jamur & creamy garlic sauce",
- image: "/images/menu/elon-dark-matter.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "mie-tesla-reactor",
- name: "TESLA REACTOR",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 27000,
- desc: "Miso pedas mentega, telur setengah matang & sensasi kuat",
- image: "/images/menu/tesla-reactor.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "mie-spacex-orbit",
- name: "SPACEX ORBIT CRUNCH",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 30000,
- desc: "Mie sarang krispi disiram kuah daging sapi & jamur",
- image: "/images/menu/spacex-orbit-crunch.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "mie-full-stack",
- name: "FULL STACK",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 32000,
- desc: "Mie komplit developer: ayam, bakso, pangsit & telur",
- image: "/images/menu/full-stack.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "mie-mars-curry",
- name: "MARS COLONY CURRY",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 26000,
- desc: "Kuah kari kental Mars keemasan dengan ayam renyah",
- image: "/images/menu/mars-colony-curry.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "mie-1",
- name: "Mie Elon Musk Lv 1",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 15000,
- desc: "Mie pedas manis level 1 dengan taburan ayam cincang & pangsit",
- image: "/images/dinein/mie-gacoan.png",
- stock: "16 Porsi tersedia",
- },
- {
- id: "mie-2",
- name: "Mie Elon Musk Lv 2",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 15000,
- desc: "Mie pedas manis level 2 sensasi gurih pas di lidah",
- image: "/images/dinein/mie-gacoan.png",
- stock: "22 Porsi tersedia",
- },
- {
- id: "mie-hom-1",
- name: "Mie Hompimpa Lv 1",
- category: "mie",
- categoryName: "Mie Pedas",
- price: 15000,
- desc: "Mie pedas asin gurih level 1 dengan rempah istimewa",
- image: "/images/dinein/mie-hompimpa.png",
- stock: "20 Porsi tersedia",
- },
+  // 1. Menu Mie (MENU MIE POS)
+  {
+    id: "pos-elon-dark-matter",
+    name: "ELON DARK MATTER",
+    category: "mie",
+    categoryName: "MENU MIE POS",
+    price: 28000,
+    desc: "Mie hitam dari tinta cumi dengan ayam panggang, jamur, dan saus bawang putih creamy.",
+    image: "/images/menu/elon-dark-matter.png",
+    stock: "Tersedia",
+    menuItemId: "pos-elon-dark-matter",
+  },
+  {
+    id: "pos-tesla-reactor",
+    name: "TESLA REACTOR",
+    category: "mie",
+    categoryName: "MENU MIE POS",
+    price: 27000,
+    desc: "Mie dengan saus miso pedas dan mentega, daging cincang, telur setengah matang, serta daun bawang.",
+    image: "/images/menu/tesla-reactor.png",
+    stock: "Tersedia",
+    menuItemId: "pos-tesla-reactor",
+  },
+  {
+    id: "pos-spacex-orbit-crunch",
+    name: "SPACEX ORBIT CRUNCH",
+    category: "mie",
+    categoryName: "MENU MIE POS",
+    price: 30000,
+    desc: "Mie goreng renyah berbentuk sarang, disiram saus kental berisi daging sapi, brokoli, dan jamur.",
+    image: "/images/menu/spacex-orbit-crunch.png",
+    stock: "Tersedia",
+    menuItemId: "pos-spacex-orbit-crunch",
+  },
+  {
+    id: "pos-full-stack",
+    name: "FULL STACK",
+    category: "mie",
+    categoryName: "MENU MIE POS",
+    price: 32000,
+    desc: "Porsi komplit dengan potongan ayam, pangsit rebus, bakso, jamur, telur rebus, dan sayuran segar.",
+    image: "/images/menu/full-stack.png",
+    stock: "Tersedia",
+    menuItemId: "pos-full-stack",
+  },
+  {
+    id: "pos-mars-colony-curry",
+    name: "MARS COLONY CURRY",
+    category: "mie",
+    categoryName: "MENU MIE POS",
+    price: 26000,
+    desc: "Mie dengan kuah kari khas berwana merah-oranye pekat, potongan ayam katsu, jagung manis, dan daun bawang.",
+    image: "/images/menu/mars-colony-curry.png",
+    stock: "Tersedia",
+    menuItemId: "pos-mars-colony-curry",
+  },
 
- // 2. Snack & Cemilan Mas Elon
- {
- id: "snk-rocket-pop",
- name: "ROCKET POP CHICKEN",
- category: "snack",
- categoryName: "Snack & Cemilan",
- price: 18000,
- desc: "Ayam popcorn renyah bumbu khas luar angkasa",
- image: "/images/menu/rocket-pop-chicken.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "snk-orbit-crunch",
- name: "ORBIT CRUNCH",
- category: "snack",
- categoryName: "Snack & Cemilan",
- price: 12000,
- desc: "Keripik renyah gurih pelengkap santapan",
- image: "/images/menu/orbit-crunch.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "snk-fusion-cheese",
- name: "FUSION CHEESE BITES",
- category: "snack",
- categoryName: "Snack & Cemilan",
- price: 16000,
- desc: "Bite-sized keju lumer goreng renyah saus cocol",
- image: "/images/menu/fusion-cheese-bites.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "snk-neuralink-enoki",
- name: "NEURALINK ENOKI",
- category: "snack",
- categoryName: "Snack & Cemilan",
- price: 15000,
- desc: "Jamur enoki goreng krispi keemasan bumbu spesial",
- image: "/images/menu/neuralink-enoki.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "snk-mars-wedges",
- name: "MARS POTATO WEDGES",
- category: "snack",
- categoryName: "Snack & Cemilan",
- price: 14000,
- desc: "Kentang wedges renyah bumbu paprika khas Mars",
- image: "/images/menu/mars-potato-wedges.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "dim-udang-keju",
- name: "Udang Keju Goreng",
- category: "dimsum",
- categoryName: "Dimsum",
- price: 12000,
- desc: "Dimsum udang isi keju lumer renyah di luar (3 pcs)",
- image: "/images/dinein/udang-keju.png",
- stock: "18 Porsi tersedia",
- },
- {
- id: "dim-udang-rambutan",
- name: "Udang Rambutan",
- category: "dimsum",
- categoryName: "Dimsum",
- price: 12000,
- desc: "Bola udang balut kulit renyah kriuk (3 pcs)",
- image: "/images/dinein/udang-rambutan.png",
- stock: "14 Porsi tersedia",
- },
+  // 2. Cemilan Mas Elon (CEMILAN MAS ELON POS)
+  {
+    id: "pos-fusion-cheese-bites",
+    name: "FUSION CHEESE BITES",
+    category: "snack",
+    categoryName: "CEMILAN MAS ELON POS",
+    price: 16000,
+    desc: "Bola keju meleleh berbalut tepung renyah dengan taburan bumbu pedas manis.",
+    image: "/images/menu/fusion-cheese-bites.png",
+    stock: "Tersedia",
+    menuItemId: "pos-fusion-cheese-bites",
+  },
+  {
+    id: "pos-mars-potato-wedges",
+    name: "MARS POTATO WEDGES",
+    category: "snack",
+    categoryName: "CEMILAN MAS ELON POS",
+    price: 14000,
+    desc: "Potongan kentang tebal berbumbu paprika asap dan garam gurih dengan saus cocol.",
+    image: "/images/menu/mars-potato-wedges.png",
+    stock: "Tersedia",
+    menuItemId: "pos-mars-potato-wedges",
+  },
+  {
+    id: "pos-neuralink-enoki",
+    name: "NEURALINK ENOKI",
+    category: "snack",
+    categoryName: "CEMILAN MAS ELON POS",
+    price: 15000,
+    desc: "Jamur enoki goreng tepung tipis sangat krispi dengan cocolan saus mentai.",
+    image: "/images/menu/neuralink-enoki.png",
+    stock: "Tersedia",
+    menuItemId: "pos-neuralink-enoki",
+  },
+  {
+    id: "pos-orbit-crunch",
+    name: "ORBIT CRUNCH",
+    category: "snack",
+    categoryName: "CEMILAN MAS ELON POS",
+    price: 12000,
+    desc: "Kulit pangsit renyah dengan bumbu keju dan cabai bubuk gurih.",
+    image: "/images/menu/orbit-crunch.png",
+    stock: "Tersedia",
+    menuItemId: "pos-orbit-crunch",
+  },
+  {
+    id: "pos-rocket-pop-chicken",
+    name: "ROCKET POP CHICKEN",
+    category: "snack",
+    categoryName: "CEMILAN MAS ELON POS",
+    price: 18000,
+    desc: "Popcorn chicken renyah dengan saus pedas manis ala roket meluncur.",
+    image: "/images/menu/rocket-pop-chicken.png",
+    stock: "Tersedia",
+    menuItemId: "pos-rocket-pop-chicken",
+  },
 
- // 3. Minuman Mas Elon & Minuman Es
- {
- id: "es-starlink-blue",
- name: "STARLINK BLUE",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 12000,
- desc: "Mocktail biru segar soda bunga telang & lemon dingin",
- image: "/images/menu/starlink-blue.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-grok-choco",
- name: "GROK CHOCO",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 15000,
- desc: "Cokelat pekat dingin dengan busa creamy",
- image: "/images/menu/grok-choco.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-tesla-latte",
- name: "TESLA CARAMEL LATTE",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 18000,
- desc: "Kopi susu espresso dingin dengan drizzle saus karamel",
- image: "/images/menu/tesla-caramel-latte.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-neuralink-matcha",
- name: "NEURALINK MATCHA",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 16000,
- desc: "Matcha latte Jepang autentik dingin menyegarkan",
- image: "/images/menu/neuralink-matcha.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-mars-strawberry",
- name: "MARS STRAWBERRY MILK",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 14000,
- desc: "Susu stroberi manis segar warna merah Mars",
- image: "/images/menu/mars-strawberry-milk.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-air-putih",
- name: "AIR PUTIH SEGAR",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 6000,
- desc: "Air mineral botol dingin bersih menyegarkan",
- image: "/images/menu/air-putih.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "es-gobak-sodor",
- name: "Es Gobak Sodor",
- category: "minuman",
- categoryName: "Minuman Es",
- price: 10000,
- desc: "Es buah cincau, nata de coco & selasih segar",
- image: "/images/dinein/es-gobak-sodor.png",
- stock: "28 Gelas tersedia",
- },
+  // 3. Minuman Mas Elon (MINUMAN MAS ELON POS)
+  {
+    id: "pos-air-putih",
+    name: "AIR PUTIH SEGAR",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 6000,
+    desc: "Air mineral higienis dingin atau normal pelepas dahaga.",
+    image: "/images/menu/air-putih.png",
+    stock: "Tersedia",
+    menuItemId: "pos-air-putih",
+  },
+  {
+    id: "pos-grok-choco",
+    name: "GROK CHOCO",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 15000,
+    desc: "Minuman cokelat pekat premium dengan susu segar dan topping chocolate flakes.",
+    image: "/images/menu/grok-choco.png",
+    stock: "Tersedia",
+    menuItemId: "pos-grok-choco",
+  },
+  {
+    id: "pos-mars-strawberry-milk",
+    name: "MARS STRAWBERRY MILK",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 14000,
+    desc: "Susu stroberi segar dengan sirup stroberi asli dan sensasi creamy dingin.",
+    image: "/images/menu/mars-strawberry-milk.png",
+    stock: "Tersedia",
+    menuItemId: "pos-mars-strawberry-milk",
+  },
+  {
+    id: "pos-neuralink-matcha",
+    name: "NEURALINK MATCHA",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 16000,
+    desc: "Matcha latte autentik Jepang dengan susu oat lembut dan foam melimpah.",
+    image: "/images/menu/neuralink-matcha.png",
+    stock: "Tersedia",
+    menuItemId: "pos-neuralink-matcha",
+  },
+  {
+    id: "pos-starlink-blue",
+    name: "STARLINK BLUE",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 12000,
+    desc: "Soda biru segar dengan perasan lemon, biji selasih, dan sirup curacao.",
+    image: "/images/menu/starlink-blue.png",
+    stock: "Tersedia",
+    menuItemId: "pos-starlink-blue",
+  },
+  {
+    id: "pos-tesla-caramel-latte",
+    name: "TESLA CARAMEL LATTE",
+    category: "minuman",
+    categoryName: "MINUMAN MAS ELON POS",
+    price: 18000,
+    desc: "Kopi espresso dengan salted caramel gurih dan susu steam dingin.",
+    image: "/images/menu/tesla-caramel-latte.png",
+    stock: "Tersedia",
+    menuItemId: "pos-tesla-caramel-latte",
+  },
 
- // 4. Kombo Mas Elon & Combat
- {
- id: "com-elon-special",
- name: "ELON COMBO SPECIAL",
- category: "combat",
- categoryName: "Paket Combat",
- price: 55000,
- desc: "Paket komplit: 1 Elon Dark Matter + 1 Enoki + 1 Starlink Blue",
- image: "/images/mie-elon-musk-combo-nobg.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "com-space-explorer",
- name: "SPACE EXPLORER COMBO",
- category: "combat",
- categoryName: "Paket Combat",
- price: 52000,
- desc: "Paket hemat: 1 Tesla Reactor + 1 Fusion Cheese + 1 Grok Choco",
- image: "/images/mie-elon-musk-combo-nobg.png",
- stock: "15 Porsi tersedia",
- },
- {
- id: "com-combat-a",
- name: "Paket Combat A",
- category: "combat",
- categoryName: "Paket Combat",
- price: 32000,
- desc: "1 Mie Elon Lv 1-4 + 1 Udang Keju + 1 Es Gobak Sodor",
- image: "/images/dinein/combat-a.png",
- stock: "12 Paket tersedia",
- },
+  // 4. Kombo Mas Elon (KOMBO MAS ELON POS)
+  {
+    id: "pos-combat-a",
+    name: "ELON COMBO SPECIAL",
+    category: "combat",
+    categoryName: "KOMBO MAS ELON POS",
+    price: 55000,
+    desc: "Paket lengkap: Elon Dark Matter + Rocket Pop Chicken + Starlink Blue.",
+    image: "/images/mie-elon-musk-combo-nobg.png",
+    stock: "Tersedia",
+    menuItemId: "pos-combat-a",
+  },
+  {
+    id: "pos-combat-b",
+    name: "SPACE EXPLORER COMBO",
+    category: "combat",
+    categoryName: "KOMBO MAS ELON POS",
+    price: 52000,
+    desc: "Paket hemat: Tesla Reactor + Fusion Cheese Bites + Grok Choco.",
+    image: "/images/mie-elon-musk-combo-nobg.png",
+    stock: "Tersedia",
+    menuItemId: "pos-combat-b",
+  },
 ];
 
 export default function PosPage({ initialCart = [] } = {}) {
@@ -439,74 +385,103 @@ export default function PosPage({ initialCart = [] } = {}) {
  const [searchQuery, setSearchQuery] = useState("");
 
  // Cart & Catalog State
- const [cart, setCart] = useState(initialCart);
- const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
- const [dishes, setDishes] = useState(ALL_DISHES);
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [cart, setCart] = useState(initialCart);
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [dishes, setDishes] = useState(ALL_DISHES);
 
- useEffect(() => {
- getMenuCategories("pos")
- .then(({ data }) => {
- if (data && data.length > 0) {
- const rawItems = data.flatMap((c) =>
- (c.items || []).map((it) => ({
- ...it,
- category: c.id,
- categoryName: c.title,
- image: resolveDishImage(it.name, it.image),
- stock: it.stock || "15 Porsi tersedia",
- }))
- );
- setDishes(rawItems);
- }
- })
- .catch((error) => console.error("Gagal memuat katalog live:", error));
- }, []);
+  useEffect(() => {
+    let mounted = true;
+    getMenuCategories("pos")
+      .then(({ data }) => {
+        if (!mounted) return;
+        if (data && data.length > 0) {
+          const liveCats = [
+            { id: "all", name: "Semua Menu" },
+            ...data.map((c) => ({
+              id: c.id,
+              name: c.title.replace(" POS", "").replace("MENU ", "").replace("MAS ELON ", "").trim(),
+            })),
+          ];
+          setCategories(liveCats);
 
- // Order Details
- const [orderType, setOrderType] = useState("Dine-In");
- const [tableNumber, setTableNumber] = useState("31");
- const [customerName, setCustomerName] = useState("Pelanggan");
- const [paymentMethod, setPaymentMethod] = useState("CASH");
- const [cashTendered, setCashTendered] = useState(100000);
+          const rawItems = data.flatMap((c) =>
+            (c.items || []).map((it) => ({
+              id: it.id,
+              code: it.id,
+              name: it.name,
+              category: c.id,
+              categoryName: c.title,
+              price: it.price,
+              formattedPrice: it.formattedPrice,
+              desc: it.shortDesc || it.description || "",
+              image: resolveDishImage(it.name, it.image),
+              stock: it.available ? "Tersedia" : "Habis",
+              menuItemId: it.id,
+            }))
+          );
+          setDishes(rawItems);
+        }
+      })
+      .catch((error) => console.error("Gagal memuat katalog live:", error));
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
- // Live Orders
- const [liveOrders, setLiveOrders] = useState([]);
- const [isSyncing, setIsSyncing] = useState(false);
- const [lastSyncTime, setLastSyncTime] = useState("");
- const [orderFilter, setOrderFilter] = useState("all");
+  // Order Details (Meja 01 - 16 sesuai data tabel fisik MariaDB)
+  const [orderType, setOrderType] = useState("Dine-In");
+  const [tableNumber, setTableNumber] = useState("01");
+  const [customerName, setCustomerName] = useState("Pelanggan");
+  const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [cashTendered, setCashTendered] = useState(100000);
 
- // Modals
- const [showTablePicker, setShowTablePicker] = useState(false);
- const [printedReceipt, setPrintedReceipt] = useState(null);
- const [showShiftModal, setShowShiftModal] = useState(false);
+  // Live Orders & Live Tables from MariaDB
+  const [liveOrders, setLiveOrders] = useState([]);
+  const [liveTables, setLiveTables] = useState([]);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState("");
+  const [orderFilter, setOrderFilter] = useState("all");
 
- // Notification Toast
- const [toastMessage, setToastMessage] = useState("");
- const showToast = useCallback((msg) => {
- setToastMessage(msg);
- setTimeout(() => setToastMessage(""), 3000);
- }, []);
+  // Modals
+  const [showTablePicker, setShowTablePicker] = useState(false);
+  const [printedReceipt, setPrintedReceipt] = useState(null);
+  const [showShiftModal, setShowShiftModal] = useState(false);
 
- // Sync Live Orders with Store (/api/orders)
- const fetchLiveOrders = useCallback(async () => {
- try {
- setIsSyncing(true);
- const res = await fetch("/api/orders");
- if (res.ok) {
- const data = await res.json();
- setLiveOrders(data);
- const now = new Date();
- setLastSyncTime(
- now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) +
- " WIB"
- );
- }
- } catch (err) {
- console.error("Gagal sinkronisasi pesanan kasir:", err);
- } finally {
- setIsSyncing(false);
- }
- }, []);
+  // Notification Toast
+  const [toastMessage, setToastMessage] = useState("");
+  const showToast = useCallback((msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(""), 3000);
+  }, []);
+
+  // Sync Live Orders with Store (/api/orders) & Tables (/api/tables)
+  const fetchLiveOrders = useCallback(async () => {
+    try {
+      setIsSyncing(true);
+      const [resOrders, resTables] = await Promise.all([
+        fetch("/api/orders"),
+        fetch("/api/tables"),
+      ]);
+      if (resOrders.ok) {
+        const data = await resOrders.json();
+        setLiveOrders(data);
+        const now = new Date();
+        setLastSyncTime(
+          now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) +
+          " WIB"
+        );
+      }
+      if (resTables.ok) {
+        const tData = await resTables.json();
+        setLiveTables(tData);
+      }
+    } catch (err) {
+      console.error("Gagal sinkronisasi pesanan kasir:", err);
+    } finally {
+      setIsSyncing(false);
+    }
+  }, []);
 
  useEffect(() => {
  fetchLiveOrders();
@@ -619,54 +594,52 @@ export default function PosPage({ initialCart = [] } = {}) {
  }
 
  setIsSubmittingOrder(true);
- try {
- const generatedTicket = Math.floor(100 + Math.random() * 900);
- const payload = {
- orderType: orderType === "Dine-In" ? "dine_in" : "takeaway",
- orderSource: "pos_cashier",
- tableNumber: orderType === "Dine-In" ? String(tableNumber) : null,
- customerName: orderType === "Dine-In" ? `Meja ${tableNumber}` : customerName || "Pelanggan POS",
- customerPhone: "081200000000",
- paymentMethod: paymentMethod === "CASH" ? "tunai" : "qris",
- items: cart.map((it) => ({
- menu_item_id: it.menuItemId || 1,
- name: it.name,
- quantity: it.qty,
- unit_price: it.price,
- note: it.note || "",
- })),
- cashTendered: paymentMethod === "CASH" ? cashTendered : grandTotal,
- };
+    try {
+      const formattedTableNumber = orderType === "Dine-In" ? String(tableNumber).padStart(2, "0") : null;
+      const payload = {
+        source: "Kasir Fisik",
+        tableNumber: formattedTableNumber,
+        customerName: orderType === "Dine-In" ? `Meja ${formattedTableNumber}` : (customerName || "Pelanggan POS"),
+        customerPhone: "081200000000",
+        paymentMethod: paymentMethod === "CASH" ? "CASH" : "QRIS",
+        notes: orderType === "Dine-In" ? `Dine-In Meja ${formattedTableNumber}` : "Takeaway Kasir",
+        items: cart.map((it) => ({
+          menu_item_id: it.menuItemId || it.id,
+          quantity: Number(it.qty) || 1,
+          selected_variants: [],
+          notes: it.note || null,
+        })),
+      };
 
- const result = await requestRestaurant("orders", {
- method: "POST",
- body: payload,
- });
+      const result = await requestRestaurant("orders", {
+        method: "POST",
+        body: payload,
+      });
 
- const finalTicket = result?.ticketNumber || result?.ticket || `#0${generatedTicket}`;
+      const finalTicket = result?.ticketNumber || result?.ticket || "C-0000";
 
- setPrintedReceipt({
- ticketNumber: finalTicket,
- createdAt: new Date().toLocaleString("id-ID", {
- dateStyle: "medium",
- timeStyle: "short",
- }),
- source: "POS Kasir",
- orderType: orderType,
- tableNumber: orderType === "Dine-In" ? tableNumber : null,
- customerName: orderType === "Dine-In" ? `Meja ${tableNumber}` : customerName,
- items: [...cart],
- subtotal: subtotal,
- serviceFee: tax,
- grandTotal: grandTotal,
- cashTendered: paymentMethod === "CASH" ? cashTendered : grandTotal,
- changeDue: paymentMethod === "CASH" ? changeDue : 0,
- paymentMethod: paymentMethod,
- cashierName: cashierUser.name,
- });
+      setPrintedReceipt({
+        ticketNumber: finalTicket,
+        createdAt: new Date().toLocaleString("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }),
+        source: "Kasir Fisik",
+        orderType: orderType,
+        tableNumber: formattedTableNumber,
+        customerName: orderType === "Dine-In" ? `Meja ${formattedTableNumber}` : customerName,
+        items: [...cart],
+        subtotal: subtotal,
+        serviceFee: 2000,
+        grandTotal: subtotal + 2000,
+        cashTendered: paymentMethod === "CASH" ? cashTendered : (subtotal + 2000),
+        changeDue: paymentMethod === "CASH" ? Math.max(0, cashTendered - (subtotal + 2000)) : 0,
+        paymentMethod: paymentMethod,
+        cashierName: cashierUser.name,
+      });
 
- setCart([]);
- showToast(`Pesanan #${finalTicket} berhasil disimpan & dicetak!`);
+      setCart([]);
+      showToast(`Pesanan #${finalTicket} berhasil disimpan & dicetak!`);
  await fetchLiveOrders();
  } catch (err) {
  console.error("Gagal memproses pesanan:", err);
@@ -851,7 +824,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  {/* Horizontal Category Underline Tabs (1:1 POSFood Signature Style) */}
  <section className="pt-2 border-b border-[#2D303E]">
  <div className="flex items-center gap-6 overflow-x-auto pos-scrollbar">
- {CATEGORIES.map((cat) => {
+ {categories.map((cat) => {
  const isSelected = selectedCategory === cat.id;
  return (
  <button
@@ -879,7 +852,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  <h3 className="text-sm font-semibold text-white">
  {selectedCategory === "all"
  ? "Pilih Menu Pesanan"
- : CATEGORIES.find((c) => c.id === selectedCategory)?.name || "Pilihan Menu"}
+ : categories.find((c) => c.id === selectedCategory)?.name || "Pilihan Menu"}
  </h3>
  <span className="text-xs text-[#8E90A6]">
  {filteredDishes.length} menu tersedia
@@ -1691,28 +1664,35 @@ export default function PosPage({ initialCart = [] } = {}) {
  </div>
 
  <div className="grid grid-cols-4 gap-2.5">
- {Array.from({ length: 16 }, (_, i) => {
- const tbl = String(i + 1).padStart(2, "0");
- const isCurrent = tableNumber === tbl;
- return (
- <button
- key={tbl}
- onClick={() => {
- setTableNumber(tbl);
- setShowTablePicker(false);
- showToast(`Nomor meja diatur ke Meja ${tbl}`);
- }}
- className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
- isCurrent
- ? "bg-[#EA7C69] text-white border-[#EA7C69]"
- : "bg-[#1F1D2B] text-white border-[#2D303E] hover:border-[#EA7C69]"
- }`}
- >
- <span className="text-[10px] block opacity-70 font-medium">Meja</span>
- <span className="text-sm font-semibold block">{tbl}</span>
- </button>
- );
- })}
+   {Array.from({ length: 16 }, (_, i) => {
+     const tbl = String(i + 1).padStart(2, "0");
+     const isCurrent = tableNumber === tbl;
+     const dbTable = liveTables.find((t) => t.number === tbl);
+     const status = dbTable ? dbTable.status : "available";
+     const isAvailable = status === "available";
+     const statusLabel = status === "occupied" ? "Terisi" : status === "cleaning" ? "Bersih" : "Meja";
+
+     return (
+       <button
+         key={tbl}
+         onClick={() => {
+           setTableNumber(tbl);
+           setShowTablePicker(false);
+           showToast(`Nomor meja diatur ke Meja ${tbl}`);
+         }}
+         className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
+           isCurrent
+             ? "bg-[#EA7C69] text-white border-[#EA7C69]"
+             : isAvailable
+             ? "bg-[#1F1D2B] text-white border-[#2D303E] hover:border-[#EA7C69]"
+             : "bg-[#1F1D2B]/50 text-[#8E90A6] border-[#2D303E] hover:border-amber-500/50"
+         }`}
+       >
+         <span className="text-[10px] block opacity-70 font-medium">{statusLabel}</span>
+         <span className="text-sm font-semibold block">{tbl}</span>
+       </button>
+     );
+   })}
  </div>
  </div>
  </div>
