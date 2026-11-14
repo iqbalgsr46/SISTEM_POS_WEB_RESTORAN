@@ -29,7 +29,7 @@ class Order extends Model
 
     public function restaurantTable(): BelongsTo
     {
-        return $this->belongsTo(RestaurantTable::class);
+        return $this->belongsTo(RestaurantTable::class)->withTrashed();
     }
 
     public function scopeActive(Builder $query): void

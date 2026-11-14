@@ -55,7 +55,7 @@ class StoreOrderRequest extends FormRequest
             'source' => ['required', Rule::enum(OrderSource::class)],
             'tableNumber' => [
                 Rule::requiredIf(fn () => $this->input('source') === OrderSource::DineIn->value),
-                'nullable', 'string', 'max:3', 'exists:restaurant_tables,number',
+                'nullable', 'string', 'max:3', Rule::exists('restaurant_tables', 'number')->whereNull('deleted_at'),
             ],
             'customerName' => ['nullable', 'string', 'max:120'],
             'customerPhone' => ['nullable', 'string', 'max:30'],

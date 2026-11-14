@@ -16,7 +16,7 @@ class RestaurantSeeder extends Seeder
 
         DB::transaction(function () use ($catalog) {
             foreach (range(1, 16) as $number) {
-                RestaurantTable::firstOrCreate(['number' => str_pad((string) $number, 2, '0', STR_PAD_LEFT)]);
+                RestaurantTable::withTrashed()->firstOrCreate(['number' => str_pad((string) $number, 2, '0', STR_PAD_LEFT)]);
             }
 
             foreach ($catalog as $item) {
@@ -26,7 +26,7 @@ class RestaurantSeeder extends Seeder
                     'available' => true,
                 ]);
                 // Re-running seeds never overwrites edited prices or operational stock.
-                MenuItem::firstOrCreate(['channel' => $item['channel'], 'code' => $item['code']], $item);
+                MenuItem::withTrashed()->firstOrCreate(['channel' => $item['channel'], 'code' => $item['code']], $item);
             }
         });
     }

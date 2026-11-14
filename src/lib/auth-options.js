@@ -1,6 +1,7 @@
 import GoogleProvider from 'next-auth/providers/google';
 import { createStaffCallbacks } from './staff-auth-core.mjs';
 import { staffBackend } from './staff-backend';
+// Konfigurasi login Google dan sesi NextAuth; status serta peran staf diperiksa melalui backend.
 export const authOptions = {
  providers:[
   GoogleProvider({

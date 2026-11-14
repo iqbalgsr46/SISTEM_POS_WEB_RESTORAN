@@ -10,13 +10,10 @@ export async function proxyToBackend(request, resource) {
  try {
   const session = await getServerSession(authOptions);
   let claims = session?.user?.googleSub ? {purpose:'staff',sub:session.user.googleSub} : undefined;
-  if (!claims && process.env.NODE_ENV !== 'production') {
-    claims = { purpose: 'staff', sub: '118327990308943069543' };
-  }
   const data = await staffBackend(resource+url.search,{method:request.method,body:mutation ? await request.text() : '',claims});
   return NextResponse.json(data,{status:request.method==='POST'?201:200,headers:{'Cache-Control':'no-store'}});
  } catch(error) {
   const status = error.status && error.status < 500 ? error.status : 503;
-  return NextResponse.json({message:status===503?'Layanan restoran tidak tersedia.':error.message},{status,headers:{'Cache-Control':'no-store'}});
+  return NextResponse.json({message:status===503?'Layanan restoran tidak tersedia.':error.message,...(status===422 && error.errors ? {errors:error.errors} : {})},{status,headers:{'Cache-Control':'no-store'}});
  }
 }

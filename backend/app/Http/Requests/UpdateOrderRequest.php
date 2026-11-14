@@ -10,7 +10,8 @@ class UpdateOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->input('status') !== OrderStatus::Cancelled->value
+            || in_array($this->attributes->get('staff')?->role, ['admin', 'cashier'], true);
     }
 
     public function rules(): array

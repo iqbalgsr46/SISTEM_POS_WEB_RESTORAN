@@ -56,7 +56,7 @@ class StaffAuthTest extends TestCase
     public function test_customer_can_track_single_order_but_cannot_access_global_orders(): void
     {
         $order = \App\Models\Order::create([
-            'public_id' => '01HQTESTORDER00000000001',
+            'public_id' => 'ORD-01ARZ3NDEKTSV4RRFFQ69G5FAV',
             'ticket_number' => 'T-001',
             'source' => 'Takeaway',
             'customer_name' => 'Budi',
@@ -73,9 +73,9 @@ class StaffAuthTest extends TestCase
         $this->getJson('/api/orders')->assertUnauthorized();
         $this->getJson('/api/orders?status=active')->assertUnauthorized();
 
-        // Scoped tracking by id/ticket is allowed and returns single order
-        $this->getJson('/api/orders?id=T-001')->assertOk()->assertJsonPath('id', '01HQTESTORDER00000000001');
-        $this->getJson('/api/orders?id=01HQTESTORDER00000000001')->assertOk()->assertJsonPath('ticketNumber', 'T-001');
+        // Only the unguessable public ID permits anonymous customer tracking.
+        $this->getJson('/api/orders?id=T-001')->assertUnauthorized();
+        $this->getJson('/api/orders?id='.$order->public_id)->assertOk()->assertJsonPath('ticketNumber', 'T-001');
     }
 
     public function test_direct_backend_cannot_read_global_orders_or_mutate_staff_resources(): void

@@ -16,6 +16,7 @@ return [
     |
     */
 
+    // Koneksi database mengikuti backend/.env; data aplikasi disimpan di MySQL/MariaDB XAMPP.
     'default' => env('DB_CONNECTION', 'mysql'),
 
     /*

@@ -28,7 +28,7 @@
 
 /* Background warna kuning cerah persis sesuai referensi CRISPR */
 .bg-doodle-pattern {
-  background-color: #FFC903;
+  background-color: #ff0303;
 }
 
 
@@ -51,7 +51,7 @@ body {
 /* Custom Selection */
 ::selection {
   background-color: #0A0A0A;
-  color: #FDB813;
+  color: #fd1313;
 }
 
 /* Custom Clean Dark Scrollbar */

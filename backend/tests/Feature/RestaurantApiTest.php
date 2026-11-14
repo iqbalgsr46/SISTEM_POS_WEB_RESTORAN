@@ -18,6 +18,19 @@ class RestaurantApiTest extends TestCase
     {
         parent::setUp();
         $this->seed(RestaurantSeeder::class);
+        config(['staff.secret' => str_repeat('r', 64)]);
+        \App\Models\StaffAccount::create(['google_sub' => 'test-admin', 'email' => 'test-admin@example.com', 'name' => 'Admin', 'status' => 'approved', 'role' => 'admin']);
+    }
+
+    private function staffHeaders(string $method, string $uri, array $body = []): array
+    {
+        $payload = rtrim(strtr(base64_encode(json_encode(['purpose' => 'staff', 'sub' => 'test-admin', 'exp' => time() + 30, 'method' => $method, 'uri' => $uri, 'body' => hash('sha256', json_encode($body))])), '+/', '-_'), '=');
+        return ['X-Staff-Identity' => $payload.'.'.hash_hmac('sha256', $payload, config('staff.secret'))];
+    }
+
+    private function staffPatch(string $uri, array $body)
+    {
+        return $this->patchJson($uri, $body, $this->staffHeaders('PATCH', $uri, $body));
     }
 
     private function payload(array $overrides = []): array
@@ -27,7 +40,7 @@ class RestaurantApiTest extends TestCase
             'tableNumber' => 'Meja 07',
             'customerName' => 'Pelanggan Test',
             'paymentMethod' => 'qris',
-            'items' => [['menu_item_id' => 'mie-gacoan', 'quantity' => 2, 'selected_variants' => ['Level 2']]],
+            'items' => [['menu_item_id' => 'dine_in-elon-dark-matter', 'quantity' => 2, 'selected_variants' => ['Level 2']]],
         ], $overrides);
     }
 
@@ -37,24 +50,24 @@ class RestaurantApiTest extends TestCase
         $payload['items'][0]['unit_price'] = 1;
         $payload['items'][0]['ready'] = true;
         $order = $this->postJson('/api/orders', $payload)->assertCreated()
-            ->assertJsonPath('totalAmount', 20910)
+            ->assertJsonPath('totalAmount', 56000)
             ->assertJsonPath('paymentStatus', 'PENDING')
-            ->assertJsonPath('items.0.price', 10455)
+            ->assertJsonPath('items.0.price', 28000)
             ->assertJsonPath('items.0.ready', false)
             ->assertJsonPath('tableNumber', '07')->json();
 
-        $this->assertDatabaseHas('orders', ['public_id' => $order['id'], 'total_amount' => 20910]);
+        $this->assertDatabaseHas('orders', ['public_id' => $order['id'], 'total_amount' => 56000]);
         $this->assertDatabaseHas('restaurant_tables', ['number' => '07', 'status' => 'occupied', 'active_ticket' => $order['ticketNumber']]);
-        $this->getJson('/api/orders?id='.$order['ticketNumber'])->assertOk()->assertJsonPath('id', $order['id']);
-        $this->getJson('/api/orders?status=active')->assertOk()->assertJsonCount(1);
+        $this->getJson('/api/orders?id='.$order['id'])->assertOk()->assertJsonPath('id', $order['id']);
+        $this->getJson('/api/orders?status=active', $this->staffHeaders('GET', '/api/orders?status=active'))->assertOk()->assertJsonCount(1);
     }
 
     public function test_each_channel_uses_its_catalog_and_fees(): void
     {
         $cases = [
-            ['Takeaway', 'mie-gacoan', 15000, 0, 0, 'T-'],
-            ['Kios Lobby', 'mie-gacoan', 10455, 0, 1046, 'K-'],
-            ['Kasir Fisik', 'mie-1', 15000, 2000, 0, 'C-'],
+            ['Takeaway', 'takeaway-elon-dark-matter', 28000, 0, 0, 'T-'],
+            ['Kios Lobby', 'kios-elon-dark-matter', 28000, 0, 2800, 'K-'],
+            ['Kasir Fisik', 'pos-elon-dark-matter', 28000, 2000, 0, 'C-'],
         ];
         foreach ($cases as [$source, $code, $price, $fee, $tax, $prefix]) {
             $order = $this->postJson('/api/orders', $this->payload([
@@ -70,13 +83,13 @@ class RestaurantApiTest extends TestCase
     public function test_unknown_menu_and_sold_out_menu_leave_no_partial_order(): void
     {
         $this->postJson('/api/orders', $this->payload([
-            'items' => [['menu_item_id' => 'mie-gacoan', 'qty' => 1], ['menu_item_id' => 'missing', 'qty' => 1]],
+            'items' => [['menu_item_id' => 'dine_in-elon-dark-matter', 'qty' => 1], ['menu_item_id' => 'missing', 'qty' => 1]],
         ]))->assertUnprocessable()->assertJsonValidationErrors('items');
 
-        $this->patchJson('/api/stock', ['id' => 'mie-gacoan', 'available' => false])->assertOk();
+        $this->staffPatch('/api/stock', ['id' => 'elon-dark-matter', 'available' => false])->assertOk();
         $this->postJson('/api/orders', $this->payload())->assertUnprocessable();
         $this->postJson('/api/orders', $this->payload([
-            'source' => 'Kasir Fisik', 'items' => [['menu_item_id' => 'mie-1', 'qty' => 1]],
+            'source' => 'Kasir Fisik', 'items' => [['menu_item_id' => 'pos-elon-dark-matter', 'qty' => 1]],
         ]))->assertUnprocessable();
 
         $this->assertDatabaseCount('orders', 0);
@@ -86,7 +99,7 @@ class RestaurantApiTest extends TestCase
 
     public function test_invalid_payloads_are_rejected(): void
     {
-        foreach ([[], null, 'invalid', [['menu_item_id' => 'mie-gacoan', 'qty' => 0]], [['menu_item_id' => 'mie-gacoan', 'qty' => -1]]] as $items) {
+        foreach ([[], null, 'invalid', [['menu_item_id' => 'dine_in-elon-dark-matter', 'qty' => 0]], [['menu_item_id' => 'dine_in-elon-dark-matter', 'qty' => -1]]] as $items) {
             $this->postJson('/api/orders', $this->payload(['items' => $items]))->assertUnprocessable();
         }
         $this->postJson('/api/orders', $this->payload(['tableNumber' => null]))->assertUnprocessable();
@@ -100,17 +113,17 @@ class RestaurantApiTest extends TestCase
     {
         $order = $this->postJson('/api/orders', $this->payload())->json();
         $item = $order['items'][0];
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'items' => [
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'items' => [
             [...$item, 'ready' => true, 'price' => 1, 'qty' => 99],
         ]])->assertOk()->assertJsonPath('items.0.ready', true)
-            ->assertJsonPath('items.0.price', 10455)->assertJsonPath('items.0.qty', 2);
+            ->assertJsonPath('items.0.price', 28000)->assertJsonPath('items.0.qty', 2);
 
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'status' => 'COMPLETED'])->assertUnprocessable();
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'status' => 'READY'])->assertOk();
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'status' => 'COMPLETED'])->assertOk();
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'status' => 'COOKING'])->assertUnprocessable();
-        $this->patchJson('/api/orders', ['id' => $order['id'], 'items' => [['id' => $item['id'], 'ready' => false]]])->assertUnprocessable();
-        $this->getJson('/api/orders?status=active')->assertJsonCount(0);
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'status' => 'COMPLETED'])->assertUnprocessable();
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'status' => 'READY'])->assertOk();
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'status' => 'COMPLETED'])->assertOk();
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'status' => 'COOKING'])->assertUnprocessable();
+        $this->staffPatch('/api/orders', ['id' => $order['id'], 'items' => [['id' => $item['id'], 'ready' => false]]])->assertUnprocessable();
+        $this->getJson('/api/orders?status=active', $this->staffHeaders('GET', '/api/orders?status=active'))->assertJsonCount(0);
         $this->assertDatabaseHas('restaurant_tables', ['number' => '07', 'status' => 'cleaning']);
     }
 
@@ -118,7 +131,7 @@ class RestaurantApiTest extends TestCase
     {
         $first = $this->postJson('/api/orders', $this->payload())->json();
         $second = $this->postJson('/api/orders', $this->payload())->json();
-        $this->patchJson('/api/orders', ['id' => $first['id'], 'items' => [
+        $this->staffPatch('/api/orders', ['id' => $first['id'], 'items' => [
             ['id' => $first['items'][0]['id'], 'ready' => true],
             ['id' => $second['items'][0]['id'], 'ready' => true],
         ]])->assertUnprocessable();
@@ -131,31 +144,31 @@ class RestaurantApiTest extends TestCase
         $second = $this->postJson('/api/orders', $this->payload())->json();
         $this->assertNotEquals($first['ticketNumber'], $second['ticketNumber']);
         $tableId = RestaurantTable::where('number', '07')->value('id');
-        $this->patchJson('/api/tables', ['id' => $tableId, 'status' => 'available'])->assertUnprocessable();
-        $this->patchJson('/api/orders', ['id' => $first['id'], 'status' => 'CANCELLED'])->assertOk();
+        $this->staffPatch('/api/tables', ['id' => $tableId, 'status' => 'available'])->assertUnprocessable();
+        $this->staffPatch('/api/orders', ['id' => $first['id'], 'status' => 'CANCELLED'])->assertOk();
         $this->assertDatabaseHas('restaurant_tables', ['number' => '07', 'status' => 'occupied', 'active_ticket' => $second['ticketNumber']]);
-        $this->patchJson('/api/orders', ['id' => $second['id'], 'status' => 'CANCELLED'])->assertOk();
+        $this->staffPatch('/api/orders', ['id' => $second['id'], 'status' => 'CANCELLED'])->assertOk();
         $this->postJson('/api/orders', $this->payload())->assertUnprocessable();
-        $this->patchJson('/api/tables', ['id' => $tableId, 'status' => 'available'])->assertOk()->assertJsonPath('ticket', null);
+        $this->staffPatch('/api/tables', ['id' => $tableId, 'status' => 'available'])->assertOk()->assertJsonPath('ticket', null);
     }
 
     public function test_missing_records_and_invalid_updates_return_expected_errors(): void
     {
-        $this->getJson('/api/orders?id=missing')->assertNotFound();
-        $this->patchJson('/api/orders', ['id' => 'missing', 'status' => 'READY'])->assertNotFound();
-        $this->patchJson('/api/orders', ['id' => 'missing'])->assertUnprocessable();
-        $this->patchJson('/api/orders', ['id' => 'missing', 'status' => 'BAD'])->assertUnprocessable();
-        $this->patchJson('/api/stock', ['id' => 'missing', 'available' => true])->assertNotFound();
-        $this->patchJson('/api/stock', ['id' => 'mie-gacoan'])->assertUnprocessable();
-        $this->patchJson('/api/tables', ['id' => 999, 'status' => 'available'])->assertNotFound();
-        $this->patchJson('/api/tables', ['id' => 1, 'status' => 'BAD'])->assertUnprocessable();
+        $this->getJson('/api/orders?id=missing', $this->staffHeaders('GET', '/api/orders?id=missing'))->assertNotFound();
+        $this->staffPatch('/api/orders', ['id' => 'missing', 'status' => 'READY'])->assertNotFound();
+        $this->staffPatch('/api/orders', ['id' => 'missing'])->assertUnprocessable();
+        $this->staffPatch('/api/orders', ['id' => 'missing', 'status' => 'BAD'])->assertUnprocessable();
+        $this->staffPatch('/api/stock', ['id' => 'missing', 'available' => true])->assertNotFound();
+        $this->staffPatch('/api/stock', ['id' => 'elon-dark-matter'])->assertUnprocessable();
+        $this->staffPatch('/api/tables', ['id' => 999, 'status' => 'available'])->assertNotFound();
+        $this->staffPatch('/api/tables', ['id' => 1, 'status' => 'BAD'])->assertUnprocessable();
     }
 
     public function test_catalog_and_stock_responses_match_frontend_contract(): void
     {
         $menu = $this->getJson('/api/menu?channel=dine_in')->assertOk()->json();
-        $this->assertSame('gacoan-combat', $menu[0]['id']);
-        $this->assertSame('combat-a', $menu[0]['items'][0]['id']);
+        $this->assertSame('mie', $menu[0]['id']);
+        $this->assertSame('dine_in-elon-dark-matter', $menu[0]['items'][0]['id']);
         $this->assertTrue($menu[0]['items'][0]['available']);
         $this->getJson('/api/tables')->assertOk()->assertJsonCount(16)->assertJsonPath('0.number', '01');
         $this->getJson('/api/stock')->assertOk()->assertJsonStructure([['id', 'name', 'category', 'available']]);
@@ -165,12 +178,12 @@ class RestaurantApiTest extends TestCase
     public function test_seeder_is_repeatable_without_resetting_operational_data(): void
     {
         $count = MenuItem::count();
-        Stock::findOrFail('mie-gacoan')->update(['available' => false]);
-        MenuItem::where('channel', 'dine_in')->where('code', 'mie-gacoan')->update(['price' => 12000]);
+        Stock::findOrFail('elon-dark-matter')->update(['available' => false]);
+        MenuItem::where('channel', 'dine_in')->where('code', 'dine_in-elon-dark-matter')->update(['price' => 12000]);
         $this->seed(RestaurantSeeder::class);
         $this->assertSame($count, MenuItem::count());
-        $this->assertDatabaseHas('stocks', ['id' => 'mie-gacoan', 'available' => false]);
-        $this->assertDatabaseHas('menu_items', ['channel' => 'dine_in', 'code' => 'mie-gacoan', 'price' => 12000]);
+        $this->assertDatabaseHas('stocks', ['id' => 'elon-dark-matter', 'available' => false]);
+        $this->assertDatabaseHas('menu_items', ['channel' => 'dine_in', 'code' => 'dine_in-elon-dark-matter', 'price' => 12000]);
     }
 
     public function test_operational_api_is_disabled_in_production_until_staff_auth_is_ready(): void

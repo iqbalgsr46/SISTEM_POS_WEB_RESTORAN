@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { requestRestaurant } from "@/lib/restaurant-api";
 import {
-  RESTAURANT_TABLES,
   generateAllTableQrs,
   getTableDineInUrl,
 } from "@/lib/table-qr";
@@ -17,21 +17,37 @@ import {
 export default function TablesManagementPage() {
   const [qrMap, setQrMap] = useState({});
   const [selectedArea, setSelectedArea] = useState("all");
-  const [origin, setOrigin] = useState("http://localhost:3000");
+  const [tables, setTables] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [retry, setRetry] = useState(0);
+  const [origin, setOrigin] = useState("");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setOrigin(window.location.origin);
-      generateAllTableQrs(window.location.origin).then(setQrMap);
-    }
-  }, []);
+    let active = true;
+    const load = async () => {
+      try {
+        const data = await requestRestaurant("tables");
+        if (!Array.isArray(data)) throw new Error("Format daftar meja tidak valid.");
+        const qrs = await generateAllTableQrs(data, window.location.origin);
+        if (!active) return;
+        setOrigin(window.location.origin);
+        setTables(data);
+        setQrMap(qrs);
+        setError("");
+      } catch (err) {
+        if (active) { setError(err.message); setTables([]); setQrMap({}); }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    load();
+    const interval = setInterval(load, 15000);
+    window.addEventListener("focus", load);
+    return () => { active = false; clearInterval(interval); window.removeEventListener("focus", load); };
+  }, [retry]);
 
-  const filteredTables = RESTAURANT_TABLES.filter((t) => {
-    if (selectedArea === "all") return true;
-    if (selectedArea === "lantai1") return t.area.includes("Lantai 1");
-    if (selectedArea === "lantai2") return t.area.includes("Lantai 2");
-    return true;
-  });
+  const filteredTables = tables.filter((table) => selectedArea === "all" || table.status === selectedArea);
 
   const handlePrintAll = () => {
     if (typeof window !== "undefined") {
@@ -81,6 +97,7 @@ export default function TablesManagementPage() {
             <button
               type="button"
               onClick={handlePrintAll}
+              disabled={loading || !!error || tables.length === 0}
               className="px-2.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 text-white text-[11px] font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -107,9 +124,10 @@ export default function TablesManagementPage() {
             {/* Filter Area */}
             <div className="flex items-center gap-1 bg-neutral-100 p-0.5 rounded-md shrink-0 text-[11px]">
               {[
-                { id: "all", label: "Semua (16)" },
-                { id: "lantai1", label: "Lantai 1" },
-                { id: "lantai2", label: "Lantai 2" },
+                { id: "all", label: `Semua (${tables.length})` },
+                { id: "available", label: "Tersedia" },
+                { id: "occupied", label: "Terisi" },
+                { id: "cleaning", label: "Dibersihkan" },
               ].map((f) => (
                 <button
                   key={f.id}
@@ -127,7 +145,10 @@ export default function TablesManagementPage() {
           </div>
         </section>
 
-        {/* Grid Kartu 16 Stand Meja */}
+        {loading && <p role="status">Memuat meja aktif...</p>}
+        {error && <div role="alert" className="rounded-lg bg-red-50 p-4 text-red-700">{error} <button onClick={() => { setLoading(true); setRetry((value) => value + 1); }} className="underline">Coba lagi</button></div>}
+        {!loading && !error && filteredTables.length === 0 && <p>Tidak ada meja aktif untuk filter ini.</p>}
+        {/* QR hanya untuk meja aktif dari database. */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 print:grid-cols-2 print:gap-4">
           {filteredTables.map((tbl) => {
             const tableUrl = getTableDineInUrl(tbl.number, origin);
@@ -145,17 +166,17 @@ export default function TablesManagementPage() {
                       MIE ELON MUSK
                     </span>
                     <span className="text-[10px] font-normal text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md">
-                      {tbl.area.split(" - ")[0]}
+                      {({ available: "Tersedia", occupied: "Terisi", cleaning: "Dibersihkan" })[tbl.status]}
                     </span>
                   </div>
 
                   {/* Judul Nomor Meja - Ramping & Tidak Terlalu Bold */}
                   <div className="pt-2.5 pb-2">
                     <h2 className="text-base font-semibold text-neutral-800 tracking-tight">
-                      {tbl.name}
+                      Meja {tbl.number}
                     </h2>
                     <p className="text-[11px] text-neutral-400 font-normal">
-                      Kapasitas {tbl.capacity}
+                      Nomor meja terdaftar
                     </p>
                   </div>
                 </div>
@@ -166,7 +187,7 @@ export default function TablesManagementPage() {
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={qrImage}
-                      alt={`QR Code ${tbl.name}`}
+                      alt={`QR Code $Meja {tbl.number}`}
                       className="w-36 h-36 object-contain rounded-md"
                     />
                   ) : (

@@ -85,7 +85,7 @@ OrderController::store -> OrderService::create -> model/migration -> OrderResour
 | PATCH | /api/orders | Ubah status atau kesiapan item |
 | GET | /api/stock | Daftar ketersediaan menu |
 | PATCH | /api/stock | Isi id dan available (boolean) |
-| GET | /api/tables | Daftar 16 meja |
+| GET | /api/tables | Daftar meja aktif (tidak termasuk arsip) |
 | PATCH | /api/tables | Isi id numerik dan status: available/occupied/cleaning |
 
 Contoh POST /api/orders:

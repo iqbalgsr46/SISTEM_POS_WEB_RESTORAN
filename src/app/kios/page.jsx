@@ -1,5 +1,6 @@
 "use client";
 
+import { useCatalogRefresh } from "@/lib/use-catalog-refresh";
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +25,6 @@ import {
   X,
   Volume2,
 } from "lucide-react";
-import { dineInCategories } from "@/data/dinein-data";
 import { getMenuCategories, requestRestaurant } from "@/lib/restaurant-api";
 
 export default function KiosLobbyPage() {
@@ -33,22 +33,42 @@ export default function KiosLobbyPage() {
 
   // Order Details
   const [orderMode, setOrderMode] = useState("dine_in"); // 'dine_in' or 'takeaway'
-  const [tableNumber, setTableNumber] = useState("12");
+  const [tableNumber, setTableNumber] = useState("");
+  const [tables, setTables] = useState([]);
+  const [tableError, setTableError] = useState("");
   const [showTableInputModal, setShowTableInputModal] = useState(false);
   const [tempTable, setTempTable] = useState("");
 
   // Menu Navigation
-  const [activeCategory, setActiveCategory] = useState("gacoan-combat");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [cart, setCart] = useState([]);
-  const [categories, setCategories] = useState(dineInCategories);
+  const [categories, setCategories] = useState([]);
+  const [menuLoading, setMenuLoading] = useState(true);
+  const [menuError, setMenuError] = useState("");
+  const [menuRetry, setMenuRetry] = useState(0);
+  useCatalogRefresh(setMenuRetry);
   const [orderError, setOrderError] = useState("");
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    if (menuRetry === 0) setMenuLoading(true);
+    setMenuError("");
     getMenuCategories("kios")
-      .then(({ data }) => setCategories(data))
-      .catch((error) => console.error("Gagal memuat katalog:", error));
-  }, []);
+      .then(({ data }) => { if (mounted) setCategories(data); })
+      .catch((error) => { if (mounted) setMenuError(error.message || "Gagal memuat katalog menu."); })
+      .finally(() => { if (mounted) setMenuLoading(false); });
+    return () => { mounted = false; };
+  }, [menuRetry]);
+
+  useEffect(() => {
+    let active = true;
+    requestRestaurant("tables").then((data) => {
+      if (!Array.isArray(data)) throw new Error("Format daftar meja tidak valid.");
+      if (active) { setTables(data); setTableError(""); }
+    }).catch((error) => { if (active) { setTables([]); setTableError(error.message); } });
+    return () => { active = false; };
+  }, [menuRetry, showTableInputModal]);
 
   // Customization modal
   const [customizingItem, setCustomizingItem] = useState(null);
@@ -91,6 +111,7 @@ export default function KiosLobbyPage() {
 
   // Open customize
   const handleOpenCustomize = (item) => {
+    if (item.available === false) return;
     setCustomizingItem(item);
     setCustomLevel(1);
     setCustomVariant("Goreng");
@@ -131,6 +152,11 @@ export default function KiosLobbyPage() {
 
   const handleConfirmPayment = async () => {
     if (isSubmittingOrder || cart.length === 0) return;
+    if (orderMode === "dine_in" && !tables.some((table) => table.number === tableNumber && table.status !== "cleaning")) {
+      setOrderError("Pilih meja aktif yang tidak sedang dibersihkan.");
+      setShowTableInputModal(true);
+      return;
+    }
     setIsSubmittingOrder(true);
     setOrderError("");
     try {
@@ -312,6 +338,8 @@ export default function KiosLobbyPage() {
                 Ambil kartu nomor meja yang ada di holder samping mesin, lalu masukkan nomornya:
               </p>
 
+              {tableError && <p role="alert" className="mb-3 text-sm text-red-700">{tableError}</p>}
+              <p className="mb-3 text-xs text-neutral-500">Meja aktif: {tables.filter((table) => table.status !== "cleaning").map((table) => table.number).join(", ") || "Tidak tersedia"}</p>
               {/* Number Pad Input Display */}
               <div className="bg-[#F8F9FA] border-2 border-amber-300 rounded-2xl p-3 text-3xl font-black text-[#1E1E24] mb-4 tracking-widest">
                 {tempTable || tableNumber}
@@ -325,7 +353,13 @@ export default function KiosLobbyPage() {
                     onClick={() => {
                       if (key === "C") setTempTable("");
                       else if (key === "OK") {
-                        if (tempTable) setTableNumber(tempTable);
+                        const number = String(tempTable || tableNumber).padStart(2, "0");
+                        if (!tables.some((table) => table.number === number && table.status !== "cleaning")) {
+                          setTableError("Nomor meja tidak aktif atau sedang dibersihkan.");
+                          return;
+                        }
+                        setTableError("");
+                        setTableNumber(number);
                         setShowTableInputModal(false);
                         setScreen("menu");
                       } else {
@@ -385,10 +419,8 @@ export default function KiosLobbyPage() {
             {/* Category Bar */}
             <div className="px-4 py-2.5 bg-[#FAF8F5] border-b border-[#F0EDEA] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
               {[
-                { id: "gacoan-combat", label: "🔥 Combat Combo" },
-                { id: "mie", label: "🍜 Mie Pedas" },
-                { id: "dimsum", label: "🥟 Dimsum" },
-                { id: "paket-fest", label: "🎉 Paket Fest" },
+                { id: "all", label: "Semua Menu" },
+                ...categories.map((category) => ({ id: category.id, label: category.title || category.name })),
               ].map((c) => (
                 <button
                   key={c.id}
@@ -406,6 +438,9 @@ export default function KiosLobbyPage() {
 
             {/* Menu Grid (Giant Touch Cards) */}
             <div className="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-3.5">
+              {menuLoading && <p role="status" className="col-span-2 p-6 text-center text-sm">Memuat katalog menu...</p>}
+              {menuError && <div role="alert" className="col-span-2 p-6 text-center text-sm text-red-700"><p>{menuError}</p><button type="button" onClick={() => setMenuRetry((retry) => retry + 1)} className="mt-3 font-bold underline">Coba lagi</button></div>}
+              {!menuLoading && !menuError && !categories.some((category) => (activeCategory === "all" || category.id === activeCategory) && category.items.length > 0) && <p className="col-span-2 p-6 text-center text-sm">Belum ada menu di kategori ini.</p>}
               {categories
                 .filter((cat) => cat.id === activeCategory || activeCategory === "all")
                 .flatMap((cat) => cat.items)
@@ -429,12 +464,13 @@ export default function KiosLobbyPage() {
                       <h4 className="text-xs font-black text-[#1E1E24] leading-tight truncate">
                         {item.name}
                       </h4>
+                      {item.available === false && <p className="text-xs font-semibold text-red-600">Tidak tersedia</p>}
                       <p className="text-xs font-black text-[#F5A623] mt-1">
                         Rp{item.price.toLocaleString("id-ID")}
                       </p>
                     </div>
 
-                    <button className="w-full mt-2.5 py-1.5 rounded-full bg-white hover:bg-amber-50 text-[#F5A623] border border-amber-300 text-[11px] font-black shadow-xs flex items-center justify-center gap-1">
+                    <button disabled={item.available === false} className="w-full mt-2.5 py-1.5 rounded-full bg-white hover:bg-amber-50 text-[#F5A623] border border-amber-300 text-[11px] font-black shadow-xs flex items-center justify-center gap-1">
                       <Plus className="w-3.5 h-3.5 stroke-[3]" />
                       <span>Pilih</span>
                     </button>
@@ -569,7 +605,7 @@ export default function KiosLobbyPage() {
               {/* Dynamic QRIS Box */}
               <div className="bg-white rounded-3xl p-6 border-2 border-amber-400 text-center shadow-lg relative overflow-hidden">
                 <span className="inline-block px-3 py-1 rounded-full bg-red-100 text-red-600 font-black text-[10px] uppercase tracking-wider mb-3">
-                  Scan QRIS Dinamis
+                  Pratinjau QRIS (belum aktif)
                 </span>
 
                 <div className="w-48 h-48 bg-neutral-100 rounded-2xl mx-auto p-3 flex items-center justify-center border-2 border-dashed border-neutral-300 relative">
@@ -577,10 +613,10 @@ export default function KiosLobbyPage() {
                 </div>
 
                 <p className="text-xs font-bold text-[#1E1E24] mt-3">
-                  Buka aplikasi BCA, GoPay, OVO, ShopeePay, atau Bank apa saja
+                  Pembayaran diverifikasi oleh kasir
                 </p>
                 <p className="text-[10px] text-[#9A9FA5] mt-0.5">
-                  Scan kode QR di atas untuk menyelesaikan pembayaran instan
+                  Ikon ini bukan kode pembayaran. Kirim pesanan, lalu selesaikan pembayaran di kasir.
                 </p>
               </div>
             </div>

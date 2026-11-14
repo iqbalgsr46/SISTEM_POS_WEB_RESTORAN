@@ -13,11 +13,13 @@ export default function DapurKDSPage() {
   const isAuthChecking = false; // Server layout enforces access; API rechecks DB each request.
   const kitchenUser = {name:session?.user?.name || 'Staff', email:session?.user?.email || '', provider:'google'};
 
-  // Stasiun aktif: 'all', 'wok' (Mie), 'dimsum', 'bar' (Minuman)
+  // Stasiun aktif: 'all', 'kitchen' (Mie & Dimsum), 'bar' (Minuman)
   const [activeStation, setActiveStation] = useState("all");
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncError, setSyncError] = useState("");
+  const [actionError, setActionError] = useState("");
   const prevCountRef = useRef(0);
 
   // Sound Chime helper
@@ -45,9 +47,9 @@ export default function DapurKDSPage() {
   const fetchOrders = async () => {
     try {
       setIsSyncing(true);
-      const res = await fetch("/api/orders?status=active");
-      if (res.ok) {
-        const data = await res.json();
+      const data = await requestRestaurant("orders?status=active");
+      if (!Array.isArray(data)) throw new Error("Format antrean dapur tidak valid.");
+      {
         const mapped = data.map((o) => {
           const now = Date.now();
           const created = new Date(o.createdAt).getTime();
@@ -68,7 +70,7 @@ export default function DapurKDSPage() {
             elapsedSeconds: elapsed,
             slaStatus: sla,
             items: o.items || [],
-            completed: o.status === "READY" || o.status === "COMPLETED",
+            completed: ["READY", "COMPLETED", "CANCELLED"].includes(o.status),
           };
         });
 
@@ -77,8 +79,10 @@ export default function DapurKDSPage() {
         }
         prevCountRef.current = mapped.length;
         setTickets(mapped);
+        setSyncError("");
       }
     } catch (e) {
+      setSyncError(`Gagal memperbarui antrean: ${e.message || "Koneksi bermasalah."} Data terakhir mungkin belum terbaru.`);
       console.error("Fetch orders failed", e);
     } finally {
       setIsSyncing(false);
@@ -117,8 +121,10 @@ export default function DapurKDSPage() {
         method: "PATCH",
         body: { id: ticketId, items: [{ id: item.id, ready: !item.ready }] },
       });
+      setActionError("");
       await fetchOrders();
     } catch (error) {
+      setActionError(`Status item gagal diperbarui: ${error.message || "Silakan coba lagi."}`);
       console.error("Toggle item failed", error);
     }
   };
@@ -129,8 +135,10 @@ export default function DapurKDSPage() {
         method: "PATCH",
         body: { id: ticketId, status: "READY" },
       });
+      setActionError("");
       await fetchOrders();
     } catch (error) {
+      setActionError(`Pesanan gagal ditandai siap: ${error.message || "Silakan coba lagi."}`);
       console.error("Complete ticket failed", error);
     }
   };
@@ -157,8 +165,7 @@ export default function DapurKDSPage() {
 
   const stationButtons = [
     { id: "all", label: "Semua Menu", icon: "/icons/restaurant.svg" },
-    { id: "wok", label: "Wok Mie", icon: "/icons/ramen_dining.svg" },
-    { id: "dimsum", label: "Dimsum", icon: "/icons/inventory_2.svg" },
+    { id: "kitchen", label: "Dapur Mie & Dimsum", icon: "/icons/ramen_dining.svg" },
     { id: "bar", label: "Bar Minuman", icon: "/icons/local_cafe.svg" },
   ];
 
@@ -350,14 +357,21 @@ export default function DapurKDSPage() {
 
         {/* Content Area */}
         <div className="flex-1 p-6 overflow-y-auto">
+          {(syncError || actionError) && (
+            <div role="alert" className="mb-4 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800">
+              {syncError && <p>{syncError}</p>}
+              {actionError && <p>{actionError}</p>}
+              {syncError && <button type="button" onClick={fetchOrders} className="mt-2 underline font-medium">Coba sinkronkan lagi</button>}
+            </div>
+          )}
           {filteredTickets.length === 0 ? (
             <div className="h-full min-h-[380px] flex flex-col items-center justify-center text-center p-6 bg-white rounded-xl border border-gray-200/80 shadow-2xs">
               <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 mb-3">
                 <Image src="/icons/restaurant.svg" alt="Dapur" width={24} height={24} className="opacity-40" />
               </div>
-              <h2 className="text-sm font-semibold text-gray-800">Dapur Sedang Kosong</h2>
+              <h2 className="text-sm font-semibold text-gray-800">{syncError ? "Antrean Belum Dapat Dipastikan" : "Dapur Sedang Kosong"}</h2>
               <p className="text-xs text-gray-400 max-w-sm mt-1">
-                Semua menu pesanan sudah selesai dimasak. Pesanan baru akan otomatis muncul di sini.
+                {syncError ? "Periksa koneksi lalu sinkronkan ulang untuk melihat pesanan terbaru." : "Tidak ada tiket aktif pada stasiun ini. Pesanan baru akan otomatis muncul di sini."}
               </p>
             </div>
           ) : (

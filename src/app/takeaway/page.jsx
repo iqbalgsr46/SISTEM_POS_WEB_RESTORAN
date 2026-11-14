@@ -1,9 +1,12 @@
 // Mie Elon Musk - Official POS & Digital Ordering System v2.1
 "use client";
 
+import OrderTracking from "@/components/order-tracking";
+import { getOrderTrackingState } from "@/components/order-tracking-state.mjs";
 import NotificationDrawer from "@/components/notification-drawer";
 import OrderingNavbar from "@/components/ordering-navbar";
 import orderingStyles from "@/components/ordering-responsive.module.css";
+import { useCatalogRefresh } from "@/lib/use-catalog-refresh";
 import { useOrderNotifications } from "@/lib/use-order-notifications";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -60,8 +63,8 @@ import {
   Home,
   PieChart,
 } from "lucide-react";
-import { dineInInfo, dineInCategories } from "@/data/dinein-data";
-import { takeawayStore, takeawayCategories } from "@/data/takeaway-data";
+import { dineInInfo } from "@/data/dinein-data";
+import { takeawayStore } from "@/data/takeaway-data";
 import { getMenuCategories, submitOrder } from "@/lib/restaurant-api";
 
 function getGreetingByHour() {
@@ -90,32 +93,6 @@ function TakeawayContent() {
     permissionStatus,
   } = useOrderNotifications();
 
-  // Initial demo notifications if empty
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("mie_elon_musk_order_notifications");
-      if (!saved || JSON.parse(saved).length === 0) {
-        addNotification({
-          type: "ready",
-          title: "Pesanan #003 Siap Saji!",
-          message: "Mie Elon Musk Lv 2 & Pangsit Goreng siap diambil di counter.",
-          orderNumber: "003",
-        });
-        addNotification({
-          type: "cooking",
-          title: "Pesanan #002 Sedang Dimasak",
-          message: "Chef sedang menyiapkan menu pesanan.",
-          orderNumber: "002",
-        });
-        addNotification({
-          type: "paid",
-          title: "Pembayaran Diterima!",
-          message: "Pesanan #001 telah dibayar dan masuk antrean dapur.",
-          orderNumber: "001",
-        });
-      }
-    }
-  }, [addNotification]);
   const searchParams = useSearchParams();
 
   // Mode: 'dine_in' atau 'takeaway'
@@ -153,22 +130,39 @@ function TakeawayContent() {
   const [previousView, setPreviousView] = useState("menu");
 
   // Katalog harga diambil dari backend Laravel.
-  const [categories, setCategories] = useState(dineInCategories);
+  const [categories, setCategories] = useState([]);
+  const [menuLoading, setMenuLoading] = useState(true);
+  const [menuError, setMenuError] = useState("");
+  const [menuRetry, setMenuRetry] = useState(0);
+  useCatalogRefresh(setMenuRetry);
+  const loadedMenuModeRef = useRef(null);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [submittedOrder, setSubmittedOrder] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
-    getMenuCategories(orderMode).then((res) => {
-      if (isMounted && res?.data?.length > 0) {
-        setCategories(res.data);
+    const needsInitialLoad = loadedMenuModeRef.current !== orderMode;
+    if (needsInitialLoad) {
+      loadedMenuModeRef.current = null;
+      setMenuLoading(true);
+      setCategories([]);
+    }
+    setMenuError("");
+    getMenuCategories(orderMode).then(({ data }) => {
+      if (isMounted) {
+        loadedMenuModeRef.current = orderMode;
+        setCategories(data);
       }
-    }).catch((error) => console.error("Gagal memuat katalog:", error));
+    }).catch((error) => {
+      if (isMounted) setMenuError(error.message || "Gagal memuat katalog menu.");
+    }).finally(() => {
+      if (isMounted) setMenuLoading(false);
+    });
     return () => {
       isMounted = false;
     };
-  }, [orderMode]);
+  }, [orderMode, menuRetry]);
 
   // Filter & Search states
   const [activeCircleCategory, setActiveCircleCategory] = useState("all");
@@ -273,9 +267,7 @@ function TakeawayContent() {
   };
 
   // Data item yang sedang dikustomisasi di layar penuh
-  const [customizingItem, setCustomizingItem] = useState(() => {
-    return dineInCategories[0]?.items[0] || null;
-  });
+  const [customizingItem, setCustomizingItem] = useState(null);
   const [editingCartId, setEditingCartId] = useState(null);
 
   // Pilihan di dalam layar kustomisasi
@@ -295,44 +287,7 @@ function TakeawayContent() {
   const [paymentMethod, setPaymentMethod] = useState("qris"); // 'qris' | 'cash'
 
   // State Order Tracking (Proses Dapur Real-Time)
-  const [trackedOrder, setTrackedOrder] = useState(() => {
-    return {
-      orderNumber: "ORD-20261020-0891",
-      paymentNumber: "PAY-20261020-0412",
-      orderMode: initialType,
-      tableNumber: tableFromUrl?.replace(/\D/g, "") || "7",
-      status: "cooking",
-      paymentMethod: "qris",
-      paymentStatus: "paid",
-      createdAt: "14:55 WIB",
-      estimatedMinutes: 10,
-      progressPercent: 60,
-      items: [
-        {
-          id: "track-item-1",
-          itemId: "combat-a",
-          name: "ELON MUSK COMBAT A",
-          price: 50000,
-          quantity: 1,
-          image: "/images/silver-mountain-placeholder.svg",
-          variants: [
-            "2x MIE ELON MUSK LEVEL 1",
-            "1x UDANG KEJU",
-            "1x UDANG RAMBUTAN",
-            "2x LEMON TEA - ICED",
-          ],
-          notes: "Saus sambal dipisah",
-        },
-      ],
-      notes: "Saus sambal dipisah, kurangi minyak",
-      subtotal: 50000,
-      pb1Tax: 5000,
-      totalAmount: 55000,
-    };
-  });
-
-  // Tahap proses dapur (1: Diterima, 2: Sedang Dimasak, 3: Siap Disajikan, 4: Selesai Disajikan)
-  const [kitchenStage, setKitchenStage] = useState(2);
+  const [trackedOrder, setTrackedOrder] = useState(null);
   const lastNotifiedStatusRef = useRef(null);
 
   // Polling Real-Time Status Pesanan Takeaway Asli dari Backend Dapur (Localhost / Server)
@@ -351,13 +306,6 @@ function TakeawayContent() {
 
         if (isMounted) {
           const rawStatus = (matched.status || "").toUpperCase();
-          let stage = 1;
-          if (rawStatus === "COOKING") stage = 2;
-          else if (rawStatus === "READY" || rawStatus === "COMPLETED") stage = 3;
-          else if (rawStatus === "PENDING" || rawStatus === "PAID") stage = 1;
-
-          setKitchenStage(stage);
-
           // Kirim notifikasi jika status diupdate oleh dapur
           if (lastNotifiedStatusRef.current !== rawStatus) {
             if (rawStatus === "COOKING") {
@@ -368,11 +316,22 @@ function TakeawayContent() {
                 orderNumber: matched.orderNumber || matched.id,
                 url: "/takeaway",
               });
-            } else if (rawStatus === "READY" || rawStatus === "COMPLETED") {
+            } else if (rawStatus === "READY") {
               addNotification({
                 type: "ready",
                 title: "Pesanan Siap Saji!",
                 message: "Pesanan takeaway kamu sudah selesai dan siap diambil di counter!",
+                orderNumber: matched.orderNumber || matched.id,
+                url: "/takeaway",
+              });
+            }
+            if (rawStatus === "CANCELLED" || rawStatus === "COMPLETED") {
+              addNotification({
+                type: "info",
+                title: rawStatus === "CANCELLED" ? "Pesanan Dibatalkan" : "Pesanan Selesai",
+                message: rawStatus === "CANCELLED"
+                  ? "Pesanan tidak lagi diproses. Hubungi kasir untuk informasi pembayaran."
+                  : "Pesanan telah selesai dilayani.",
                 orderNumber: matched.orderNumber || matched.id,
                 url: "/takeaway",
               });
@@ -388,7 +347,7 @@ function TakeawayContent() {
             status: matched.status?.toLowerCase(),
             paymentStatus: matched.paymentStatus?.toLowerCase() || prev?.paymentStatus,
             paymentMethod: matched.paymentMethod?.toLowerCase() || prev?.paymentMethod,
-            totalAmount: matched.totalAmount || prev?.totalAmount,
+            totalAmount: matched.totalAmount ?? prev?.totalAmount,
           }));
         }
       } catch {
@@ -503,9 +462,7 @@ function TakeawayContent() {
 
     const c = searchParams.get("customize");
     if (c) {
-      const item =
-        categories.flatMap((cat) => cat.items).find((it) => it.id === c) ||
-        categories[0]?.items[0];
+      const item = categories.flatMap((cat) => cat.items).find((it) => it.id === c);
       if (item) {
         handleOpenCustomize(item);
       }
@@ -542,6 +499,7 @@ function TakeawayContent() {
 
   // Buka Layar Kustomisasi
   const handleOpenCustomize = (item) => {
+    if (item.available === false) return;
     setPreviousView(view);
     setCustomizingItem(item);
     setEditingCartId(null);
@@ -728,6 +686,7 @@ function TakeawayContent() {
   // Quick add item
   const handleQuickAdd = (item, e) => {
     if (e) e.stopPropagation();
+    if (item.available === false) return;
     if (item.isCombo || item.canCustomLevel) {
       handleOpenCustomize(item);
       return;
@@ -840,16 +799,16 @@ function TakeawayContent() {
       const generatedPayNum = result.data.paymentNumber;
       
       const newOrder = {
+        id: result.data.id,
+        ticketNumber: result.data.ticketNumber,
         orderNumber: generatedOrderNum,
         paymentNumber: generatedPayNum,
         orderMode: orderMode,
         tableNumber: tableNumber,
-        status: "cooking",
-        paymentMethod: paymentMethod,
-        paymentStatus: result.data.paymentStatus.toLowerCase(),
+        status: result.data.status?.toLowerCase() || "pending",
+        paymentMethod: result.data.paymentMethod?.toLowerCase() || paymentMethod,
+        paymentStatus: result.data.paymentStatus?.toLowerCase() || "pending",
         createdAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
-        estimatedMinutes: 10,
-        progressPercent: 55,
         items: selectedCartItems.map((item, index) => ({
           ...item,
           price: result.data.items?.[index]?.price ?? item.price,
@@ -862,14 +821,14 @@ function TakeawayContent() {
 
       setSubmittedOrder(newOrder);
       setTrackedOrder(newOrder);
-      setKitchenStage(2);
+      lastNotifiedStatusRef.current = null;
       addNotification({
-        type: "cooking",
-        title: "Pesanan Sedang Dimasak",
-        message: "Chef sedang menyiapkan mie dan menu pesananmu.",
-        orderNumber: generatedOrderNum || "001",
+        type: "info",
+        title: "Pesanan Diterima",
+        message: "Pesanan berhasil dibuat. Pantau status dan pembayaran melalui halaman pesanan.",
+        orderNumber: generatedOrderNum,
         url: "/takeaway",
-      }); // Tahap awal dapur: Sedang Dimasak
+      });
 
       // Hapus item yang sudah di-checkout dari keranjang
       const purchasedIds = new Set(selectedCartItems.map((item) => item.id));
@@ -899,14 +858,7 @@ function TakeawayContent() {
 
     // Filter circular category
     if (activeCircleCategory !== "all") {
-      result = result.filter((it) => {
-        if (activeCircleCategory === "mie") return it.categoryId === "mie";
-        if (activeCircleCategory === "dimsum") return it.categoryId === "dimsum";
-        if (activeCircleCategory === "combat") return it.categoryId === "gacoan-combat" || it.isCombo || it.categoryId === "combat";
-        if (activeCircleCategory === "beverage") return it.categoryId === "beverage" || it.categoryId === "minuman" || it.categoryId === "es-buah" || it.categoryId === "beverages";
-        if (activeCircleCategory === "camilan") return it.categoryId === "camilan" || it.id.includes("pangsit");
-        return true;
-      });
+      result = result.filter((it) => it.categoryId === activeCircleCategory);
 
       if (activeCircleCategory === "mie") {
         const miePriority = ["elon-dark-matter", "tesla-reactor", "spacex-orbit-crunch", "full-stack", "mars-colony-curry"];
@@ -1015,10 +967,11 @@ function TakeawayContent() {
   // Kategori icon circular data dengan gambar transparan tanpa kotak
   const categoryChips = [
     { id: "all", label: "All", img: "/images/mie-elon-musk-combo-nobg.png" },
-    { id: "mie", label: "Mie Pedas", img: "/images/menu/elon-dark-matter.png" },
-    { id: "camilan", label: "Camilan", img: "/images/menu/fusion-cheese-bites.png" },
-    { id: "beverage", label: "Minuman", img: "/images/menu/starlink-blue.png" },
-    { id: "combat", label: "Combat", img: "/images/mie-elon-musk-combo-nobg.png" },
+    ...categories.map((category) => ({
+      id: category.id,
+      label: category.title || category.name,
+      img: category.items[0]?.image || "/images/mie-elon-musk-combo-nobg.png",
+    })),
   ];
 
   // 3 Promo Banners bertema senada dengan aset studio unik (100% kloning referensi McDonald's)
@@ -1233,7 +1186,7 @@ function TakeawayContent() {
         {/* =========================================================================
             TAMPILAN 1: MENU KATALOG (view === 'menu')
            ========================================================================= */}
-        {view === "menu" && (
+        {(view === "menu" || (view === "customize" && !customizingItem)) && (
           <div data-ordering="catalog" className="flex flex-col px-4 pt-4 animate-in fade-in duration-200">
             
             <OrderingNavbar
@@ -1258,10 +1211,10 @@ function TakeawayContent() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-semibold text-gray-900 leading-tight">
-                      Pesanan Sedang Dimasak
+                      {getOrderTrackingState(trackedOrder).title}
                     </span>
                     <span className="text-[10.5px] text-gray-500 font-normal">
-                      {trackedOrder.orderMode === "dine_in" ? `Meja Nomor ${trackedOrder.tableNumber}` : "Pickup Counter"} • Pantau proses dapur
+                      {trackedOrder.orderMode === "dine_in" ? `Meja Nomor ${trackedOrder.tableNumber}` : "Pickup Counter"} • Lihat status pesanan
                     </span>
                   </div>
                 </div>
@@ -1536,7 +1489,7 @@ function TakeawayContent() {
 
             {/* 7. PRODUCT CARDS GRID (Cloning persis kartu putih 3-kolom screenshot) */}
             <div data-ordering="products" className="mt-2.5 grid grid-cols-3 gap-2 sm:gap-2.5">
-              {(activeCircleCategory === "all" && !searchQuery.trim() ? filteredItems.slice(0, 18) : filteredItems).map((item) => {
+              {filteredItems.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -1568,6 +1521,7 @@ function TakeawayContent() {
                       <p className="text-[9.5px] sm:text-[10px] text-gray-400 font-normal leading-tight mt-0.5 truncate">
                         {getItemSubtitle(item)}
                       </p>
+                      {item.available === false && <p className="text-[10px] font-semibold text-red-600 mt-1">Tidak tersedia</p>}
                     </div>
 
                     {/* Bottom Row: Price & Red Circular Plus Button */}
@@ -1578,6 +1532,7 @@ function TakeawayContent() {
 
                       <button
                         onClick={(e) => handleQuickAdd(item, e)}
+                        disabled={item.available === false}
                         aria-label={`Tambah ${item.name}`}
                         className="w-[24px] h-[24px] rounded-full bg-[#FFD400] hover:bg-[#E6BF00] text-gray-950 flex items-center justify-center shadow-xs active:scale-90 transition-transform cursor-pointer shrink-0"
                       >
@@ -1588,10 +1543,17 @@ function TakeawayContent() {
                 );
               })}
 
-              {filteredItems.length === 0 && (
+              {menuLoading && <p role="status" className="col-span-3 p-6 text-center text-sm text-gray-500">Memuat katalog menu...</p>}
+              {menuError && (
+                <div role="alert" className="col-span-3 p-6 text-center bg-white rounded-2xl border border-red-200 text-sm text-red-700">
+                  <p>{menuError}</p>
+                  <button type="button" onClick={() => setMenuRetry((retry) => retry + 1)} className="mt-3 font-bold underline">Coba lagi</button>
+                </div>
+              )}
+              {!menuLoading && !menuError && filteredItems.length === 0 && (
                 <div className="col-span-3 py-10 flex flex-col items-center justify-center text-center p-4 bg-white rounded-2xl border border-gray-150">
                   <Utensils className="w-8 h-8 text-gray-300 mb-2" />
-                  <p className="text-xs font-bold text-gray-700">Menu tidak ditemukan</p>
+                  <p className="text-xs font-bold text-gray-700">{allItems.length === 0 ? "Belum ada menu untuk kanal ini" : "Menu tidak ditemukan"}</p>
                   <p className="max-w-full [overflow-wrap:anywhere] text-[11px] text-gray-400 mt-0.5">
                     Tidak ada menu yang cocok dengan &quot;{searchQuery}&quot;
                   </p>
@@ -2416,159 +2378,7 @@ function TakeawayContent() {
               <div className="w-7 h-7" />
             </div>
 
-                        {/* Live Progress Stage Card (Horizontal Flow Timeline Sampai Finis Siap Saji) */}
-            <div className="m-4 p-5 rounded-2xl bg-white border border-gray-150 shadow-xs space-y-4">
-              
-              {/* Header Status */}
-              <div className="pb-3 border-b border-gray-100">
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider block">
-                  Status Pickup
-                </span>
-                <h2 className="text-[15.5px] font-medium text-gray-900 mt-0.5 leading-snug">
-                  {kitchenStage === 1 && "Pesanan Diterima"}
-                  {kitchenStage === 2 && "Sedang Dimasak"}
-                  {kitchenStage >= 3 && "Siap Saji di Counter!"}
-                </h2>
-              </div>
-
-                            {/* Garis Alur ke Samping Sampai Finis Siap Saji */}
-              <div className="pt-2 pb-2 px-2">
-                <div className="relative flex items-center justify-between">
-                  {/* Background Track Line & Dynamic Yellow Progress */}
-                  <div className="absolute top-[14px] left-8 right-8 h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFD400] transition-all duration-500 rounded-full"
-                      style={{
-                        width:
-                          kitchenStage === 1
-                            ? "0%"
-                            : kitchenStage === 2
-                            ? "50%"
-                            : "100%",
-                      }}
-                    />
-                  </div>
-
-                  {/* Step 1: Diterima */}
-                  <div className="w-16 flex flex-col items-center relative z-10 text-center">
-                    <div
-                      className={"w-8 h-8 rounded-full flex items-center justify-center transition-all " + (
-                        kitchenStage >= 1
-                          ? "bg-[#FFD400] text-gray-950 shadow-xs ring-4 ring-[#FFD400]/25"
-                          : "bg-gray-100 border border-gray-300 text-gray-400"
-                      )}
-                    >
-                      <Check className="w-4 h-4 stroke-[2.5]" />
-                    </div>
-                    <span
-                      className={"mt-1.5 text-[11px] font-medium leading-tight " + (
-                        kitchenStage >= 1 ? "text-gray-900" : "text-gray-400"
-                      )}
-                    >
-                      Diterima
-                    </span>
-                    <span className="text-[9.5px] text-gray-400 font-normal">Antrean Koki</span>
-                  </div>
-
-                  {/* Step 2: Dimasak */}
-                  <div className="w-16 flex flex-col items-center relative z-10 text-center">
-                    <div
-                      className={"w-8 h-8 rounded-full flex items-center justify-center transition-all " + (
-                        kitchenStage > 2
-                          ? "bg-[#FFD400] text-gray-950 shadow-xs"
-                          : kitchenStage === 2
-                          ? "bg-[#FFD400] text-gray-950 shadow-xs ring-4 ring-[#FFD400]/25"
-                          : "bg-gray-100 border border-gray-300 text-gray-400"
-                      )}
-                    >
-                      {kitchenStage > 2 ? (
-                        <Check className="w-4 h-4 stroke-[2.5]" />
-                      ) : (
-                        <Flame className={"w-4 h-4 stroke-[2.2] " + (kitchenStage === 2 ? "animate-bounce" : "")} />
-                      )}
-                    </div>
-                    <span
-                      className={"mt-1.5 text-[11px] font-medium leading-tight " + (
-                        kitchenStage >= 2 ? "text-gray-900" : "text-gray-400"
-                      )}
-                    >
-                      Dimasak
-                    </span>
-                    <span className="text-[9.5px] text-gray-400 font-normal">Proses Dapur</span>
-                  </div>
-
-                  {/* Step 3: Siap Saji (Finis) */}
-                  <div className="w-16 flex flex-col items-center relative z-10 text-center">
-                    <div
-                      className={"w-8 h-8 rounded-full flex items-center justify-center transition-all " + (
-                        kitchenStage >= 3
-                          ? "bg-[#FFD400] text-gray-950 shadow-xs ring-4 ring-[#FFD400]/25"
-                          : "bg-gray-100 border border-gray-300 text-gray-400"
-                      )}
-                    >
-                      {kitchenStage >= 3 ? (
-                        <Check className="w-4 h-4 stroke-[2.5]" />
-                      ) : (
-                        <Utensils className="w-4 h-4 stroke-[2]" />
-                      )}
-                    </div>
-                    <span
-                      className={"mt-1.5 text-[11px] font-medium leading-tight " + (
-                        kitchenStage >= 3 ? "text-gray-900" : "text-gray-400"
-                      )}
-                    >
-                      Siap Saji
-                    </span>
-                    <span
-                      className={"text-[9.5px] font-medium " + (
-                        kitchenStage >= 3 ? "text-emerald-600" : "text-gray-400"
-                      )}
-                    >
-                      Finis
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Callout Info Tahap Berjalan */}
-              <div className="p-3.5 bg-amber-50/70 border border-[#FFD400]/40 rounded-xl flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#FFD400] text-gray-950 flex items-center justify-center shrink-0 shadow-2xs font-medium text-xs">
-                  {kitchenStage >= 3 ? "3/3" : `${kitchenStage}/3`}
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-xs font-medium text-gray-900 leading-snug">
-                    {kitchenStage === 1 && "Pesanan Takeaway Diterima"}
-                    {kitchenStage === 2 && "Sedang Dimasak & Dibungkus"}
-                    {kitchenStage >= 3 && "Siap Saji di Pickup Counter!"}
-                  </span>
-                  <span className="text-[11px] text-gray-600 font-normal leading-tight mt-0.5">
-                    {kitchenStage === 1 && "Tiket antrean telah diteruskan ke dapur koki."}
-                    {kitchenStage === 2 && "Koki sedang memasak & menyiapkan bungkus pesanan Anda."}
-                    {kitchenStage >= 3 && "Pesanan siap diambil di counter kasir."}
-                  </span>
-                </div>
-              </div>
-
-              {/* Order Info */}
-              <div className="p-3.5 bg-gray-50/80 rounded-xl border border-gray-150 text-xs space-y-2">
-                <div className="flex justify-between items-center text-gray-500">
-                  <span>No. Tiket:</span>
-                  <span className="font-mono font-medium text-gray-800">
-                    {trackedOrder.orderNumber}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center text-gray-500">
-                  <span>Lokasi Ambil:</span>
-                  <span className="font-medium text-gray-800">Pickup Counter Kasir</span>
-                </div>
-                <div className="flex justify-between items-center text-gray-500">
-                  <span>Status Pembayaran:</span>
-                  <span className="text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 text-[10px]">
-                    Lunas ({trackedOrder.paymentMethod.toUpperCase()})
-                  </span>
-                </div>
-              </div>
-            </div>
+                        <OrderTracking order={trackedOrder} />
 
             {/* Bottom Actions */}
             <div data-ordering="bottom-actions" className="fixed bottom-0 max-w-[430px] w-full bg-white border-t border-gray-150 px-4 py-3 flex items-center gap-2 z-40">

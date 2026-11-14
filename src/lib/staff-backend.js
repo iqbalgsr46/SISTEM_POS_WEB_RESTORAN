@@ -6,6 +6,6 @@ export async function staffBackend(resource, { method = 'GET', body = '', claims
  if (claims) headers['X-Staff-Identity'] = signIdentity(process.env.STAFF_PROXY_SECRET,method,url.pathname+url.search,body,claims);
  const response = await fetch(url,{method,headers,body:['GET','HEAD'].includes(method)?undefined:body,cache:'no-store',signal:AbortSignal.timeout(10000)});
  const data = await response.json();
- if (!response.ok) { const error=new Error(data.message || 'Request rejected'); error.status=response.status; throw error; }
+ if (!response.ok) { const error=new Error(data.message || 'Request rejected'); error.status=response.status; if (response.status === 422 && data.errors && typeof data.errors === 'object') error.errors=data.errors; throw error; }
  return data;
 }

@@ -65,7 +65,7 @@ class OrderService
     private function priceItems(OrderSource $source, array $items): array
     {
         $menu = MenuItem::query()->where('channel', $source->channel())
-            ->whereIn('code', array_column($items, 'menu_item_id'))->get()->keyBy('code');
+            ->whereIn('code', array_column($items, 'menu_item_id'))->orderBy('id')->lockForUpdate()->get()->keyBy('code');
         $stocks = Stock::query()->whereIn('id', $menu->pluck('stock_id'))
             ->orderBy('id')->lockForUpdate()->get()->keyBy('id');
 
@@ -111,12 +111,13 @@ class OrderService
                 }
             }
 
+            $wasTerminal = $order->status->isTerminal();
             $order->update(['status' => $nextStatus]);
             if (in_array($nextStatus, [OrderStatus::Ready, OrderStatus::Completed], true)) {
                 $order->items()->update(['ready' => true]);
             }
 
-            if ($nextStatus->isTerminal() && $order->restaurant_table_id) {
+            if (! $wasTerminal && $nextStatus->isTerminal() && $order->restaurant_table_id) {
                 $table = RestaurantTable::query()->lockForUpdate()->findOrFail($order->restaurant_table_id);
                 $remainingOrder = $table->orders()->active()->latest('id')->first();
                 $table->update([

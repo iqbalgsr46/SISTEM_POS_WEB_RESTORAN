@@ -8,8 +8,12 @@ class StaffIdentity
 {
     public function handle(Request $request, Closure $next, string ...$roles)
     {
-        // Public customer tracking: single order lookup by identifier does not expose global order data.
-        if ($request->isMethod('GET') && $request->has('id')) {
+        // Public tracking is a capability granted only by an unguessable public ID.
+        // Keep it independent of stale staff sessions; all other lookups require
+        // a signed identity and a currently approved account below.
+        $publicId = $request->input('id');
+        if ($request->isMethod('GET') && $request->is('api/orders')
+            && is_string($publicId) && preg_match('/\AORD-[0-7][0-9A-HJKMNP-TV-Z]{25}\z/', $publicId)) {
             return $next($request);
         }
 

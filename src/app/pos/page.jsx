@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useCatalogRefresh } from "@/lib/use-catalog-refresh";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -95,7 +96,7 @@ const DISH_IMAGE_MAP = {
 };
 
 export function resolveDishImage(name, currentImage) {
- if (currentImage && !currentImage.includes("silver-mountain-placeholder.svg")) {
+ if (currentImage) {
  return currentImage;
  }
  const clean = (name || "").toLowerCase().trim();
@@ -386,53 +387,47 @@ export default function PosPage({ initialCart = [] } = {}) {
  const [searchQuery, setSearchQuery] = useState("");
 
  // Cart & Catalog State
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [categories, setCategories] = useState([]);
   const [cart, setCart] = useState(initialCart);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
-  const [dishes, setDishes] = useState(ALL_DISHES);
+  const [dishes, setDishes] = useState([]);
+  const [menuLoading, setMenuLoading] = useState(true);
+  const [menuError, setMenuError] = useState("");
+  const [menuRetry, setMenuRetry] = useState(0);
+  useCatalogRefresh(setMenuRetry);
 
   useEffect(() => {
     let mounted = true;
+    if (menuRetry === 0) setMenuLoading(true);
+    setMenuError("");
     getMenuCategories("pos")
       .then(({ data }) => {
         if (!mounted) return;
-        if (data && data.length > 0) {
-          const liveCats = [
-            { id: "all", name: "SEMUA MENU" },
-            ...data.map((c) => ({
-              id: c.id,
-              name: c.title.replace(" POS", "").trim(),
-            })),
-          ];
-          setCategories(liveCats);
-
-          const rawItems = data.flatMap((c) =>
-            (c.items || []).map((it) => ({
-              id: it.id,
-              code: it.id,
-              name: it.name,
-              category: c.id,
-              categoryName: c.title,
-              price: it.price,
-              formattedPrice: it.formattedPrice,
-              desc: it.shortDesc || it.description || "",
-              image: resolveDishImage(it.name, it.image),
-              stock: it.available ? "Tersedia" : "Habis",
-              menuItemId: it.id,
-            }))
-          );
-          setDishes(rawItems);
-        }
+        setCategories([
+          { id: "all", name: "SEMUA MENU" },
+          ...data.map((category) => ({ id: category.id, name: (category.title || category.name || "").replace(" POS", "").trim() })),
+        ]);
+        setDishes(data.flatMap((category) => category.items.map((item) => ({
+          ...item,
+          code: item.code || item.id,
+          category: category.id,
+          categoryName: category.title,
+          desc: item.shortDesc || item.description || "",
+          image: item.image || DEFAULT_PLACEHOLDER,
+          stock: item.available === false ? "Tidak tersedia" : "Tersedia",
+          menuItemId: item.id,
+        }))));
       })
-      .catch((error) => console.error("Gagal memuat katalog live:", error));
+      .catch((error) => { if (mounted) setMenuError(error.message || "Gagal memuat katalog menu."); })
+      .finally(() => { if (mounted) setMenuLoading(false); });
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [menuRetry]);
 
-  // Order Details (Meja 01 - 16 sesuai data tabel fisik MariaDB)
+  // Order details use active database tables, never a fixed range.
   const [orderType, setOrderType] = useState("Dine-In");
-  const [tableNumber, setTableNumber] = useState("01");
+  const [tableNumber, setTableNumber] = useState("");
   const [customerName, setCustomerName] = useState("Pelanggan");
   const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [cashTendered, setCashTendered] = useState(100000);
@@ -440,6 +435,7 @@ export default function PosPage({ initialCart = [] } = {}) {
   // Live Orders & Live Tables from MariaDB
   const [liveOrders, setLiveOrders] = useState([]);
   const [liveTables, setLiveTables] = useState([]);
+  const [tableError, setTableError] = useState("");
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState("");
   const [orderFilter, setOrderFilter] = useState("all");
@@ -487,9 +483,17 @@ export default function PosPage({ initialCart = [] } = {}) {
       }
       if (resTables.ok) {
         const tData = await resTables.json();
+        if (!Array.isArray(tData)) throw new Error("Format daftar meja tidak valid.");
         setLiveTables(tData);
+        setTableError("");
+        setTableNumber((current) => tData.some((table) => table.number === current && table.status !== "cleaning") ? current : "");
+      } else {
+        setLiveTables([]);
+        setTableError("Gagal memuat meja. Coba sinkronisasi kembali.");
       }
     } catch (err) {
+      setLiveTables([]);
+      setTableError("Gagal memuat meja. Periksa koneksi layanan.");
       console.error("Gagal sinkronisasi pesanan kasir:", err);
     } finally {
       setIsSyncing(false);
@@ -548,6 +552,7 @@ export default function PosPage({ initialCart = [] } = {}) {
 
  // Cart Handlers
  const handleAddToCart = (dish) => {
+ if (dish.available === false) return;
  setCart((prev) => {
  const existing = prev.find((it) => it.name === dish.name);
  if (existing) {
@@ -600,7 +605,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  return;
  }
 
- if (orderType === "Dine-In" && !tableNumber) {
+ if (orderType === "Dine-In" && !liveTables.some((table) => table.number === tableNumber && table.status !== "cleaning")) {
  showToast("Pilih nomor meja terlebih dahulu!");
  setShowTablePicker(true);
  return;
@@ -613,7 +618,6 @@ export default function PosPage({ initialCart = [] } = {}) {
         source: "Kasir Fisik",
         tableNumber: formattedTableNumber,
         customerName: orderType === "Dine-In" ? `Meja ${formattedTableNumber}` : (customerName || "Pelanggan POS"),
-        customerPhone: "081200000000",
         paymentMethod: paymentMethod === "CASH" ? "CASH" : "QRIS",
         notes: orderType === "Dine-In" ? `Dine-In Meja ${formattedTableNumber}` : "Takeaway Kasir",
         items: cart.map((it) => ({
@@ -629,7 +633,7 @@ export default function PosPage({ initialCart = [] } = {}) {
         body: payload,
       });
 
-      const finalTicket = result?.ticketNumber || result?.ticket || "C-0000";
+      const finalTicket = result.ticketNumber;
 
       setPrintedReceipt({
         ticketNumber: finalTicket,
@@ -641,13 +645,14 @@ export default function PosPage({ initialCart = [] } = {}) {
         orderType: orderType,
         tableNumber: formattedTableNumber,
         customerName: orderType === "Dine-In" ? `Meja ${formattedTableNumber}` : customerName,
-        items: [...cart],
-        subtotal: subtotal,
-        serviceFee: 2000,
-        grandTotal: subtotal + 2000,
-        cashTendered: paymentMethod === "CASH" ? cashTendered : (subtotal + 2000),
-        changeDue: paymentMethod === "CASH" ? Math.max(0, cashTendered - (subtotal + 2000)) : 0,
-        paymentMethod: paymentMethod,
+        items: result.items.map((item) => ({ ...item, name: item.name.replace(/^\d+x\s+/, "") })),
+        subtotal: result.subtotal,
+        serviceFee: result.serviceFee,
+        grandTotal: result.totalAmount,
+        cashTendered: paymentMethod === "CASH" ? cashTendered : result.totalAmount,
+        changeDue: paymentMethod === "CASH" ? Math.max(0, cashTendered - result.totalAmount) : 0,
+        paymentMethod: result.paymentMethod,
+        paymentStatus: result.paymentStatus,
         cashierName: cashierUser.name,
       });
 
@@ -877,9 +882,16 @@ export default function PosPage({ initialCart = [] } = {}) {
  </span>
  </div>
 
- {filteredDishes.length === 0 ? (
+ {menuLoading ? (
+ <p role="status" className="p-12 text-center text-sm text-[#8E90A6]">Memuat katalog menu...</p>
+ ) : menuError ? (
+ <div role="alert" className="bg-[#252836] rounded-2xl p-8 text-center text-sm text-[#EA7C69]">
+ <p>{menuError}</p>
+ <button type="button" onClick={() => setMenuRetry((retry) => retry + 1)} className="mt-3 font-semibold underline">Coba lagi</button>
+ </div>
+ ) : filteredDishes.length === 0 ? (
  <div className="bg-[#252836] rounded-2xl border border-[#2D303E] p-12 text-center text-[#8E90A6] space-y-2 mt-4">
- <p className="text-xs font-medium">Menu tidak ditemukan untuk kata kunci tersebut.</p>
+ <p className="text-xs font-medium">{dishes.length === 0 ? "Belum ada menu untuk kanal POS." : "Menu tidak ditemukan untuk kata kunci tersebut."}</p>
  <button
  onClick={() => {
  setSearchQuery("");
@@ -930,7 +942,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  Rp{dish.price.toLocaleString("id-ID")}
  </p>
  <p className="text-[10.5px] font-normal text-[#8E90A6]">
- {dish.stock || "15 Porsi tersedia"}
+ {dish.stock}
  </p>
  </div>
  </div>
@@ -1335,7 +1347,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  >
  <div>
  <span className="text-[10px] font-medium text-[#8E90A6] block">Nomor Meja Tamu</span>
- <span className="text-xs font-semibold text-white">Meja {tableNumber}</span>
+ <span className="text-xs font-semibold text-white">{tableNumber ? `Meja ${tableNumber}` : "Pilih meja"}</span>
  </div>
  <ChevronRight className="w-4 h-4 text-[#8E90A6]" />
  </div>
@@ -1590,6 +1602,7 @@ export default function PosPage({ initialCart = [] } = {}) {
  </div>
  </div>
 
+ <p className="text-xs text-amber-300">Status pembayaran: {printedReceipt.paymentStatus === "PAID" ? "Lunas" : "Menunggu verifikasi kasir"}</p>
  {/* Daftar Item Pembelian */}
  <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1 text-xs pos-scrollbar">
  {printedReceipt.items.map((it, idx) => (
@@ -1681,18 +1694,20 @@ export default function PosPage({ initialCart = [] } = {}) {
  </button>
  </div>
 
+ {tableError && <p role="alert" className="text-red-300">{tableError}</p>}
+ {!tableError && liveTables.length === 0 && <p role="status">{isSyncing ? "Memuat meja..." : "Belum ada meja aktif."}</p>}
  <div className="grid grid-cols-4 gap-2.5">
-   {Array.from({ length: 16 }, (_, i) => {
-     const tbl = String(i + 1).padStart(2, "0");
+   {liveTables.map((dbTable) => {
+     const tbl = dbTable.number;
      const isCurrent = tableNumber === tbl;
-     const dbTable = liveTables.find((t) => t.number === tbl);
-     const status = dbTable ? dbTable.status : "available";
+     const status = dbTable.status;
      const isAvailable = status === "available";
      const statusLabel = status === "occupied" ? "Terisi" : status === "cleaning" ? "Bersih" : "Meja";
 
      return (
        <button
          key={tbl}
+         disabled={status === "cleaning"}
          onClick={() => {
            setTableNumber(tbl);
            setShowTablePicker(false);

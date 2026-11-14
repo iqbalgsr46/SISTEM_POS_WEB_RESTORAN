@@ -45,6 +45,7 @@ export default function LoginPage() {
     }
   }, [status, account?.status, targetWorkspace, router]);
 
+  // Tombol login memulai OAuth Google, lalu kembali ke halaman ini untuk pemeriksaan status akun.
   const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
     signIn('google', {callbackUrl:'/login'});
