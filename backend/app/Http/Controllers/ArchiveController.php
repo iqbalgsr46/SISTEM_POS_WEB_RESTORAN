@@ -64,7 +64,10 @@ class ArchiveController extends Controller
             if ($data['type'] === 'menu') {
                 $item = MenuItem::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
                 if ($item->stock_id) {
-                    MenuItem::onlyTrashed()->where('stock_id', $item->stock_id)->restore();
+                    MenuItem::onlyTrashed()
+                        ->where('stock_id', $item->stock_id)
+                        ->get()
+                        ->each(fn ($sibling) => $sibling->restore());
                 } else {
                     $item->restore();
                 }
@@ -97,7 +100,10 @@ class ArchiveController extends Controller
             if ($data['type'] === 'menu') {
                 $item = MenuItem::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
                 if ($item->stock_id) {
-                    MenuItem::onlyTrashed()->where('stock_id', $item->stock_id)->forceDelete();
+                    MenuItem::onlyTrashed()
+                        ->where('stock_id', $item->stock_id)
+                        ->get()
+                        ->each(fn ($sibling) => $sibling->forceDelete());
                 } else {
                     $item->forceDelete();
                 }

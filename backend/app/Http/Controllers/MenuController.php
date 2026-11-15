@@ -209,12 +209,13 @@ class MenuController extends Controller
             // Update baris menu utama (LastUpdatedDate & LastUpdatedBy otomatis terisi oleh trait HasDefaultFields)
             $item->update($fields);
 
-            // Jika mode sinkron aktif, update juga menu yang sama di kanal lain
+            // Jika mode sinkron aktif, update juga setiap menu yang sama di kanal lain via instance model agar event updating terpanggil
             if ($syncAll && $item->stock_id) {
                 $syncFields = array_diff_key($fields, array_flip(['channel', 'code', 'stock_id']));
                 MenuItem::where('stock_id', $item->stock_id)
                     ->where('id', '!=', $item->id)
-                    ->update($syncFields);
+                    ->get()
+                    ->each(fn ($sibling) => $sibling->update($syncFields));
             }
 
             return $item;
@@ -244,8 +245,10 @@ class MenuController extends Controller
         DB::transaction(function () use ($data, $syncAll) {
             $item = MenuItem::query()->lockForUpdate()->findOrFail($data['id']);
             if ($syncAll && $item->stock_id) {
-                // Hapus di seluruh kanal yang membagikan menu ini
-                MenuItem::where('stock_id', $item->stock_id)->delete();
+                // Hapus di seluruh kanal via instance model agar event deleted terpanggil untuk setiap baris
+                MenuItem::where('stock_id', $item->stock_id)
+                    ->get()
+                    ->each(fn ($sibling) => $sibling->delete());
             } else {
                 $item->delete();
             }
