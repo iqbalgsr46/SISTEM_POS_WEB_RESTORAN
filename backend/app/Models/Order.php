@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\OrderSource;
 use App\Enums\OrderStatus;
+use App\Models\Traits\HasDefaultFields;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,10 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    use HasDefaultFields;
+
     protected $fillable = [
         'public_id', 'ticket_number', 'source', 'restaurant_table_id', 'customer_name',
         'customer_phone', 'notes', 'status', 'payment_method', 'payment_status',
         'subtotal', 'service_fee', 'tax_amount', 'total_amount',
+        'CompanyCode', 'Status', 'IsDeleted', 'CreatedBy', 'CreatedDate', 'LastUpdatedBy', 'LastUpdatedDate',
     ];
 
     protected function casts(): array

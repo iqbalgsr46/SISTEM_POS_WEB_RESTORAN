@@ -66,6 +66,7 @@ import {
 import { dineInInfo } from "@/data/dinein-data";
 import { takeawayStore } from "@/data/takeaway-data";
 import { getMenuCategories, submitOrder } from "@/lib/restaurant-api";
+import { formatShortCategoryName } from "@/lib/utils";
 
 function getGreetingByHour() {
   const hour = new Date().getHours();
@@ -969,7 +970,7 @@ function TakeawayContent() {
     { id: "all", label: "All", img: "/images/mie-elon-musk-combo-nobg.png" },
     ...categories.map((category) => ({
       id: category.id,
-      label: category.title || category.name,
+      label: formatShortCategoryName(category.title || category.name),
       img: category.items[0]?.image || "/images/mie-elon-musk-combo-nobg.png",
     })),
   ];
@@ -1004,17 +1005,17 @@ function TakeawayContent() {
       headlineWhite: "Level Pedas.",
       headlineAccent: "Nendang Puas.",
       headlineAccentColor: "text-[#FFBC0D]",
-      description: "Sensasi mie pedas manis berpadu minuman dingin segar pelepas dahaga!",
+      description: "Sensasi mie pedas gurih Tesla Reactor dengan racikan bumbu khas Elon Musk!",
       buttonText: "Order Now",
-      buttonBg: "bg-[#FFD400] hover:bg-[#E6BF00]",
-      buttonShadow: "shadow-[0_4px_16px_rgba(255,212,0,0.35)]",
+      buttonBg: "bg-[#FFBC0D] hover:bg-[#E6BF00]",
+      buttonShadow: "shadow-[0_4px_16px_rgba(255,188,13,0.35)]",
       buttonTextColor: "text-gray-950",
       buttonArrowColor: "text-gray-950",
-      image: "/images/silver-mountain-placeholder.svg",
-      imageAlt: "Paket Mie Gacoan Manis Pedas",
+      image: "/images/menu/tesla-reactor-hero.png",
+      imageAlt: "Tesla Reactor Mie Elon Musk",
       spotlightGradient:
         "radial-gradient(circle, rgba(255, 120, 20, 0.35) 0%, rgba(255, 107, 0, 0.12) 45%, rgba(255, 107, 0, 0) 70%)",
-      itemId: "mie-gacoan",
+      itemId: "tesla-reactor",
     },
     {
       id: "banner-3",
@@ -1024,17 +1025,17 @@ function TakeawayContent() {
       headlineWhite: "Crispy Bite.",
       headlineAccent: "Melty Cheese.",
       headlineAccentColor: "text-[#FFBC0D]",
-      description: "Kelezatan Udang Keju lumer berpadu Thai Tea dingin segar favoritmu!",
+      description: "Kelezatan Fusion Cheese Bites renyah keemasan isi keju lumer bikin nagih!",
       buttonText: "Order Now",
-      buttonBg: "bg-[#FFD400] hover:bg-[#E6BF00]",
-      buttonShadow: "shadow-[0_4px_16px_rgba(255,212,0,0.35)]",
+      buttonBg: "bg-[#FFBC0D] hover:bg-[#E6BF00]",
+      buttonShadow: "shadow-[0_4px_16px_rgba(255,188,13,0.35)]",
       buttonTextColor: "text-gray-950",
       buttonArrowColor: "text-gray-950",
-      image: "/images/silver-mountain-placeholder.svg",
-      imageAlt: "Paket Dimsum Udang Keju Lumer",
+      image: "/images/menu/fusion-cheese-bites-hero.png",
+      imageAlt: "Fusion Cheese Bites Elon Musk",
       spotlightGradient:
         "radial-gradient(circle, rgba(255, 120, 20, 0.35) 0%, rgba(255, 107, 0, 0.12) 45%, rgba(255, 107, 0, 0) 70%)",
-      itemId: "udang-keju",
+      itemId: "fusion-cheese-bites",
     },
   ];
 
@@ -1352,7 +1353,13 @@ function TakeawayContent() {
                               e.stopPropagation();
                               return;
                             }
-                            const target = allItems.find((i) => i.id === banner.itemId) || allItems[0];
+                            const target =
+                              allItems.find(
+                                (i) =>
+                                  i.id === banner.itemId ||
+                                  i.id.endsWith(`-${banner.itemId}`) ||
+                                  i.id.includes(banner.itemId)
+                              ) || allItems[0];
                             if (target) handleOpenCustomize(target);
                           }}
                           className={`mt-3 ${banner.buttonBg} ${banner.buttonTextColor || "text-gray-950"} pl-3.5 pr-1.5 py-1.5 rounded-full inline-flex items-center gap-2 ${banner.buttonShadow} active:scale-95 transition-all cursor-pointer select-none self-start group`}

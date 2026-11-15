@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasDefaultFields;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MenuItem extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDefaultFields;
 
     protected $fillable = [
         'channel', 'code', 'stock_id', 'name', 'category_id', 'category_title',
         'price', 'station', 'sort_order', 'details',
+        'CompanyCode', 'Status', 'IsDeleted', 'CreatedBy', 'CreatedDate', 'LastUpdatedBy', 'LastUpdatedDate',
     ];
 
     protected function casts(): array

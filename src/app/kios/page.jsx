@@ -26,6 +26,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { getMenuCategories, requestRestaurant } from "@/lib/restaurant-api";
+import { formatShortCategoryName } from "@/lib/utils";
 
 export default function KiosLobbyPage() {
   // Kiosk Screens: 'attract' (Screensaver), 'mode' (Dine-in vs Takeaway), 'menu', 'customize', 'payment', 'ticket'
@@ -420,7 +421,7 @@ export default function KiosLobbyPage() {
             <div className="px-4 py-2.5 bg-[#FAF8F5] border-b border-[#F0EDEA] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
               {[
                 { id: "all", label: "Semua Menu" },
-                ...categories.map((category) => ({ id: category.id, label: category.title || category.name })),
+                ...categories.map((category) => ({ id: category.id, label: formatShortCategoryName(category.title || category.name) })),
               ].map((c) => (
                 <button
                   key={c.id}

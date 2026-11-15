@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasDefaultFields;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RestaurantTable extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasDefaultFields;
 
-    protected $fillable = ['number', 'status', 'active_ticket', 'occupied_at'];
+    protected $fillable = [
+        'number', 'status', 'active_ticket', 'occupied_at',
+        'CompanyCode', 'Status', 'IsDeleted', 'CreatedBy', 'CreatedDate', 'LastUpdatedBy', 'LastUpdatedDate',
+    ];
 
     protected function casts(): array
     {

@@ -5,7 +5,7 @@ import { adminNavigation, isAdminRouteActive } from '../src/components/admin/adm
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('admin routes remain stable across refresh, nested paths, and trailing slashes', () => {
-  assert.deepEqual(adminNavigation.map(item => item.href), ['/admin', '/admin/orders', '/admin/menu', '/admin/stock', '/admin/tables', '/admin/accounts', '/admin/reports']);
+  assert.deepEqual(adminNavigation.map(item => item.href), ['/admin', '/admin/orders', '/admin/menu', '/admin/stock', '/admin/tables', '/admin/accounts', '/admin/reports', '/admin/archive']);
   for (const { href } of adminNavigation) {
     assert.equal(adminNavigation.filter(item => isAdminRouteActive(href, item.href)).length, 1);
     assert.equal(isAdminRouteActive(`${href}/`, href), true);

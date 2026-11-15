@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
@@ -13,6 +14,9 @@ Route::middleware(RequireLocalDevelopment::class)->group(function () {
     Route::delete('/accounts', [\App\Http\Controllers\StaffAuthController::class, 'destroy'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
     Route::get('/accounts', [\App\Http\Controllers\StaffAuthController::class, 'index'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
     Route::patch('/accounts', [\App\Http\Controllers\StaffAuthController::class, 'update'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
+    Route::get('/archive', [ArchiveController::class, 'index'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
+    Route::post('/archive/restore', [ArchiveController::class, 'restore'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
+    Route::post('/archive/purge', [ArchiveController::class, 'purge'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
     Route::get('/menu', [MenuController::class, 'index']);
     Route::post('/menu', [MenuController::class, 'store'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');
     Route::delete('/menu', [MenuController::class, 'destroy'])->middleware(\App\Http\Middleware\StaffIdentity::class.':admin');

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { getMenuCategories, requestRestaurant } from "@/lib/restaurant-api";
+import { formatShortCategoryName } from "@/lib/utils";
 import {
  Search,
  Plus,
@@ -405,7 +406,7 @@ export default function PosPage({ initialCart = [] } = {}) {
         if (!mounted) return;
         setCategories([
           { id: "all", name: "SEMUA MENU" },
-          ...data.map((category) => ({ id: category.id, name: (category.title || category.name || "").replace(" POS", "").trim() })),
+          ...data.map((category) => ({ id: category.id, name: formatShortCategoryName(category.title || category.name).toUpperCase() })),
         ]);
         setDishes(data.flatMap((category) => category.items.map((item) => ({
           ...item,

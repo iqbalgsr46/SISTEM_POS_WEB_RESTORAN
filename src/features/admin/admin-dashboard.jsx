@@ -134,6 +134,7 @@ export default function AdminDashboard({
   const descriptions = {
     Dashboard: 'Ringkasan penjualan, pesanan, dan operasional restoran.',
     Ketersediaan: 'Kelola stok bersama untuk seluruh kanal pemesanan.',
+    Stock: 'Kelola stok bersama untuk seluruh kanal pemesanan.',
     Laporan: 'Tinjau ringkasan penjualan berdasarkan rentang tanggal Jakarta.'
   };
 
@@ -414,18 +415,20 @@ export default function AdminDashboard({
                       {report && report.orders.length > 0 && (
                         <div className="overflow-x-auto">
                           <table className="w-full text-left text-xs whitespace-nowrap">
-                            <thead className="border-y border-slate-100 bg-slate-50/70 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <thead className="border-b border-[#F0F2F6] bg-[#F8F9FE] text-xs font-medium text-slate-500">
                               <tr>
-                                <th className="px-3 py-2.5">Tiket</th>
-                                <th className="px-3 py-2.5">Pelanggan / Meja</th>
-                                <th className="px-3 py-2.5">Total Nilai</th>
-                                <th className="px-3 py-2.5">Pembayaran</th>
-                                <th className="px-3 py-2.5">Status Masak</th>
+                                <th className="w-12 px-4 py-3 font-medium">No</th>
+                                <th className="px-4 py-3 font-medium">Tiket</th>
+                                <th className="px-4 py-3 font-medium">Pelanggan / Meja</th>
+                                <th className="px-4 py-3 font-medium">Total Nilai</th>
+                                <th className="px-4 py-3 font-medium">Pembayaran</th>
+                                <th className="px-4 py-3 font-medium">Status Masak</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
-                              {matchingOrders.slice(0, 5).map(order => (
-                                <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
+                            <tbody className="divide-y divide-[#F0F2F6]">
+                              {matchingOrders.slice(0, 5).map((order, idx) => (
+                                <tr key={order.id} className={`${idx % 2 === 1 ? 'bg-[#F8F9FE]' : 'bg-white'} hover:bg-[#EEF1FA] transition-colors`}>
+                                  <td className="w-12 px-4 py-3 font-medium text-slate-400 tabular-nums">{idx + 1}</td>
                                   <td className="px-3 py-3 font-semibold text-slate-900">
                                     {order.ticketNumber}
                                     <span className="block text-xs font-normal text-slate-400">{order.source}</span>
@@ -440,23 +443,23 @@ export default function AdminDashboard({
                                     {money(order.totalAmount)}
                                   </td>
                                   <td className="px-3 py-3">
-                                    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                    <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-center text-xs font-semibold ${
                                       order.paymentStatus === 'paid'
-                                        ? 'bg-emerald-50 text-emerald-700'
-                                        : 'bg-amber-50 text-amber-700'
+                                        ? 'bg-emerald-100 text-emerald-700'
+                                        : 'bg-amber-100 text-amber-800'
                                     }`}>
                                       {order.paymentStatus === 'paid' ? 'Lunas' : order.paymentStatus || 'Pending'}
                                     </span>
                                   </td>
                                   <td className="px-3 py-3">
-                                    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                    <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-center text-xs font-semibold ${
                                       order.status === 'COMPLETED'
                                         ? 'bg-slate-100 text-slate-700'
                                         : order.status === 'READY'
-                                        ? 'bg-blue-50 text-blue-700'
+                                        ? 'bg-blue-100 text-blue-700'
                                         : order.status === 'COOKING'
-                                        ? 'bg-amber-50 text-amber-700'
-                                        : 'bg-red-50 text-red-700'
+                                        ? 'bg-amber-100 text-amber-800'
+                                        : 'bg-rose-100 text-rose-700'
                                     }`}>
                                       {statusLabels[order.status] || order.status}
                                     </span>
@@ -697,19 +700,21 @@ export default function AdminDashboard({
                   {report && (
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs whitespace-nowrap">
-                        <thead className="border-y border-slate-100 bg-slate-50/70 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <thead className="border-b border-[#F0F2F6] bg-[#F8F9FE] text-xs font-medium text-slate-500">
                           <tr>
-                            <th className="px-3 py-2.5">Pesanan</th>
-                            <th className="px-3 py-2.5">Pelanggan / Meja</th>
-                            <th className="px-3 py-2.5">Total</th>
-                            <th className="px-3 py-2.5">Pembayaran</th>
-                            <th className="px-3 py-2.5">Status</th>
-                            <th className="px-3 py-2.5">Tindakan</th>
+                            <th className="w-12 px-4 py-3 font-medium">No</th>
+                            <th className="px-4 py-3 font-medium">Pesanan</th>
+                            <th className="px-4 py-3 font-medium">Pelanggan / Meja</th>
+                            <th className="px-4 py-3 font-medium">Total</th>
+                            <th className="px-4 py-3 font-medium">Pembayaran</th>
+                            <th className="px-4 py-3 font-medium">Status</th>
+                            <th className="px-4 py-3 font-medium">Tindakan</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
-                          {matchingOrders.map(order => (
-                            <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
+                        <tbody className="divide-y divide-[#F0F2F6]">
+                          {matchingOrders.map((order, idx) => (
+                            <tr key={order.id} className={`${idx % 2 === 1 ? 'bg-[#F8F9FE]' : 'bg-white'} hover:bg-[#EEF1FA] transition-colors`}>
+                              <td className="w-12 px-3 py-3 font-medium text-slate-400 tabular-nums">{idx + 1}</td>
                               <td className="px-3 py-3 font-semibold text-slate-900">
                                 {order.ticketNumber}
                                 <span className="block text-xs font-normal text-slate-400">{order.source}</span>
@@ -724,23 +729,23 @@ export default function AdminDashboard({
                                 {money(order.totalAmount)}
                               </td>
                               <td className="px-3 py-3">
-                                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-center text-xs font-semibold ${
                                   order.paymentStatus === 'paid'
-                                    ? 'bg-emerald-50 text-emerald-700'
-                                    : 'bg-amber-50 text-amber-700'
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-amber-100 text-amber-800'
                                 }`}>
                                   {order.paymentStatus === 'paid' ? 'Lunas' : order.paymentStatus || 'Pending'}
                                 </span>
                               </td>
                               <td className="px-3 py-3">
-                                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-center text-xs font-semibold ${
                                   order.status === 'COMPLETED'
                                     ? 'bg-slate-100 text-slate-700'
                                     : order.status === 'READY'
-                                    ? 'bg-blue-50 text-blue-700'
+                                    ? 'bg-blue-100 text-blue-700'
                                     : order.status === 'COOKING'
-                                    ? 'bg-amber-50 text-amber-700'
-                                    : 'bg-red-50 text-red-700'
+                                    ? 'bg-amber-100 text-amber-800'
+                                    : 'bg-rose-100 text-rose-700'
                                 }`}>
                                   {statusLabels[order.status] || order.status}
                                 </span>
@@ -786,11 +791,11 @@ export default function AdminDashboard({
               )}
 
               {/* 6. MENU & KETERSEDIAAN TABS */}
-              {(tab === 'Menu' || tab === 'Ketersediaan') && (
+              {(tab === 'Menu' || tab === 'Ketersediaan' || tab === 'Stock') && (
                 <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-xs space-y-5">
                   <div>
                     <h2 className="text-sm font-semibold text-slate-800">
-                      {tab === 'Menu' ? 'Katalog menu · Dine-in' : 'Ketersediaan menu'}
+                      {tab === 'Menu' ? 'Katalog menu · Dine-in' : 'Stok menu'}
                     </h2>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {tab === 'Menu'
@@ -821,8 +826,10 @@ export default function AdminDashboard({
                         </div>
 
                         {tab === 'Menu' ? (
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            item.available ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                          <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-center text-xs font-semibold ${
+                            item.available
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-rose-100 text-rose-700'
                           }`}>
                             {item.available ? 'Tersedia' : 'Habis'}
                           </span>
@@ -989,22 +996,22 @@ export default function AdminDashboard({
                                     </span>
                                   )}
                                   {acc.status === 'approved' && (
-                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                    <span className="inline-flex min-w-[72px] items-center justify-center px-3 py-1 rounded-full text-center text-xs font-semibold bg-emerald-100 text-emerald-700">
                                       Aktif
                                     </span>
                                   )}
                                   {acc.status === 'pending' && (
-                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200/60 animate-pulse">
+                                    <span className="inline-flex min-w-[72px] items-center justify-center px-3 py-1 rounded-full text-center text-xs font-semibold bg-amber-100 text-amber-800 animate-pulse">
                                       Menunggu
                                     </span>
                                   )}
                                   {acc.status === 'disabled' && (
-                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                                    <span className="inline-flex min-w-[72px] items-center justify-center px-3 py-1 rounded-full text-center text-xs font-semibold bg-slate-100 text-slate-600">
                                       Nonaktif
                                     </span>
                                   )}
                                   {acc.status === 'rejected' && (
-                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                                    <span className="inline-flex min-w-[72px] items-center justify-center px-3 py-1 rounded-full text-center text-xs font-semibold bg-rose-100 text-rose-700">
                                       Ditolak
                                     </span>
                                   )}
@@ -1158,15 +1165,15 @@ export default function AdminDashboard({
 
                       <div className="overflow-x-auto">
                         <table className="w-full text-left text-xs whitespace-nowrap">
-                          <thead className="border-y border-slate-100 bg-slate-50/70 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                          <thead className="border-b border-[#F0F2F6] bg-[#F8F9FE] text-xs font-medium text-slate-500">
                             <tr>
-                              <th className="px-3 py-2.5">Tanggal</th>
-                              <th className="px-3 py-2.5">Total Pendapatan Lunas</th>
+                              <th className="px-4 py-3 font-medium">Tanggal</th>
+                              <th className="px-4 py-3 font-medium">Total Pendapatan Lunas</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-[#F0F2F6]">
                             {report.daily.map(d => (
-                              <tr key={d.date} className="hover:bg-slate-50/50">
+                              <tr key={d.date} className="hover:bg-[#F9FAFD] transition-colors">
                                 <td className="px-3 py-2.5 font-medium text-slate-800">{d.date}</td>
                                 <td className="px-3 py-2.5 font-semibold text-slate-900">{money(d.revenue)}</td>
                               </tr>

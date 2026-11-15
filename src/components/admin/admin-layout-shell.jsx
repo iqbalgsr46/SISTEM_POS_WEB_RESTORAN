@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
-import { BarChart3, Bell, ChefHat, Grid, LayoutGrid, LogOut, Menu, PackageCheck, Search, ShoppingBag, Store, Users, UtensilsCrossed, X } from 'lucide-react';
+import { Archive, BarChart3, Bell, ChefHat, Grid, LayoutGrid, LogOut, Menu, PackageCheck, Search, ShoppingBag, Store, Users, UtensilsCrossed, X } from 'lucide-react';
 import { adminNavigation, isAdminRouteActive } from './admin-navigation.mjs';
 
-const icons = { dashboard: LayoutGrid, orders: ShoppingBag, menu: UtensilsCrossed, stock: PackageCheck, tables: Grid, accounts: Users, reports: BarChart3 };
+const icons = { dashboard: LayoutGrid, orders: ShoppingBag, menu: UtensilsCrossed, stock: PackageCheck, tables: Grid, accounts: Users, reports: BarChart3, archive: Archive };
 const focusClass = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFC903] focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950';
 
 export default function AdminLayoutShell({ children, account }) {

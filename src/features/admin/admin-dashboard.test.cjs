@@ -102,7 +102,7 @@ test('compact stock, tables, and accounts render aligned semantic lists with rea
     const tables = renderToStaticMarkup(React.createElement(Pages['/admin/tables']));
     assert.ok(tables.includes('aria-label="Status meja 1"'));
     assert.match(tables, /<option value="available" disabled=""/);
-    assert.match(tables, /<button[^>]*disabled=""[^>]*>Arsipkan<\/button>/);
+    assert.match(tables, /<button[^>]*disabled=""[^>]*>.*?Hapus.*?<\/button>/s);
     assert.ok(tables.includes('>Simpan</button>'));
     setSession({ user: { email: 'self@example.test', account: { id: 'self' } } });
     setResource(resource([{ id: 'self', name: 'Self', email: 'self@example.test', role: 'admin', status: 'approved' }, { id: 'new', email: 'new@example.test', role: 'cashier', status: 'pending' }]));
