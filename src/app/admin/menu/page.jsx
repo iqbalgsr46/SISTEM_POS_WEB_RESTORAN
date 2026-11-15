@@ -5,11 +5,17 @@ import AdminSelect from '@/components/admin/admin-select';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminShell, EmptyState, Feedback, Field, buttonClass, inputClass, money, secondaryClass, useAdminResource } from '@/components/admin/admin-ui';
 
-const channels = [['dine_in', 'Dine-in'], ['takeaway', 'Takeaway'], ['kios', 'Kios'], ['pos', 'Kasir / POS']];
+const channels = [
+  ['all', 'Semua kanal (Ditautkan)'],
+  ['dine_in', 'Dine-in'],
+  ['takeaway', 'Takeaway'],
+  ['kios', 'Kios'],
+  ['pos', 'Kasir / POS'],
+];
 const blank = { name: '', category_id: '', category_title: '', price: '', station: 'kitchen', image: '', description: '', shortDesc: '', sort_order: 0 };
 
 export default function MenuAdminPage() {
-  const [channel, setChannel] = useState('dine_in');
+  const [channel, setChannel] = useState('all');
   const resource = useAdminResource(`menu?channel=${channel}`);
   const [search, setSearch] = useState('');
   const [editor, setEditor] = useState(null);
@@ -78,19 +84,44 @@ export default function MenuAdminPage() {
 
   const save = async event => {
     event.preventDefault();
-    const body = { ...form, channel, price: Number(form.price), sort_order: Number(form.sort_order) };
+    const body = {
+      ...form,
+      channel,
+      sync_all: channel === 'all',
+      price: Number(form.price),
+      sort_order: Number(form.sort_order),
+    };
     if (!editor.isNew) body.id = editor.adminId;
-    if (await resource.mutate('menu', editor.isNew ? 'POST' : 'PATCH', body, editor.isNew ? 'Menu baru berhasil ditambahkan.' : 'Menu berhasil diperbarui.')) setEditor(null);
+    if (await resource.mutate(
+      'menu',
+      editor.isNew ? 'POST' : 'PATCH',
+      body,
+      editor.isNew
+        ? (channel === 'all' ? 'Menu baru berhasil ditambahkan ke semua kanal.' : 'Menu baru berhasil ditambahkan.')
+        : (channel === 'all' ? 'Menu berhasil diperbarui di semua kanal.' : 'Menu berhasil diperbarui.')
+    )) {
+      setEditor(null);
+    }
   };
 
   const archive = async item => {
-    if (!window.confirm(`Hapus "${item.name}" dari kanal ${channel}? Menu akan dipindahkan ke menu Arsip dan dapat dipulihkan kapan saja.`)) return;
-    await resource.mutate('menu', 'DELETE', { id: item.adminId }, 'Menu berhasil dipindahkan ke Arsip.');
+    const targetScope = channel === 'all' ? 'seluruh kanal pemesanan' : `kanal ${channel}`;
+    if (!window.confirm(`Hapus "${item.name}"? Menu akan dipindahkan ke Arsip dan dinonaktifkan di ${targetScope}.`)) return;
+    await resource.mutate(
+      'menu',
+      'DELETE',
+      { id: item.adminId, channel, sync_all: channel === 'all' },
+      'Menu berhasil dipindahkan ke Arsip.'
+    );
   };
 
-  return <AdminShell title="Kelola menu" description="Atur katalog dan harga per kanal. Perubahan tersimpan di server dan digunakan pada halaman pemesanan." action={<button className={buttonClass} disabled={resource.busy || resource.loading || !!resource.error} onClick={() => openEditor(null)}>Tambah menu</button>}>
+  return <AdminShell
+    title="Kelola menu"
+    description="Atur katalog dan harga menu terpadu. Perubahan otomatis berlaku untuk seluruh kanal pemesanan (Dine-in, Takeaway, Kios, dan Kasir POS)."
+    action={<button className={buttonClass} disabled={resource.busy || resource.loading || !!resource.error} onClick={() => openEditor(null)}>Tambah menu</button>}
+  >
     <div className="flex flex-wrap items-end gap-3 rounded-xl border border-neutral-200 bg-white p-4">
-      <div className="w-full sm:w-48">
+      <div className="w-full sm:w-56">
         <Field label="Kanal"><AdminSelect className={inputClass} value={channel} disabled={resource.busy || !!editor} onChange={e => setChannel(e.target.value)}>{channels.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</AdminSelect></Field>
       </div>
       <div className="min-w-0 flex-1 sm:min-w-[220px]">
@@ -179,11 +210,11 @@ export default function MenuAdminPage() {
 
         <Field label="Deskripsi singkat"><input className={inputClass} maxLength={200} value={form.shortDesc} onChange={e => update('shortDesc', e.target.value)} /></Field>
         <Field label="Deskripsi"><textarea className={inputClass} rows={2} maxLength={2000} value={form.description} onChange={e => update('description', e.target.value)} /></Field>
-        <p className="text-xs leading-5 text-neutral-500 sm:col-span-2 lg:col-span-3">Konfigurasi varian menu yang sudah ada tetap dipertahankan. Ketersediaan menggunakan stok bersama, sehingga dapat memengaruhi menu terkait di kanal lain.</p>
+        <p className="text-xs leading-5 text-neutral-500 sm:col-span-2 lg:col-span-3">Menu terhubung otomatis ke seluruh kanal (Dine-in, Takeaway, Kios, dan Kasir POS) serta tersinkronisasi dengan status ketersediaan stok dapur.</p>
         <div className="flex gap-2 sm:col-span-2 lg:col-span-3"><button className={buttonClass} disabled={resource.busy || (!editor.isNew && !editor.adminId)}>{resource.busy ? 'Menyimpan...' : 'Simpan menu'}</button><button type="button" className={secondaryClass} disabled={resource.busy} onClick={() => setEditor(null)}>Batal</button></div>
       </form>
     </section>}
-    {!resource.loading && !resource.error && !filtered.length && <EmptyState>{items.length ? 'Tidak ada menu yang cocok dengan pencarian.' : 'Kanal ini belum memiliki menu. Tambahkan menu pertama.'}</EmptyState>}
+    {!resource.loading && !resource.error && !filtered.length && <EmptyState>{items.length ? 'Tidak ada menu yang cocok dengan pencarian.' : 'Belum ada menu yang terdaftar. Tambahkan menu pertama.'}</EmptyState>}
     {!!filtered.length && <div className="overflow-x-auto rounded-2xl border border-[#F0F2F6] bg-white"><table className="w-full text-left text-xs"><thead className="border-b border-[#F0F2F6] bg-[#F8F9FE] text-xs font-medium text-slate-500"><tr><th className="w-12 px-4 py-3 font-medium">No</th><th className="px-4 py-3 font-medium">Menu</th><th className="px-4 py-3 font-medium">Harga</th><th className="px-4 py-3 font-medium">Stasiun</th><th className="px-4 py-3 font-medium">Stok</th><th className="px-4 py-3 font-medium">Tindakan</th></tr></thead><tbody className="divide-y divide-[#F0F2F6]">{filtered.map((item, index) => <tr key={item.adminId || item.id} className={`${index % 2 === 1 ? 'bg-[#F8F9FE]' : 'bg-white'} hover:bg-[#EEF1FA] transition-colors`}>
       <td className="w-12 px-4 py-3.5 font-medium text-slate-400 tabular-nums">{index + 1}</td>
       <td className="min-w-48 px-4 py-3.5">

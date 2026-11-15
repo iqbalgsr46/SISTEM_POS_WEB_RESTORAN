@@ -19,16 +19,18 @@ class ArchiveController extends Controller
     {
         $archivedMenus = MenuItem::onlyTrashed()
             ->orderByDesc('deleted_at')
-            ->get(['id', 'code', 'name', 'channel', 'category_title', 'price', 'deleted_at'])
+            ->get(['id', 'code', 'stock_id', 'name', 'channel', 'category_title', 'price', 'deleted_at'])
+            ->unique('stock_id')
             ->map(fn ($item) => [
                 'id' => $item->id,
                 'type' => 'menu',
                 'name' => $item->name,
-                'channel' => $item->channel,
+                'channel' => 'Semua Kanal',
                 'category' => $item->category_title,
                 'price' => $item->price,
                 'deleted_at' => $item->deleted_at->toIso8601String(),
-            ]);
+            ])
+            ->values();
 
         $archivedTables = RestaurantTable::onlyTrashed()
             ->orderByDesc('deleted_at')
@@ -39,7 +41,8 @@ class ArchiveController extends Controller
                 'name' => 'Meja ' . $table->number,
                 'number' => $table->number,
                 'deleted_at' => $table->deleted_at->toIso8601String(),
-            ]);
+            ])
+            ->values();
 
         return response()->json([
             'menus' => $archivedMenus,
@@ -60,7 +63,11 @@ class ArchiveController extends Controller
         DB::transaction(function () use ($data) {
             if ($data['type'] === 'menu') {
                 $item = MenuItem::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
-                $item->restore();
+                if ($item->stock_id) {
+                    MenuItem::onlyTrashed()->where('stock_id', $item->stock_id)->restore();
+                } else {
+                    $item->restore();
+                }
             } else {
                 $table = RestaurantTable::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
                 // Pastikan nomor meja tidak bentrok dengan meja aktif
@@ -89,7 +96,11 @@ class ArchiveController extends Controller
         DB::transaction(function () use ($data) {
             if ($data['type'] === 'menu') {
                 $item = MenuItem::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
-                $item->forceDelete();
+                if ($item->stock_id) {
+                    MenuItem::onlyTrashed()->where('stock_id', $item->stock_id)->forceDelete();
+                } else {
+                    $item->forceDelete();
+                }
             } else {
                 $table = RestaurantTable::onlyTrashed()->lockForUpdate()->findOrFail($data['id']);
                 // Tidak boleh hapus permanen jika masih terikat ke riwayat order (foreign key integrity)

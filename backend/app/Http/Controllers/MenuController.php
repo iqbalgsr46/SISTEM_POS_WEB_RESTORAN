@@ -15,9 +15,27 @@ class MenuController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $data = $request->validate(['channel' => ['sometimes', Rule::in(['dine_in', 'takeaway', 'kios', 'pos'])]]);
-        $menu = MenuItem::query()->with('stock')->where('channel', $data['channel'] ?? 'dine_in')
-            ->orderBy('sort_order')->orderBy('id')->get();
+        $data = $request->validate([
+            'channel' => ['sometimes', Rule::in(['all', 'dine_in', 'takeaway', 'kios', 'pos'])],
+        ]);
+        $channel = $data['channel'] ?? 'all';
+
+        if ($channel === 'all') {
+            // Master menu catalog: unique by stock_id, prioritizing dine_in representation
+            $items = MenuItem::query()->with('stock')
+                ->where('channel', 'dine_in')
+                ->orderBy('sort_order')->orderBy('id')->get();
+
+            $existingStockIds = $items->pluck('stock_id')->all();
+            $otherItems = MenuItem::query()->with('stock')
+                ->whereNotIn('stock_id', $existingStockIds)
+                ->orderBy('sort_order')->orderBy('id')->get()->unique('stock_id');
+
+            $menu = $items->concat($otherItems);
+        } else {
+            $menu = MenuItem::query()->with('stock')->where('channel', $channel)
+                ->orderBy('sort_order')->orderBy('id')->get();
+        }
 
         return response()->json($menu->groupBy('category_id')->map(fn ($items, $category) => [
             'id' => $category,
@@ -50,7 +68,7 @@ class MenuController extends Controller
         $presence = $creating ? 'required' : 'sometimes';
         $data = $request->validate([
             'id' => [$creating ? 'prohibited' : 'required', 'integer', 'min:1'],
-            'channel' => [$presence, Rule::in(['dine_in', 'takeaway', 'kios', 'pos'])],
+            'channel' => ['sometimes', Rule::in(['all', 'dine_in', 'takeaway', 'kios', 'pos'])],
             'name' => [$presence, 'string', 'max:120', 'regex:/\S/u'],
             'category_id' => [$presence, 'string', 'max:80', 'regex:/^[a-z0-9][a-z0-9_-]*$/'],
             'category_title' => [$presence, 'string', 'max:120', 'regex:/\S/u'],
@@ -60,6 +78,7 @@ class MenuController extends Controller
             'image' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string', 'max:2000'],
             'shortDesc' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'sync_all' => ['sometimes', 'boolean'],
         ]);
         if (! empty($data['image'])) {
             // Existing raster assets only: no URLs, traversal, SVG, uploads or executable content.
@@ -81,40 +100,104 @@ class MenuController extends Controller
                 unset($data[$key]);
             }
         }
-        unset($data['id']);
+        unset($data['id'], $data['sync_all']);
         return [...$data, 'details' => $details];
     }
 
     public function store(Request $request): JsonResponse
     {
         $data = $this->validated($request, true);
-        $item = DB::transaction(function () use ($data) {
-            $code = 'menu-'.strtolower((string) Str::ulid());
-            $stock = Stock::create(['id' => $code, 'name' => trim($data['name']), 'category' => $data['category_title'], 'available' => true]);
-            return MenuItem::create([...$this->fields($data), 'code' => $code, 'stock_id' => $stock->id]);
+        $syncAll = ! isset($data['channel']) || $data['channel'] === 'all' || $request->boolean('sync_all', false);
+
+        $item = DB::transaction(function () use ($data, $syncAll) {
+            $baseId = strtolower((string) Str::ulid());
+            $stockId = 'stock-'.$baseId;
+            $stock = Stock::create([
+                'id' => $stockId,
+                'name' => trim($data['name']),
+                'category' => $data['category_title'],
+                'available' => true,
+            ]);
+
+            $fields = $this->fields($data);
+            unset($fields['channel']);
+
+            if ($syncAll) {
+                $channels = ['dine_in', 'takeaway', 'kios', 'pos'];
+                $primaryItem = null;
+                foreach ($channels as $ch) {
+                    $created = MenuItem::create([
+                        ...$fields,
+                        'channel' => $ch,
+                        'code' => $ch.'-'.$baseId,
+                        'stock_id' => $stock->id,
+                    ]);
+                    if ($ch === 'dine_in') {
+                        $primaryItem = $created;
+                    }
+                }
+
+                return $primaryItem ?? $created;
+            }
+
+            $channel = $data['channel'] ?? 'dine_in';
+            $code = 'menu-'.$baseId;
+
+            return MenuItem::create([
+                ...$fields,
+                'channel' => $channel,
+                'code' => $code,
+                'stock_id' => $stock->id,
+            ]);
         });
+
         return response()->json($this->present($item->load('stock')), 201);
     }
 
     public function update(Request $request): JsonResponse
     {
         $data = $this->validated($request, false);
-        $item = DB::transaction(function () use ($data) {
+        $syncAll = ! isset($data['channel']) || $data['channel'] === 'all' || $request->boolean('sync_all', false);
+
+        $item = DB::transaction(function () use ($data, $syncAll) {
             $item = MenuItem::query()->lockForUpdate()->findOrFail($data['id']);
-            $item->update($this->fields($data, $item->details ?? []));
-            // Shared stock labels belong to the stock, not to a single channel's menu.
+            $fields = $this->fields($data, $item->details ?? []);
+            unset($fields['channel']);
+
+            $item->update($fields);
+
+            if ($syncAll && $item->stock_id) {
+                $syncFields = array_diff_key($fields, array_flip(['channel', 'code', 'stock_id']));
+                MenuItem::where('stock_id', $item->stock_id)
+                    ->where('id', '!=', $item->id)
+                    ->update($syncFields);
+            }
+
             return $item;
         });
+
         return response()->json($this->present($item->load('stock')));
     }
 
     public function destroy(Request $request): JsonResponse
     {
-        $data = $request->validate(['id' => ['required', 'integer', 'min:1']]);
-        DB::transaction(function () use ($data) {
-            MenuItem::query()->lockForUpdate()->findOrFail($data['id'])->delete();
-            // Retain stock shared across channels and immutable historical order lines.
+        $data = $request->validate([
+            'id' => ['required', 'integer', 'min:1'],
+            'channel' => ['sometimes', 'string'],
+            'sync_all' => ['sometimes', 'boolean'],
+        ]);
+
+        $syncAll = ($data['channel'] ?? null) === 'all' || $request->boolean('sync_all', false);
+
+        DB::transaction(function () use ($data, $syncAll) {
+            $item = MenuItem::query()->lockForUpdate()->findOrFail($data['id']);
+            if ($syncAll && $item->stock_id) {
+                MenuItem::where('stock_id', $item->stock_id)->delete();
+            } else {
+                $item->delete();
+            }
         });
+
         return response()->json(['message' => 'Menu diarsipkan.']);
     }
 }
